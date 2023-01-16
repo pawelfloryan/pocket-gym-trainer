@@ -86,7 +86,7 @@ class _NewSection extends State<NewSection> {
               children: [
                 TextField(
                   style: const TextStyle(
-                    color: Colors.grey,
+                    color: Colors.white,
                   ),
                   controller: _textController,
                   decoration: InputDecoration(

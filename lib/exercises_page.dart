@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ExercisesPage extends StatefulWidget {
   const ExercisesPage({super.key});
@@ -63,19 +64,122 @@ class NewExercise extends StatefulWidget {
 }
 
 class _NewExercise extends State<NewExercise> {
+  final _exerciseController = TextEditingController();
+  final _weightController = TextEditingController();
+  bool exerciseNotClicked = true;
+  bool weightNotClicked = true;
+  String exerciseUserPost = '';
+  String weightUserPost = '';
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 130,
+      height: 150,
       margin: const EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 5),
       decoration: const BoxDecoration(
-          color: Colors.grey,
-          border: Border(
-              top: BorderSide(color: Colors.grey),
-              bottom: BorderSide(color: Colors.grey),
-              left: BorderSide(color: Colors.grey),
-              right: BorderSide(color: Colors.grey))),
+        color: Colors.grey,
+      ),
+      child: Material(
+        elevation: 6,
+        color: Colors.grey,
+        child: Container(
+          margin: const EdgeInsets.only(left: 0, right: 0, top: 5, bottom: 5),
+          child: Row(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(
+                    left: 20, right: 0, top: 0, bottom: 0),
+                width: 140,
+                height: 115,
+                decoration: const BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: Colors.white, width: 4),
+                    bottom: BorderSide(color: Colors.white, width: 4),
+                    left: BorderSide(color: Colors.white, width: 4),
+                    right: BorderSide(color: Colors.white, width: 4),
+                  ),
+                ),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+                  onPressed: () {},
+                  child: const Tooltip(
+                    message: "Upload your photos here!",
+                    child: Icon(
+                      Icons.add_photo_alternate_outlined,
+                      size: 70,
+                    ),
+                  ),
+                ),
+              ),
+              Column(
+                children: [
+                  Container(
+                    width: 174,
+                    height: 40,
+                    margin: const EdgeInsets.only(
+                        left: 20, right: 0, top: 13, bottom: 20),
+                    child: exerciseNotClicked == true ? TextField(
+                      style: const TextStyle(
+                        color: Colors.black,
+                      ),
+                      controller: _exerciseController,
+                      decoration: InputDecoration(
+                        hintText: 'Exercise Name',
+                        hintStyle: TextStyle(color: Colors.black),
+                        border: OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          color: Colors.black,
+                          onPressed: () {
+                            exerciseUserPost = _exerciseController.text;
+                            setState(() {
+                              exerciseNotClicked = false;
+                            });
+                          },
+                          icon: Icon((Icons.done)),
+                        ),
+                      ),
+                    ) : Container(
+                      margin: const EdgeInsets.only(
+                        left: 0, right: 0, top: 5, bottom: 0),
+                      child: Text(
+                        exerciseUserPost,
+                        style: const TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 174,
+                    height: 40,
+                    margin: const EdgeInsets.only(
+                        left: 20, right: 0, top: 0, bottom: 0),
+                    child: TextField(
+                      style: const TextStyle(
+                        color: Colors.black,
+                      ),
+                      controller: _weightController,
+                      decoration: InputDecoration(
+                        hintText: 'Kilos/Pounds',
+                        hintStyle: TextStyle(color: Colors.black),
+                        border: OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          color: Colors.black,
+                          onPressed: () {
+                            _weightController.clear();
+                          },
+                          icon: Icon((Icons.done)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
