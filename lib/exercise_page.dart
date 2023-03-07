@@ -21,12 +21,43 @@ class _ExercisePageState extends State<ExercisePage> {
           return Center(
             child: Column(
               children: <Widget>[
-                Expanded(
-                  child: ListView(
-                    scrollDirection: Axis.vertical,
-                    children: newSection,
-                  ),
-                ),
+                _count > 0
+                    ? Expanded(
+                        child: ListView(
+                          scrollDirection: Axis.vertical,
+                          children: newSection,
+                        ),
+                      )
+                    : Container(
+                        margin: const EdgeInsets.only(
+                            left: 0, top: 50, right: 0, bottom: 0),
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              "images/bodybuilder.png",
+                              scale: 0.8,
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(
+                            left: 20, top: 10, right: 0, bottom: 0),
+                              width: 370,
+                              child: const Text(
+                                  "Click the button on the right bottom",
+                                  style: TextStyle(fontSize: 22),
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(
+                            left: 55, top: 0, right: 0, bottom: 0),
+                              width: 350,
+                              child: const Text(
+                                  "to add new exercise sections",
+                                  style: TextStyle(fontSize: 22),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
               ],
             ),
           );
@@ -66,9 +97,7 @@ class _NewSection extends State<NewSection> {
       height: 110,
       margin: const EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 0),
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black
-        ),
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -78,54 +107,65 @@ class _NewSection extends State<NewSection> {
             ),
           );
         },
-        child: notClicked == true ? Visibility(
-          visible: notClicked,
-          child: Container(
-            margin: const EdgeInsets.only(left: 0, right: 0, top: 5, bottom: 5),
-            child: Column(
-              children: [
-                TextField(
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
-                  controller: _textController,
-                  decoration: InputDecoration(
-                    hintText: 'The name of new section',
-                    hintStyle: TextStyle(color: Colors.grey),
-                    border: OutlineInputBorder(),
-                    suffixIcon: IconButton(
-                      color: Colors.white,
-                      onPressed: () {
-                        _textController.clear();
-                      },
-                      icon: Icon((Icons.clear)),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 0, right: 0, top: 5, bottom: 5),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[900]
-                    ),
-                    onPressed: () {
-                        userPost = _textController.text;
-                        setState(() {
-                          notClicked = false;
-                        });
-                        debugPrint("$userPost");
-                    }, 
-                    child: Text("SUBMIT")
+        child: notClicked == true
+            ? Visibility(
+                visible: notClicked,
+                child: Container(
+                  margin: const EdgeInsets.only(
+                      left: 0, right: 0, top: 21, bottom: 5),
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white)),
+                        child: TextField(
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                          controller: _textController,
+                          decoration: InputDecoration(
+                            hintText: 'Name of a new section',
+                            hintStyle: TextStyle(color: Colors.grey),
+                            border: OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              color: Colors.white,
+                              onPressed: () {
+                                userPost = _textController.text;
+                                setState(() {
+                                  notClicked = false;
+                                });
+                                debugPrint("$userPost");
+                              },
+                              icon: Icon((Icons.done)),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ) : Text(
-          userPost,
-          style: TextStyle(fontSize: 70),
-          ),
+              )
+            : Text(
+                userPost,
+                style: TextStyle(fontSize: 70),
+              ),
       ),
     );
   }
 }
+
+/*
+Container(
+                        margin: const EdgeInsets.only(
+                            left: 0, top: 50, right: 0, bottom: 0),
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              "images/bodybuilder.png",
+                              scale: 0.8,
+                            ),
+                            Text("Click button on the left to add new exercise sections")
+                          ],
+                        ),
+                      ),
+                      */
