@@ -1,4 +1,4 @@
-final String section = 'section';
+final String sectionTable = 'section';
 
 class SectionFields {
   static final String id = '_id';
@@ -13,4 +13,9 @@ class Section {
     this.id,
     required this.name,
   });
+
+  Map<String, Object?> toJson() => {
+    SectionFields.id: id,
+    SectionFields.name: name
+  };
 }
