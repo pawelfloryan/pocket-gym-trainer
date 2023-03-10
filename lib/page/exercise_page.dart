@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gymbro/exercises_page.dart';
+import 'package:gymbro/page/exercises_page.dart';
 
 class ExercisePage extends StatefulWidget {
   const ExercisePage({super.key});

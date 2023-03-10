@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gymbro/exercise_page.dart';
-import 'package:gymbro/stats_page.dart';
-import 'package:gymbro/home_page.dart';
+import 'package:gymbro/page/exercise_page.dart';
+import 'package:gymbro/page/stats_page.dart';
+import 'package:gymbro/page/home_page.dart';
 
 void main() {
   runApp(const MyApp());
