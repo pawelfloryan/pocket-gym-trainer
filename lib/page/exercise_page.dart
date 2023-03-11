@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gymbro/page/exercises_page.dart';
+import './exercises_page.dart';
+import '../model/tables.dart';
+import '../db/database.dart';
 
 class ExercisePage extends StatefulWidget {
   const ExercisePage({super.key});
@@ -9,11 +11,34 @@ class ExercisePage extends StatefulWidget {
 }
 
 class _ExercisePageState extends State<ExercisePage> {
-  int _count = 0;
+  bool isLoading = false;
+  List<Exercise> exercises = <Exercise>[];
+  List<NewSection> newSection = <NewSection>[];
+
+  @override
+  void initState() {
+    super.initState();
+    refreshSection();
+  }
+
+  Future refreshSection() async {
+    setState(() => isLoading = true);
+    exercises = await LibreGymDatabase.instance.readAllExercises();
+    exercises.forEach((element) { 
+      debugPrint("${element.title}");
+    });
+    newSection = exercises.map((e) => NewSection(exercise: e, notClicked: false,)).toList();
+    setState(() => isLoading = false);
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> newSection = List.generate(_count, (int i) => NewSection());
+
+    void addNewSection() {
+    setState(() {
+      newSection.add(NewSection());
+    });
+  }
 
     return Scaffold(
       body: LayoutBuilder(
@@ -21,7 +46,7 @@ class _ExercisePageState extends State<ExercisePage> {
           return Center(
             child: Column(
               children: <Widget>[
-                _count > 0
+                newSection.isNotEmpty
                     ? Expanded(
                         child: ListView(
                           scrollDirection: Axis.vertical,
@@ -39,20 +64,20 @@ class _ExercisePageState extends State<ExercisePage> {
                             ),
                             Container(
                               margin: const EdgeInsets.only(
-                            left: 20, top: 10, right: 0, bottom: 0),
+                                  left: 20, top: 10, right: 0, bottom: 0),
                               width: 370,
                               child: const Text(
-                                  "Click the button on the right bottom",
-                                  style: TextStyle(fontSize: 22),
+                                "Click the button on the right bottom",
+                                style: TextStyle(fontSize: 22),
                               ),
                             ),
                             Container(
                               margin: const EdgeInsets.only(
-                            left: 55, top: 0, right: 0, bottom: 0),
+                                  left: 55, top: 0, right: 0, bottom: 0),
                               width: 350,
                               child: const Text(
-                                  "to add new exercise sections",
-                                  style: TextStyle(fontSize: 22),
+                                "to add new exercise sections",
+                                style: TextStyle(fontSize: 22),
                               ),
                             ),
                           ],
@@ -64,24 +89,21 @@ class _ExercisePageState extends State<ExercisePage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addNewSection,
-        child: Icon(Icons.add),
+        onPressed: addNewSection,
+        child: const Icon(Icons.add),
       ),
     );
   }
-
-  void _addNewSection() {
-    setState(() {
-      _count = _count + 1;
-      debugPrint("New Section $_count");
-    });
-  }
 }
 
+// ignore: must_be_immutable
 class NewSection extends StatefulWidget {
-  const NewSection({super.key});
+  final Exercise? exercise;
+  bool notClicked;
+  NewSection({super.key, this.exercise, this.notClicked = true});
 
   @override
+  // ignore: no_logic_in_create_state
   State<NewSection> createState() => _NewSection();
 }
 
@@ -89,6 +111,13 @@ class _NewSection extends State<NewSection> {
   final _textController = TextEditingController();
   String userPost = '';
   bool notClicked = true;
+
+  @override
+  void initState(){
+    super.initState();
+    userPost = widget.exercise != null ? widget.exercise!.title : "";
+    notClicked = widget.notClicked;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,13 +158,8 @@ class _NewSection extends State<NewSection> {
                             border: OutlineInputBorder(),
                             suffixIcon: IconButton(
                               color: Colors.white,
-                              onPressed: () {
-                                userPost = _textController.text;
-                                setState(() {
-                                  notClicked = false;
-                                });
-                                debugPrint("$userPost");
-                              },
+                              onPressed: addSection,
+                              
                               icon: Icon((Icons.done)),
                             ),
                           ),
@@ -147,10 +171,19 @@ class _NewSection extends State<NewSection> {
               )
             : Text(
                 userPost,
-                style: TextStyle(fontSize: 70),
+                style: const TextStyle(fontSize: 70),
               ),
       ),
     );
+  }
+
+  Future<void> addSection() async {
+    userPost = _textController.text;
+    setState(() {
+      notClicked = false;
+    });
+    Exercise newExercise = Exercise(title: userPost);
+    await LibreGymDatabase.instance.create(newExercise);
   }
 }
 
