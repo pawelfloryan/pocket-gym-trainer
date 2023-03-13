@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import './exercises_page.dart';
-import '../model/tables.dart';
+import '../model/section.dart';
 import '../db/database.dart';
 
 class ExercisePage extends StatefulWidget {
@@ -12,7 +12,7 @@ class ExercisePage extends StatefulWidget {
 
 class _ExercisePageState extends State<ExercisePage> {
   bool isLoading = false;
-  List<Exercise> exercises = <Exercise>[];
+  List<Section> exercises = <Section>[];
   List<NewSection> newSection = <NewSection>[];
 
   @override
@@ -98,7 +98,7 @@ class _ExercisePageState extends State<ExercisePage> {
 
 // ignore: must_be_immutable
 class NewSection extends StatefulWidget {
-  final Exercise? exercise;
+  final Section? exercise;
   bool notClicked;
   NewSection({super.key, this.exercise, this.notClicked = true});
 
@@ -182,7 +182,7 @@ class _NewSection extends State<NewSection> {
     setState(() {
       notClicked = false;
     });
-    Exercise newExercise = Exercise(title: userPost);
+    Section newExercise = Section(title: userPost);
     await LibreGymDatabase.instance.create(newExercise);
   }
 }

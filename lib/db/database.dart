@@ -1,6 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:gymbro/model/tables.dart';
+import 'package:gymbro/model/section.dart';
 
 class LibreGymDatabase {
   static final LibreGymDatabase instance = LibreGymDatabase._init();
@@ -28,51 +28,51 @@ class LibreGymDatabase {
     final textType = "TEXT NOT NULL";
 
     await db.execute('''
-CREATE TABLE $exerciseTable (
-  ${ExerciseFields.id} $idType,
-  ${ExerciseFields.title} $textType
+CREATE TABLE $sectionTable (
+  ${SectionFields.id} $idType,
+  ${SectionFields.title} $textType
 )
 ''');
   }
 
-  Future<Exercise> create(Exercise exercise) async {
+  Future<Section> create(Section exercise) async {
     final db = await instance.database;
-    final id = await db.insert(exerciseTable, exercise.toJson());
+    final id = await db.insert(sectionTable, exercise.toJson());
 
     return exercise.copy(id: id);
   }
 
-  Future<Exercise> readExercise(int id) async {
+  Future<Section> readExercise(int id) async {
     final db = await instance.database;
     final maps = await db.query(
-      exerciseTable,
-      columns: ExerciseFields.values,
-      where: '${ExerciseFields.id} = ?',
+      sectionTable,
+      columns: SectionFields.values,
+      where: '${SectionFields.id} = ?',
       whereArgs: [id]
     );
 
     if(maps.isNotEmpty){
-      return Exercise.fromJson(maps.first);
+      return Section.fromJson(maps.first);
     }else {
       throw Exception('Id ${id} not found');
     }
   }
 
-  Future<List<Exercise>> readAllExercises() async {
+  Future<List<Section>> readAllExercises() async {
     final db = await instance.database;
-    final orderBy = '${ExerciseFields.id} ASC'; 
-    final result = await db.query(exerciseTable, orderBy:orderBy);
+    final orderBy = '${SectionFields.id} ASC'; 
+    final result = await db.query(sectionTable, orderBy:orderBy);
 
-    return result.map((json) => Exercise.fromJson(json)).toList();
+    return result.map((json) => Section.fromJson(json)).toList();
   }
 
-  Future<int> update(Exercise exercise) async {
+  Future<int> update(Section exercise) async {
     final db = await instance.database;
 
     return db.update(
-      exerciseTable,
+      sectionTable,
       exercise.toJson(),
-      where: '${ExerciseFields.id} = ?',
+      where: '${SectionFields.id} = ?',
       whereArgs: [exercise.id]
     );
   }
@@ -81,8 +81,8 @@ CREATE TABLE $exerciseTable (
     final db = await instance.database;
 
     return await db.delete(
-      exerciseTable,
-      where: '${ExerciseFields.id} = ?',
+      sectionTable,
+      where: '${SectionFields.id} = ?',
       whereArgs: [id]
     );
   }
