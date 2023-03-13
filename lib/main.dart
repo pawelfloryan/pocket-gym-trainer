@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gymbro/page/exercise_page.dart';
+import 'package:gymbro/page/section_page.dart';
 import 'package:gymbro/page/stats_page.dart';
 import 'package:gymbro/page/home_page.dart';
 
@@ -48,7 +48,7 @@ class RootPage extends StatefulWidget {
 class _RootPageState extends State<RootPage> {
   bool _isVisible = true;
   int currentPage = 0;
-  List<Widget> pages = const [HomePage(), ExercisePage(), StatsPage()];
+  List<Widget> pages = const [HomePage(), SectionPage(), StatsPage()];
   void show() {
     setState(() {
       _isVisible = !_isVisible;
