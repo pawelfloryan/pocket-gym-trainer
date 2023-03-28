@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro/db/database.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:gymbro/model/exercise.dart';
 
 class ExercisesPage extends StatefulWidget {
   const ExercisesPage({super.key});
@@ -46,7 +48,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
                           children: [
                             Image.asset(
                               "images/exercise.png",
-                              scale: 1.75,
+                              scale: 1.5,
                             ),
                             Container(
                               margin: const EdgeInsets.only(
@@ -59,7 +61,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
                             ),
                             Container(
                               margin: const EdgeInsets.only(
-                            left: 90, top: 0, right: 0, bottom: 0),
+                                  left: 90, top: 0, right: 0, bottom: 0),
                               width: 350,
                               child: const Text(
                                 "to add new exercises",
