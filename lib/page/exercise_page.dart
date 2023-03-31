@@ -3,16 +3,16 @@ import './exercises_page.dart';
 import '../model/section.dart';
 import '../db/database.dart';
 
-class SectionPage extends StatefulWidget {
-  const SectionPage({super.key});
+class ExercisePage extends StatefulWidget {
+  const ExercisePage({super.key});
 
   @override
-  State<SectionPage> createState() => _SectionPageState();
+  State<ExercisePage> createState() => _ExercisePageState();
 }
 
-class _SectionPageState extends State<SectionPage> {
+class _ExercisePageState extends State<ExercisePage> {
   bool isLoading = false;
-  List<Section> sections = <Section>[];
+  List<Section> exercises = <Section>[];
   List<NewSection> newSection = <NewSection>[];
 
   @override
@@ -23,26 +23,22 @@ class _SectionPageState extends State<SectionPage> {
 
   Future refreshSection() async {
     setState(() => isLoading = true);
-    sections = await LibreGymDatabase.instance.readAllSections();
-    sections.forEach((element) {
+    exercises = await LibreGymDatabase.instance.readAllExercises();
+    exercises.forEach((element) { 
       debugPrint("${element.title}");
     });
-    newSection = sections
-        .map((e) => NewSection(
-              section: e,
-              notClicked: false,
-            ))
-        .toList();
+    newSection = exercises.map((e) => NewSection(exercise: e, notClicked: false,)).toList();
     setState(() => isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
+
     void addNewSection() {
-      setState(() {
-        newSection.add(NewSection());
-      });
-    }
+    setState(() {
+      newSection.add(NewSection());
+    });
+  }
 
     return Scaffold(
       body: LayoutBuilder(
@@ -102,9 +98,9 @@ class _SectionPageState extends State<SectionPage> {
 
 // ignore: must_be_immutable
 class NewSection extends StatefulWidget {
-  final Section? section;
+  final Section? exercise;
   bool notClicked;
-  NewSection({super.key, this.section, this.notClicked = true});
+  NewSection({super.key, this.exercise, this.notClicked = true});
 
   @override
   // ignore: no_logic_in_create_state
@@ -117,9 +113,9 @@ class _NewSection extends State<NewSection> {
   bool notClicked = true;
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
-    userPost = widget.section != null ? widget.section!.title : "";
+    userPost = widget.exercise != null ? widget.exercise!.title : "";
     notClicked = widget.notClicked;
   }
 
@@ -163,6 +159,7 @@ class _NewSection extends State<NewSection> {
                             suffixIcon: IconButton(
                               color: Colors.white,
                               onPressed: addSection,
+                              
                               icon: Icon((Icons.done)),
                             ),
                           ),
@@ -185,8 +182,8 @@ class _NewSection extends State<NewSection> {
     setState(() {
       notClicked = false;
     });
-    Section newSection = Section(title: userPost);
-    await LibreGymDatabase.instance.createSection(newSection);
+    Section newExercise = Section(title: userPost);
+    await LibreGymDatabase.instance.create(newExercise);
   }
 }
 
