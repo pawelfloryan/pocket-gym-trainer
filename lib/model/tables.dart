@@ -1,39 +1,21 @@
-final String exerciseTable = 'section';
+final String sectionTable = 'section';
 
-class ExerciseFields {
-  static final List<String> values = [
-    id, title
-  ]; 
-
+class SectionFields {
   static final String id = '_id';
-  static final String title = 'title';
+  static final String name = 'name';
 }
 
-class Exercise {
+class Section {
   final int? id;
-  final String title;
+  final String name;
 
-  const Exercise({
+  const Section({
     this.id,
-    required this.title,
+    required this.name,
   });
 
   Map<String, Object?> toJson() => {
-    ExerciseFields.id: id,
-    ExerciseFields.title: title
+    SectionFields.id: id,
+    SectionFields.name: name
   };
-  
-  static Exercise fromJson(Map<String, Object?> json) => Exercise(
-    id: json[ExerciseFields.id] as int?,
-    title: json[ExerciseFields.title] as String
-  );
-
-  Exercise copy({
-    int? id,
-    String? title
-  }) => 
-      Exercise(
-        id: id ?? this.id,
-        title: title ?? this.title
-      );
 }
