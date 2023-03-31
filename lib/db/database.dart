@@ -104,20 +104,6 @@ CREATE TABLE $exerciseTable (
     return result.map((json) => Exercise.fromJson(json)).toList();
   }
 
-  Future<int> updateExercise(Exercise exercise) async {
-    final db = await instance.database;
-
-    return db.update(exerciseTable, exercise.toJson(),
-        where: '${ExerciseFields.id} = ?', whereArgs: [exercise.id]);
-  }
-
-  Future<int> deleteExercise(int id) async {
-    final db = await instance.database;
-
-    return await db.delete(exerciseTable,
-        where: '${ExerciseFields.id} = ?', whereArgs: [id]);
-  }
-
   Future close() async {
     final db = await instance.database;
 
