@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import './exercises_page.dart';
-import '../model/section.dart';
+import 'package:gymbro/page/exercises_page.dart';
+import 'package:gymbro/model/section.dart';
 import '../db/database.dart';
+import 'package:gymbro/services/section_services.dart';
 
 class SectionPage extends StatefulWidget {
   const SectionPage({super.key});
@@ -18,22 +19,12 @@ class _SectionPageState extends State<SectionPage> {
   @override
   void initState() {
     super.initState();
-    refreshSection();
+    _getData();
   }
 
-  Future refreshSection() async {
-    setState(() => isLoading = true);
-    sections = await LibreGymDatabase.instance.readAllSections();
-    sections.forEach((element) {
-      debugPrint("${element.title}");
-    });
-    newSection = sections
-        .map((e) => NewSection(
-              section: e,
-              notClicked: false,
-            ))
-        .toList();
-    setState(() => isLoading = false);
+  void _getData() async {
+    sections = (await SectionService().getSection())!;
+    Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
   }
 
   @override

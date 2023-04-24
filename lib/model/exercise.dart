@@ -31,7 +31,6 @@ class Exercise {
     required this.image,
     required this.name,
     required this.description,
-
   });
 
   //Map<String, Object?> toJson() => {
@@ -48,8 +47,8 @@ class Exercise {
         description: json[ExerciseFields.description] as String,
       );
 
-  List<Exercise> exerciseFromJson(String str) => 
-    List<Exercise>.from(json.decode(str));
+  static List<Exercise> exerciseFromJson(String str) =>
+      List<Exercise>.from(json.decode(str).map((x) => Exercise.fromJson(x)));
 //
   //Exercise copy({
   //  int? id,
