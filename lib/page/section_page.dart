@@ -19,10 +19,10 @@ class _SectionPageState extends State<SectionPage> {
   @override
   void initState() {
     super.initState();
-    _getData();
+    getData();
   }
 
-  void _getData() async {
+  void getData() async {
     sections = (await SectionService().getSection())!;
     Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
   }
@@ -34,6 +34,10 @@ class _SectionPageState extends State<SectionPage> {
         newSection.add(NewSection());
       });
     }
+
+    SectionService().then((value) {
+      sections
+    });
 
     return Scaffold(
       body: LayoutBuilder(
@@ -110,7 +114,7 @@ class _NewSection extends State<NewSection> {
   @override
   void initState() {
     super.initState();
-    userPost = widget.section != null ? widget.section!.title : "";
+    userPost = widget.section != null ? widget.section!.name : "";
     notClicked = widget.notClicked;
   }
 
@@ -176,7 +180,7 @@ class _NewSection extends State<NewSection> {
     setState(() {
       notClicked = false;
     });
-    Section newSection = Section(title: userPost);
+    Section newSection = Section(name: userPost);
     await LibreGymDatabase.instance.createSection(newSection);
   }
 }

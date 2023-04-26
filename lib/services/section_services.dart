@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:http/http.dart' as http;
@@ -17,9 +18,15 @@ class SectionService {
     try {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.sectionEndpoint);
       var response = await http.get(url);
+
+      var sections = <Section>[];
+
       if (response.statusCode == 200) {
-        List<Section> _model = Section.sectionFromJson(response.body);
-        return _model;
+        var sectionsJson = json.decode(response.body);
+        for (var sectionJson in sectionsJson) {
+          sections.add(Section.fromJson(sectionJson));
+        }
+        return sections;
       }
     } catch (e) {
       log(e.toString());

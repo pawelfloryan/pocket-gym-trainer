@@ -26,7 +26,7 @@ class Section {
   //      SectionFields.title: title,
   //    };
 //
-  static Section fromJson(Map<String, Object?> json) => Section(
+  static Section fromJson(Map<String, dynamic> json) => Section(
         id: json[SectionFields.id] as int,
         name: json[SectionFields.name] as String,
       );
