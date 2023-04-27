@@ -35,10 +35,6 @@ class _SectionPageState extends State<SectionPage> {
       });
     }
 
-    SectionService().then((value) {
-      sections
-    });
-
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraint) {
