@@ -32,7 +32,7 @@ class _SectionPageState extends State<SectionPage> {
 
   void getData() async {
     sections = (await SectionService().getSection())!;
-    Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
+    Future.delayed(const Duration(milliseconds: 25)).then((value) => setState(() {}));
   }
 
   //TODO
@@ -47,7 +47,9 @@ class _SectionPageState extends State<SectionPage> {
             child: Column(
               children: <Widget>[
                 sections.isNotEmpty
-                    ? Expanded(
+                    ? SizedBox(
+                        width: double.infinity,
+                        height: 110,
                         child: Container(
                           width: double.infinity,
                           height: 110,

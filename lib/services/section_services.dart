@@ -9,6 +9,15 @@ class SectionService {
   Future<List<Section>?> createSection() async {
     try {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.sectionEndpoint);
+      var response = await http.post(url);
+
+      //TODO Problems with method referencing
+      //var json = Section.toJson(response.body);
+
+      if (response.statusCode == 201) {
+        List<Section> sections = sectionFromJson(response.body);
+        return sections;
+      }
     } catch (e) {
       log(e.toString());
     }
@@ -19,13 +28,8 @@ class SectionService {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.sectionEndpoint);
       var response = await http.get(url);
 
-      var sections = <Section>[];
-
       if (response.statusCode == 200) {
-        var sectionsJson = json.decode(response.body);
-        for (var sectionJson in sectionsJson) {
-          sections.add(Section.fromJson(sectionJson));
-        }
+        List<Section> sections = sectionFromJson(response.body);
         return sections;
       }
     } catch (e) {
@@ -38,7 +42,7 @@ class SectionService {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.sectionEndpoint);
       var response = await http.put(url);
       if (response.statusCode == 200) {
-        List<Section> _model = Section.sectionFromJson(response.body);
+        List<Section> _model = sectionFromJson(response.body);
         return _model;
       }
     } catch (e) {
@@ -51,7 +55,7 @@ class SectionService {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.sectionEndpoint);
       var response = await http.delete(url);
       if (response.statusCode == 200) {
-        List<Section> _model = Section.sectionFromJson(response.body);
+        List<Section> _model = sectionFromJson(response.body);
         return _model;
       }
     } catch (e) {
