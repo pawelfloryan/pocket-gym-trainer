@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro/page/exercises_page.dart';
 import 'package:gymbro/model/section.dart';
+import 'package:gymbro/res/SectionRequest.dart';
 import 'package:uuid/uuid.dart';
 import '../db/database.dart';
 import 'package:gymbro/services/section_services.dart';
@@ -14,7 +15,6 @@ class SectionPage extends StatefulWidget {
 
 class _SectionPageState extends State<SectionPage> {
   bool isLoading = false;
-  List<Section> sections = <Section>[];
   final _textController = TextEditingController();
   String userPost = '';
   bool notClicked = true;
@@ -23,11 +23,13 @@ class _SectionPageState extends State<SectionPage> {
   //  uuidS = "008107e5-a7da-4626-b9a3-a911920332ac";
   //  uuid = uuidS as Uuid;
 
+  List<Section> sections = <Section>[];
+  SectionRequest section = SectionRequest();
+
   @override
   void initState() {
     super.initState();
     getData();
-    createData();
   }
 
   void getData() async {
@@ -36,7 +38,10 @@ class _SectionPageState extends State<SectionPage> {
   }
 
   //TODO
-  void createData() async {}
+  void createData() async {
+    section = (await SectionService().createSection(section))! as SectionRequest;
+    Future.delayed(const Duration(milliseconds: 25)).then((value) => setState(() {}));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,15 +116,18 @@ class _SectionPageState extends State<SectionPage> {
         itemCount: sections.length,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: createData,
+        onPressed: addSection,
         child: const Icon(Icons.add),
       ),
     );
   }
+  //TODO Add showing up the new sections
 
   Future<void> addSection() async {
     userPost = _textController.text;
     setState(() {
+      section.name = userPost;
+      createData();
       notClicked = false;
     });
     //Section newSection = Section(name: userPost);

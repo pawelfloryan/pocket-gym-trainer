@@ -2,19 +2,24 @@ import 'dart:convert';
 
 class Section {
   final String id;
-  final String name;
+  late final String name;
 
   Section({
     required this.id,
     required this.name,
   });
 
-  Map<String, Object?> toJson(String str) => {
+  Map<String, Object?> toJson() => {
         "id": id,
         "name": name,
       };
 
-  static Section fromJson(Map<String, dynamic> json) => Section(
+  static Section fromJsonList(Map<String, dynamic> json) => Section(
+        id: json["id"] as String,
+        name: json["name"] as String,
+      );
+
+  static Section fromJson(dynamic json) => Section(
         id: json["id"] as String,
         name: json["name"] as String,
       );
@@ -30,5 +35,11 @@ class Section {
   //    );
 }
 
-List<Section> sectionFromJson(String str) =>
-    List<Section>.from(json.decode(str).map((x) => Section.fromJson(x)));
+List<Section> sectionFromJsonList(String str) =>
+    List<Section>.from(json.decode(str).map((x) => Section.fromJsonList(x)));
+
+Section sectionFromJson(String str) =>
+    json.decode((Section.fromJson(str)).toString());
+
+String sectionToJson(Section section) =>
+    json.encode(section.toJson());
