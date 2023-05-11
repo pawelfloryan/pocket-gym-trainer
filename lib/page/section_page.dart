@@ -34,94 +34,103 @@ class _SectionPageState extends State<SectionPage> {
 
   void getData() async {
     sections = (await SectionService().getSection())!;
-    Future.delayed(const Duration(milliseconds: 25)).then((value) => setState(() {}));
+    Future.delayed(const Duration(milliseconds: 25))
+        .then((value) => setState(() {}));
   }
 
   //TODO
   void createData() async {
-    section = (await SectionService().createSection(section))! as SectionRequest;
-    Future.delayed(const Duration(milliseconds: 25)).then((value) => setState(() {}));
+    section =
+        (await SectionService().createSection(section))! as SectionRequest;
+    Future.delayed(const Duration(milliseconds: 25))
+        .then((value) => setState(() {}));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          return Center(
-            child: Column(
-              children: <Widget>[
-                sections.isNotEmpty
-                    ? SizedBox(
-                        width: double.infinity,
-                        height: 110,
-                        child: Container(
+    return Stack(
+      children: <Widget>[
+        ListView.builder(
+          itemBuilder: (context, index) {
+            return Center(
+              child: Column(
+                children: <Widget>[
+                  sections.isNotEmpty
+                      ? SizedBox(
                           width: double.infinity,
                           height: 110,
-                          margin: const EdgeInsets.only(
-                              left: 20, top: 10, right: 20, bottom: 0),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black),
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) {
-                                    return const ExercisesPage();
-                                  },
-                                ),
-                              );
-                            },
-                            child: Text(
-                              sections[index].name,
-                              style: const TextStyle(fontSize: 70),
+                          child: Container(
+                            width: double.infinity,
+                            height: 110,
+                            margin: const EdgeInsets.only(
+                                left: 20, top: 10, right: 20, bottom: 0),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) {
+                                      return const ExercisesPage();
+                                    },
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                sections[index].name,
+                                style: const TextStyle(fontSize: 70),
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                    : Container(
-                        margin: const EdgeInsets.only(
-                            left: 0, top: 50, right: 0, bottom: 0),
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              "images/bodybuilder.png",
-                              scale: 0.8,
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(
-                                  left: 20, top: 10, right: 0, bottom: 0),
-                              width: 370,
-                              child: const Text(
-                                "Click the button on the right bottom",
-                                style: TextStyle(fontSize: 22),
+                        )
+                      : Container(
+                          margin: const EdgeInsets.only(
+                              left: 0, top: 50, right: 0, bottom: 0),
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                "images/bodybuilder.png",
+                                scale: 0.8,
                               ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(
-                                  left: 55, top: 0, right: 0, bottom: 0),
-                              width: 350,
-                              child: const Text(
-                                "to add new exercise sections",
-                                style: TextStyle(fontSize: 22),
+                              Container(
+                                margin: const EdgeInsets.only(
+                                    left: 20, top: 10, right: 0, bottom: 0),
+                                width: 370,
+                                child: const Text(
+                                  "Click the button on the right bottom",
+                                  style: TextStyle(fontSize: 22),
+                                ),
                               ),
-                            ),
-                          ],
+                              Container(
+                                margin: const EdgeInsets.only(
+                                    left: 55, top: 0, right: 0, bottom: 0),
+                                width: 350,
+                                child: const Text(
+                                  "to add new exercise sections",
+                                  style: TextStyle(fontSize: 22),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-              ],
-            ),
-          );
-        },
-        itemCount: sections.length,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: addSection,
-        child: const Icon(Icons.add),
-      ),
+                ],
+              ),
+            );
+          },
+          itemCount: sections.length,
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: FloatingActionButton(
+            onPressed: addSection,
+            child: const Icon(Icons.add),
+          ),
+        ),
+      ],
     );
   }
   //TODO Add showing up the new sections
+  //TODO Figure out how to overlay list with a widget with section's properties
 
   Future<void> addSection() async {
     userPost = _textController.text;
@@ -130,8 +139,6 @@ class _SectionPageState extends State<SectionPage> {
       createData();
       notClicked = false;
     });
-    //Section newSection = Section(name: userPost);
-    //await LibreGymDatabase.instance.createSection(newSection);
   }
 }
 
