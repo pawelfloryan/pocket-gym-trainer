@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class SectionRequest {
-  late final String? name;
+  late String? name;
 
   SectionRequest({
     this.name,
