@@ -43,7 +43,8 @@ class _SectionPageState extends State<SectionPage> {
   //TODO
   void createData() async {
     section = (await SectionService().createSection(sectionRequest))!;
-    print(section.name);
+    //print(section.name);
+    sections.add(section);
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
   }
@@ -55,6 +56,7 @@ class _SectionPageState extends State<SectionPage> {
       //print(sectionRequest.name);
       createData();
       for(var section in sections){
+        print(section.name);
         newSections.add(section);
       }
       sections = newSections;
