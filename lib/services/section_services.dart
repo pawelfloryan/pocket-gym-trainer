@@ -15,10 +15,10 @@ class SectionService {
       'Content-Type': 'application/json; charset=UTF-8',}, body: json.encode(sectionJson));
 
       if (response.statusCode == 201) {
-        List<Section> sections = sectionFromJsonList(response.body);
-        for(Section section in sections){
-          return section;
-        }
+        Map<String, dynamic> jsonMap = json.decode(response.body);
+        //Section sections = sectionFromJsonList(response.body)[0];
+        Section section = Section.fromJson(jsonMap);
+        return section;
       }
     } catch (e) {
       log(e.toString());

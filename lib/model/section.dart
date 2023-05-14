@@ -2,11 +2,11 @@ import 'dart:convert';
 
 class Section {
   final String? id;
-  late String? name;
+  late String name;
 
   Section({
     this.id,
-    this.name,
+    required this.name,
   });
 
   Map<String, Object?> toJson() => {
@@ -38,8 +38,10 @@ class Section {
 List<Section> sectionFromJsonList(String str) =>
     List<Section>.from(json.decode(str).map((x) => Section.fromJsonList(x)));
 
-//Section sectionFromJson(String str) =>
-//    json.decode((Section.fromJson(str)).toString());
-
+Map<String, dynamic> sectionFromJson(String str){
+  //json.decode((Section.fromJson(str)).toString());
+  Map<String, dynamic> jsonMap = json.decode(str);
+  return jsonMap;
+}
 String sectionToJson(Section section) =>
     json.encode(section.toJson());

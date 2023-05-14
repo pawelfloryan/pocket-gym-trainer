@@ -24,8 +24,9 @@ class _SectionPageState extends State<SectionPage> {
   //  uuid = uuidS as Uuid;
 
   List<Section> sections = <Section>[];
-  Section sectionRequest = Section(name: "Test");
-  Section section = Section();
+  List<Section> newSections = <Section>[];
+  Section sectionRequest = Section(name: "default");
+  Section section = Section(name: "test");
 
   @override
   void initState() {
@@ -42,8 +43,30 @@ class _SectionPageState extends State<SectionPage> {
   //TODO
   void createData() async {
     section = (await SectionService().createSection(sectionRequest))!;
+    print(section.name);
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
+  }
+
+    Future<void> addSection() async {
+    setState(() {
+      userPost = _textController.text;
+      sectionRequest.name = userPost;
+      //print(sectionRequest.name);
+      createData();
+      for(var section in sections){
+        newSections.add(section);
+      }
+      sections = newSections;
+      getData();
+      notClicked = false;
+    });
+  }
+
+  Future<void> textFieldShow() async {
+    setState(() {
+      notClicked = true;
+    });
   }
 
   @override
@@ -77,7 +100,7 @@ class _SectionPageState extends State<SectionPage> {
                                 );
                               },
                               child: Text(
-                                sections[index].name!,
+                                sections[index].name,
                                 style: const TextStyle(fontSize: 70),
                               ),
                             ),
@@ -177,22 +200,6 @@ class _SectionPageState extends State<SectionPage> {
   }
   //TODO Add showing up the new sections
   //TODO Figure out how to overlay list with a widget with section's properties
-
-  Future<void> addSection() async {
-    setState(() {
-      userPost = _textController.text;
-      sectionRequest.name = userPost;
-      createData();
-      sections.add(section);
-      notClicked = false;
-    });
-  }
-
-  Future<void> textFieldShow() async {
-    setState(() {
-      notClicked = true;
-    });
-  }
 }
 
 
