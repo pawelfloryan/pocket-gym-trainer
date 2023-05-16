@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gymbro/db/database.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:gymbro/model/exercise.dart';
 

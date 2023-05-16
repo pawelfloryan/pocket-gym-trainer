@@ -3,7 +3,6 @@ import 'package:gymbro/page/exercises_page.dart';
 import 'package:gymbro/model/section.dart';
 import 'package:gymbro/res/section_request.dart';
 import 'package:uuid/uuid.dart';
-import '../db/database.dart';
 import 'package:gymbro/services/section_services.dart';
 
 class SectionPage extends StatefulWidget {
@@ -81,33 +80,67 @@ class _SectionPageState extends State<SectionPage> {
               child: Column(
                 children: <Widget>[
                   sections.isNotEmpty
-                      ? SizedBox(
-                          width: double.infinity,
-                          height: 110,
-                          child: Container(
-                            width: double.infinity,
-                            height: 110,
-                            margin: const EdgeInsets.only(
-                                left: 20, top: 10, right: 20, bottom: 0),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.black),
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                      return const ExercisesPage();
-                                    },
+                      ? Column(
+                        children: [
+                          SizedBox(
+                              width: double.infinity,
+                              height: 110,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: 110,
+                                      margin: const EdgeInsets.only(
+                                          left: 20, top: 10, right: 0, bottom: 0),
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.black),
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (BuildContext context) {
+                                                return const ExercisesPage();
+                                              },
+                                            ),
+                                          );
+                                        },
+                                        child: Text(
+                                          sections[index].name,
+                                          style: const TextStyle(fontSize: 70),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                );
-                              },
-                              child: Text(
-                                sections[index].name,
-                                style: const TextStyle(fontSize: 70),
+                                  Container(
+                                    height: 110,
+                                    width: 55,
+                                    margin: const EdgeInsets.only(
+                                          left: 0, top: 10, right: 10, bottom: 0),
+                                    child: ElevatedButton(
+                                    onPressed: () {},
+                                    child: const Icon(
+                                      Icons.settings,
+                                      color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                        )
+                            SizedBox(
+                              width: double.infinity,
+                              height: 0,
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                    left: 20, top: 0, right: 20, bottom: 0),
+                                width: double.infinity,
+                                height: 110,
+                                color: Colors.blue,
+                              ),
+                            ),
+                        ],
+                      )
                       : Container(
                           margin: const EdgeInsets.only(
                               left: 0, top: 50, right: 0, bottom: 0),
