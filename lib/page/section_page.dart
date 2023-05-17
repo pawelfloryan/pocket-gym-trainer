@@ -4,6 +4,7 @@ import 'package:gymbro/model/section.dart';
 import 'package:gymbro/res/section_request.dart';
 import 'package:uuid/uuid.dart';
 import 'package:gymbro/services/section_services.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class SectionPage extends StatefulWidget {
   const SectionPage({super.key});
@@ -48,13 +49,13 @@ class _SectionPageState extends State<SectionPage> {
         .then((value) => setState(() {}));
   }
 
-    Future<void> addSection() async {
+  Future<void> addSection() async {
     setState(() {
       userPost = _textController.text;
       sectionRequest.name = userPost;
       //print(sectionRequest.name);
       createData();
-      for(var section in sections){
+      for (var section in sections) {
         print(section.name);
         newSections.add(section);
       }
@@ -70,108 +71,135 @@ class _SectionPageState extends State<SectionPage> {
     });
   }
 
+  void slide() {
+    print("Slide");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
         ListView.builder(
           itemBuilder: (context, index) {
-            return Center(
-              child: Column(
-                children: <Widget>[
-                  sections.isNotEmpty
-                      ? Column(
-                        children: [
-                          SizedBox(
-                              width: double.infinity,
-                              height: 110,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 110,
-                                      margin: const EdgeInsets.only(
-                                          left: 20, top: 10, right: 0, bottom: 0),
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.black),
-                                        onPressed: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (BuildContext context) {
-                                                return const ExercisesPage();
-                                              },
-                                            ),
-                                          );
-                                        },
-                                        child: Text(
-                                          sections[index].name,
-                                          style: const TextStyle(fontSize: 70),
+            return Container(
+              //decoration: const BoxDecoration(
+              //  border: Border(
+              //    left: BorderSide(color: Colors.black, width: 2.5),
+              //    right: BorderSide(color: Colors.black, width: 2.5),
+              //  ),
+              //),
+              child: Center(
+                child: Column(
+                  children: <Widget>[
+                    sections.isNotEmpty
+                        ? Container(
+                            margin: const EdgeInsets.only(
+                                left: 20, top: 10, right: 20, bottom: 0),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 110,
+                                  child: Slidable(
+                                    // ignore: sort_child_properties_last
+                                    child: Expanded(
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 110,
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.black),
+                                          onPressed: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return const ExercisesPage();
+                                                },
+                                              ),
+                                            );
+                                          },
+                                          child: Text(
+                                            sections[index].name,
+                                            style:
+                                                const TextStyle(fontSize: 70),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    height: 110,
-                                    width: 55,
-                                    margin: const EdgeInsets.only(
-                                          left: 0, top: 10, right: 10, bottom: 0),
-                                    child: ElevatedButton(
-                                    onPressed: () {},
-                                    child: const Icon(
-                                      Icons.settings,
-                                      color: Colors.white,
-                                      ),
+                                    endActionPane: ActionPane(
+                                      extentRatio: 0.2,
+                                      motion: ScrollMotion(),
+                                      children: [
+                                        SlidableAction(
+                                          onPressed: (context) => slide(),
+                                          backgroundColor: Colors.red,
+                                          foregroundColor: Colors.white,
+                                          icon: Icons.delete_sharp,
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              width: double.infinity,
-                              height: 0,
-                              child: Container(
-                                margin: const EdgeInsets.only(
-                                    left: 20, top: 0, right: 20, bottom: 0),
-                                width: double.infinity,
-                                height: 110,
-                                color: Colors.blue,
-                              ),
-                            ),
-                        ],
-                      )
-                      : Container(
-                          margin: const EdgeInsets.only(
-                              left: 0, top: 50, right: 0, bottom: 0),
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                "images/bodybuilder.png",
-                                scale: 0.8,
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(
-                                    left: 20, top: 10, right: 0, bottom: 0),
-                                width: 370,
-                                child: const Text(
-                                  "Click the button on the right bottom",
-                                  style: TextStyle(fontSize: 22),
+                                  //Container(
+                                  //  height: 110,
+                                  //  width: 55,
+                                  //  margin: const EdgeInsets.only(
+                                  //        left: 0, top: 10, right: 10, bottom: 0),
+                                  //  child: ElevatedButton(
+                                  //  onPressed: () {},
+                                  //  child: const Icon(
+                                  //    Icons.settings,
+                                  //    color: Colors.white,
+                                  //    ),
+                                  //  ),
+                                  //),
                                 ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(
-                                    left: 55, top: 0, right: 0, bottom: 0),
-                                width: 350,
-                                child: const Text(
-                                  "to add new exercise sections",
-                                  style: TextStyle(fontSize: 22),
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 0,
+                                  child: Container(
+                                    margin: const EdgeInsets.only(
+                                        left: 20, top: 0, right: 20, bottom: 0),
+                                    width: double.infinity,
+                                    height: 110,
+                                    color: Colors.blue,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
+                          )
+                        : Container(
+                            margin: const EdgeInsets.only(
+                                left: 0, top: 50, right: 0, bottom: 0),
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  "images/bodybuilder.png",
+                                  scale: 0.8,
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(
+                                      left: 20, top: 10, right: 0, bottom: 0),
+                                  width: 370,
+                                  child: const Text(
+                                    "Click the button on the right bottom",
+                                    style: TextStyle(fontSize: 22),
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(
+                                      left: 55, top: 0, right: 0, bottom: 0),
+                                  width: 350,
+                                  child: const Text(
+                                    "to add new exercise sections",
+                                    style: TextStyle(fontSize: 22),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                ],
+                  ],
+                ),
               ),
             );
           },
