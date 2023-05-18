@@ -39,23 +39,19 @@ class SectionService {
     }
   }
 
-  Future<List<Section>?> upsertSection() async {
+  Future<List<Section>?> deleteSection(String id) async {
     try {
-      var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.sectionEndpoint);
-      var response = await http.put(url);
-      if (response.statusCode == 200) {
-        List<Section> _model = sectionFromJsonList(response.body);
-        return _model;
-      }
+      var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.sectionEndpoint + "/${id}");
+      var response = await http.delete(url);
     } catch (e) {
       log(e.toString());
     }
   }
 
-  Future<List<Section>?> deleteSection() async {
+  Future<List<Section>?> upsertSection() async {
     try {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.sectionEndpoint);
-      var response = await http.delete(url);
+      var response = await http.put(url);
       if (response.statusCode == 200) {
         List<Section> _model = sectionFromJsonList(response.body);
         return _model;
