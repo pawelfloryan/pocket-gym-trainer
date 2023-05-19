@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 class Section {
-  final String? id;
-  late String name;
+  late String? id;
+  late String? name;
 
   Section({
     this.id,
-    required this.name,
+    this.name,
   });
 
   Map<String, Object?> toJson() => {

@@ -22,8 +22,10 @@ class _SectionPageState extends State<SectionPage> {
 
   List<Section> sections = <Section>[];
   List<Section> newSections = <Section>[];
-  Section sectionRequest = Section(name: "default");
-  Section section = Section(name: "test");
+  List<Section> newSectionsDelete = <Section>[];
+  Section sectionCreate = Section();
+  Section section = Section();
+  Section sectionDelete = Section();
   String sectionId = "";
 
   @override
@@ -33,13 +35,13 @@ class _SectionPageState extends State<SectionPage> {
   }
 
   void getData() async {
-    sections = (await SectionService().getSection())!;
+    sections = (await SectionService().getSection());
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
   }
 
   void createData() async {
-    section = (await SectionService().createSection(sectionRequest))!;
+    section = (await SectionService().createSection(sectionCreate))!;
     sections.add(section);
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
@@ -54,7 +56,7 @@ class _SectionPageState extends State<SectionPage> {
   Future<void> addSection() async {
     setState(() {
       userPost = _textController.text;
-      sectionRequest.name = userPost;
+      sectionCreate.name = userPost;
       createData();
       for (var section in sections) {
         print(section.name);
@@ -72,13 +74,16 @@ class _SectionPageState extends State<SectionPage> {
     setState(() {
       sectionId = id;
       deleteData();
+      sectionDelete.id = sectionId;
+      sections.remove(sectionDelete);
+
       for (var section in sections) {
-          print(section.name);
+        print(section.name);
+        newSectionsDelete.add(section);
       }
-      sections = newSections;
-      Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
-      getData();
+      sections = newSectionsDelete;
+      //sections = newSections;
+     getData();
       //List<Section> newList = sections.where((section) => section.id != sectionId).toList();
     });
   }
@@ -133,7 +138,7 @@ class _SectionPageState extends State<SectionPage> {
                                             );
                                           },
                                           child: Text(
-                                            sections[index].name,
+                                            sections[index].name!,
                                             style:
                                                 const TextStyle(fontSize: 70),
                                           ),

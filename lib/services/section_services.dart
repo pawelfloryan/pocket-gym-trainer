@@ -25,18 +25,17 @@ class SectionService {
     }
   }
 
-  Future<List<Section>?> getSection() async {
-    try {
+  Future<List<Section>> getSection() async {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.sectionEndpoint);
       var response = await http.get(url);
 
       if (response.statusCode == 200) {
         List<Section> sections = sectionFromJsonList(response.body);
         return sections;
+      }else{
+        List<Section> sections = <Section>[];
+        return sections;
       }
-    } catch (e) {
-      log(e.toString());
-    }
   }
 
   Future<List<Section>?> deleteSection(String id) async {
