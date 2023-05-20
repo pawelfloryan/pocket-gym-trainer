@@ -19,6 +19,8 @@ class _SectionPageState extends State<SectionPage> {
   final _textController = TextEditingController();
   String userPost = '';
   bool notClicked = false;
+  double click = 1;
+  double temp = 1;
 
   List<Section> sections = <Section>[];
   List<Section> newSections = <Section>[];
@@ -47,8 +49,12 @@ class _SectionPageState extends State<SectionPage> {
         .then((value) => setState(() {}));
   }
 
-  void deleteData() async {
+  void deleteData(String sectionId) async {
     await SectionService().deleteSection(sectionId);
+    getData();
+    sectionDelete.id = sectionId;
+    newSectionsDelete = sections;
+    newSectionsDelete.remove(sectionDelete);
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
   }
@@ -58,39 +64,32 @@ class _SectionPageState extends State<SectionPage> {
       userPost = _textController.text;
       sectionCreate.name = userPost;
       createData();
-      for (var section in sections) {
-        print(section.name);
-        newSections.add(section);
-      }
-      sections = newSections;
       Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
-      getData();
       notClicked = false;
+      _textController.text = "";
     });
   }
 
   void deleteSection(String id) {
     setState(() {
       sectionId = id;
-      deleteData();
-      sectionDelete.id = sectionId;
-      sections.remove(sectionDelete);
-
-      for (var section in sections) {
-        print(section.name);
-        newSectionsDelete.add(section);
-      }
+      deleteData(sectionId);
       sections = newSectionsDelete;
-      //sections = newSections;
-     getData();
       //List<Section> newList = sections.where((section) => section.id != sectionId).toList();
     });
   }
 
   Future<void> textFieldShow() async {
     setState(() {
-      notClicked = true;
+      click += 1;
+      temp = click / 2;
+      if(temp % 1 == 0){
+        notClicked = true;
+      }else{
+        notClicked = false;
+      }
+      print(click);
     });
   }
 
@@ -227,13 +226,6 @@ class _SectionPageState extends State<SectionPage> {
           child: Container(
             margin:
                 const EdgeInsets.only(left: 0, top: 0, right: 10, bottom: 10),
-            //decoration: BoxDecoration(
-            //  shape: BoxShape.circle,
-            //  border: Border.all(
-            //    color: Colors.black,
-            //    width: 2.5
-            //  )
-            //),
             child: FloatingActionButton(
               backgroundColor: Colors.white,
               onPressed: textFieldShow,
@@ -248,25 +240,33 @@ class _SectionPageState extends State<SectionPage> {
           visible: notClicked,
           child: Container(
             margin:
-                const EdgeInsets.only(left: 0, right: 0, top: 21, bottom: 5),
+                EdgeInsets.only(left: 18, right: 0, top: MediaQuery.of(context).size.height - 200, bottom: 5),
             child: Column(
               children: [
                 Container(
+                  width: MediaQuery.of(context).size.width - 90,
                   decoration:
-                      BoxDecoration(border: Border.all(color: Colors.white)),
-                  child: TextField(
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
-                    controller: _textController,
-                    decoration: InputDecoration(
-                      hintText: 'Name of a new section',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      border: OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        color: Colors.white,
-                        onPressed: addSection,
-                        icon: Icon((Icons.done)),
+                      BoxDecoration(
+                        border: Border.all(
+                          color: Colors.black,
+                          width: 3.5
+                          ),
+                        color: Colors.white
+                      ),
+                  child: Container(
+                    margin: const EdgeInsets.only(
+                                left: 7, top: 0, right: 0, bottom: 0),
+                    child: TextField(
+                      autofocus: true,
+                      controller: _textController,
+                      decoration: InputDecoration(
+                        hintText: 'Name of a new section',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        suffixIcon: IconButton(
+                          color: Colors.black,
+                          onPressed: addSection,
+                          icon: Icon((Icons.done)),
+                        ),
                       ),
                     ),
                   ),
