@@ -1,63 +1,44 @@
 import 'dart:convert';
 
-final String exerciseTable = 'exercise';
-
-class ExerciseFields {
-  static final List<String> values = [
-    id,
-    sectionId,
-    image,
-    name,
-    description,
-  ];
-
-  static final String id = '_id';
-  static final String sectionId = 'sectionId';
-  static final String image = 'image';
-  static final String name = 'name';
-  static final String description = 'description';
-}
-
 class Exercise {
-  final int id;
-  final int sectionId;
-  final String image;
-  final String name;
-  final String description;
+  late String? id;
+  late int? sectionId;
+  late String? image;
+  late String? name;
+  late List<String>? description;
 
   Exercise({
-    required this.id,
-    required this.sectionId,
-    required this.image,
-    required this.name,
-    required this.description,
+    this.id,
+    this.sectionId,
+    this.image,
+    this.name,
+    this.description,
   });
 
-  //Map<String, Object?> toJson() => {
-  //      ExerciseFields.id: id,
-  //      ExerciseFields.title: title,
-  //      ExerciseFields.image: image,
-  //    };
-//
-  static Exercise fromJson(Map<String, Object?> json) => Exercise(
-        id: json[ExerciseFields.id] as int,
-        sectionId: json[ExerciseFields.sectionId] as int,
-        image: json[ExerciseFields.image] as String,
-        name: json[ExerciseFields.name] as String,
-        description: json[ExerciseFields.description] as String,
+  Map<String, Object?> toJson() => {
+        "id": id,
+        "sectionId": sectionId,
+        "image": image,
+        "name": name,
+        "description": description
+      };
+
+  static Exercise fromJson(Map<String, dynamic> json) => Exercise(
+        id: json["id"] as String,
+        sectionId: json["sectionId"] as int,
+        image: json["image"] as String,
+        name: json["name"] as String,
+        description: json["description"] as List<String>,
       );
 
-  static List<Exercise> exerciseFromJson(String str) =>
-      List<Exercise>.from(json.decode(str).map((x) => Exercise.fromJson(x)));
-//
-  //Exercise copy({
-  //  int? id,
-  //  String? title,
-  //  String? image,
-  //}) =>
-  //    Exercise(
-  //      id: id ?? this.id,
-  //      title: title ?? this.title,
-  //      image: image ?? this.image,
-  //    );
 }
+
+List<Exercise> exerciseFromJsonList(String str) =>
+    List<Exercise>.from(json.decode(str).map((x) => Exercise.fromJson(x)));
+
+Map<String, dynamic> exerciseFromJson(String str) {
+  Map<String, dynamic> jsonMap = json.decode(str);
+  return jsonMap;
+}
+
+String exerciseToJson(Exercise exercise) => json.encode(exercise.toJson());

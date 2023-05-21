@@ -7,17 +7,17 @@ import 'package:gymbro/model/exercise.dart';
 class ExerciseService {
   Future<List<Exercise>?> createExercise() async {}
 
-  Future<List<Exercise>?> getExercise() async {
-    try {
+  Future<List<Exercise>> getExercise() async {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.exerciseEndpoint);
       var response = await http.get(url);
+
       if (response.statusCode == 200) {
-        List<Exercise> _model = Exercise.exerciseFromJson(response.body);
-        return _model;
+        List<Exercise> exercises = exerciseFromJsonList(response.body);
+        return exercises;
+      }else{
+        List<Exercise> exercises = <Exercise>[];
+        return exercises;
       }
-    } catch (e) {
-      log(e.toString());
-    }
   }
 
   Future<List<Exercise>?> upsertExercise() async {}

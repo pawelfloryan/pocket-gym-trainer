@@ -65,7 +65,7 @@ class _SectionPageState extends State<SectionPage> {
       sectionCreate.name = userPost;
       createData();
       Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
+          .then((value) => setState(() {}));
       notClicked = false;
       _textController.text = "";
     });
@@ -84,9 +84,9 @@ class _SectionPageState extends State<SectionPage> {
     setState(() {
       click += 1;
       temp = click / 2;
-      if(temp % 1 == 0){
+      if (temp % 1 == 0) {
         notClicked = true;
-      }else{
+      } else {
         notClicked = false;
       }
       print(click);
@@ -120,35 +120,34 @@ class _SectionPageState extends State<SectionPage> {
                                   height: 110,
                                   child: Slidable(
                                     // ignore: sort_child_properties_last
-                                      child: Container(
-                                        width: double.infinity,
-                                        height: 110,
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.black),
-                                          onPressed: () {
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return const ExercisesPage();
-                                                },
-                                              ),
-                                            );
-                                          },
-                                          child: Text(
-                                            sections[index].name!,
-                                            style:
-                                                const TextStyle(fontSize: 70),
-                                          ),
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: 110,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.black),
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (BuildContext context) {
+                                                return const ExercisesPage();
+                                              },
+                                            ),
+                                          );
+                                        },
+                                        child: Text(
+                                          sections[index].name!,
+                                          style: const TextStyle(fontSize: 70),
                                         ),
                                       ),
+                                    ),
                                     endActionPane: ActionPane(
                                       extentRatio: 0.2,
                                       motion: ScrollMotion(),
                                       children: [
                                         SlidableAction(
-                                          onPressed: (context) => deleteSection(sections[index].id!),
+                                          onPressed: (context) => deleteSection(
+                                              sections[index].id!),
                                           backgroundColor: Colors.red,
                                           foregroundColor: Colors.white,
                                           icon: Icons.delete_sharp,
@@ -239,23 +238,21 @@ class _SectionPageState extends State<SectionPage> {
         Visibility(
           visible: notClicked,
           child: Container(
-            margin:
-                EdgeInsets.only(left: 18, right: 0, top: MediaQuery.of(context).size.height - 200, bottom: 5),
+            margin: EdgeInsets.only(
+                left: 18,
+                right: 0,
+                top: MediaQuery.of(context).size.height - 200,
+                bottom: 5),
             child: Column(
               children: [
                 Container(
                   width: MediaQuery.of(context).size.width - 90,
-                  decoration:
-                      BoxDecoration(
-                        border: Border.all(
-                          color: Colors.black,
-                          width: 3.5
-                          ),
-                        color: Colors.white
-                      ),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 3.5),
+                      color: Colors.white),
                   child: Container(
                     margin: const EdgeInsets.only(
-                                left: 7, top: 0, right: 0, bottom: 0),
+                        left: 7, top: 0, right: 0, bottom: 0),
                     child: TextField(
                       autofocus: true,
                       controller: _textController,
