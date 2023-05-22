@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro/page/exercises_page.dart';
 import 'package:gymbro/model/section.dart';
-import 'package:gymbro/res/section_request.dart';
 import 'package:http/http.dart';
 import 'package:uuid/uuid.dart';
 import 'package:gymbro/services/section_services.dart';
@@ -76,7 +75,6 @@ class _SectionPageState extends State<SectionPage> {
       sectionId = id;
       deleteData(sectionId);
       sections = newSectionsDelete;
-      //List<Section> newList = sections.where((section) => section.id != sectionId).toList();
     });
   }
 

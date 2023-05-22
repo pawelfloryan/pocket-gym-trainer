@@ -21,8 +21,16 @@ class _ExercisesPageState extends State<ExercisesPage> {
   String exerciseUserPost = '';
   String weightUserPost = '';
   File? image;
+  double click = 1;
+  double temp = 1;
 
   List<Exercise> exercises = <Exercise>[];
+  List<Exercise> newExercises = <Exercise>[];
+  List<Exercise> newExercisesDelete = <Exercise>[];
+  Exercise exerciseCreate = Exercise();
+  Exercise exercise = Exercise();
+  Exercise exerciseDelete = Exercise();
+  String exerciseId = "";
 
   Future pickImage() async {
     try {
@@ -50,6 +58,56 @@ class _ExercisesPageState extends State<ExercisesPage> {
     exercises = (await ExerciseService().getExercise());
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
+  }
+
+  void createData() async {
+    exercise = (await ExerciseService().createExercise(exerciseCreate))!;
+    exercises.add(exercise);
+    Future.delayed(const Duration(milliseconds: 10))
+        .then((value) => setState(() {}));
+  }
+
+  void deleteData(String exerciseId) async {
+    await ExerciseService().deleteExercise(exerciseId);
+    getData();
+    exerciseDelete.id = exerciseId;
+    newExercisesDelete = exercises;
+    newExercisesDelete.remove(exerciseDelete);
+    Future.delayed(const Duration(milliseconds: 10))
+        .then((value) => setState(() {}));
+  }
+
+  Future<void> addExercise() async {
+    setState(() {
+      //userPost = _textController.text;
+      //exerciseCreate.name = userPost;
+      createData();
+      Future.delayed(const Duration(milliseconds: 10))
+          .then((value) => setState(() {}));
+      //notClicked = false;
+      //_textController.text = "";
+    });
+  }
+
+  void deleteExercise(String id) {
+    setState(() {
+      exerciseId = id;
+      deleteData(exerciseId);
+      exercises = newExercisesDelete;
+    });
+  }
+
+  Future<void> textFieldShow() async {
+    setState(() {
+      click += 1;
+      temp = click / 2;
+      if (temp % 1 == 0) {
+        //notClicked = true;
+      } else {
+        //notClicked = false;
+      }
+      print(click);
+    });
   }
 
   @override
