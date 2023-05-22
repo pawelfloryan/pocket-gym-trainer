@@ -5,7 +5,7 @@ class Exercise {
   late int? sectionId;
   late String? image;
   late String? name;
-  late List<String>? description;
+  late List<dynamic>? description;
 
   Exercise({
     this.id,
@@ -28,7 +28,7 @@ class Exercise {
         sectionId: json["sectionId"] as int,
         image: json["image"] as String,
         name: json["name"] as String,
-        description: json["description"] as List<String>,
+        description: json["description"] as List<dynamic>,
       );
 
 }
