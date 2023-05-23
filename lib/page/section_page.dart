@@ -8,6 +8,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 class SectionPage extends StatefulWidget {
   const SectionPage({super.key});
+  static late final sectionKey;
 
   @override
   State<SectionPage> createState() => _SectionPageState();
@@ -125,6 +126,8 @@ class _SectionPageState extends State<SectionPage> {
                                         style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.black),
                                         onPressed: () {
+                                          SectionPage.sectionKey =
+                                              sections[index].id;
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
                                               builder: (BuildContext context) {

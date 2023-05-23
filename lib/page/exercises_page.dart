@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:gymbro/model/exercise.dart';
-
+import '../model/exercise.dart';
+import '../page/section_page.dart';
 import '../services/exercise_service.dart';
 
 class ExercisesPage extends StatefulWidget {
@@ -32,6 +32,8 @@ class _ExercisesPageState extends State<ExercisesPage> {
   Exercise exerciseDelete = Exercise();
   String exerciseId = "";
 
+  String sectionId = SectionPage.sectionKey;
+
   Future pickImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -51,11 +53,11 @@ class _ExercisesPageState extends State<ExercisesPage> {
   @override
   void initState() {
     super.initState();
-    getData();
+    getData(sectionId);
   }
 
-  void getData() async {
-    exercises = (await ExerciseService().getExercise());
+  void getData(sectionId) async {
+    exercises = (await ExerciseService().getExercise(sectionId));
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
   }
@@ -69,7 +71,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
 
   void deleteData(String exerciseId) async {
     await ExerciseService().deleteExercise(exerciseId);
-    getData();
+    getData(sectionId);
     exerciseDelete.id = exerciseId;
     newExercisesDelete = exercises;
     newExercisesDelete.remove(exerciseDelete);
@@ -184,48 +186,19 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                               right: 0,
                                               top: 13,
                                               bottom: 20),
-                                          child: exerciseNotClicked
-                                              ? TextField(
-                                                  style: const TextStyle(
-                                                    color: Colors.black,
-                                                  ),
-                                                  controller:
-                                                      _exerciseController,
-                                                  decoration: InputDecoration(
-                                                    hintText: 'Exercise',
-                                                    hintStyle: const TextStyle(
-                                                        color: Colors.black),
-                                                    border:
-                                                        const OutlineInputBorder(),
-                                                    suffixIcon: IconButton(
-                                                      color: Colors.black,
-                                                      onPressed: () {
-                                                        exerciseUserPost =
-                                                            _exerciseController
-                                                                .text;
-                                                        setState(() {
-                                                          exerciseNotClicked =
-                                                              false;
-                                                        });
-                                                      },
-                                                      icon: const Icon(
-                                                          (Icons.done)),
-                                                    ),
-                                                  ),
-                                                )
-                                              : Container(
-                                                  margin: const EdgeInsets.only(
-                                                      left: 0,
-                                                      right: 0,
-                                                      top: 5,
-                                                      bottom: 0),
-                                                  child: Text(
-                                                    exerciseUserPost,
-                                                    style: const TextStyle(
-                                                      fontSize: 20,
-                                                    ),
-                                                  ),
-                                                ),
+                                          child: Container(
+                                            margin: const EdgeInsets.only(
+                                                left: 0,
+                                                right: 0,
+                                                top: 5,
+                                                bottom: 0),
+                                            child: Text(
+                                              exercises[index].name!,
+                                              style: const TextStyle(
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                         Container(
                                           width: 174,
@@ -330,170 +303,4 @@ class _ExercisesPageState extends State<ExercisesPage> {
   }
 
   void _addNewExercise() {}
-}
-
-class NewExercise extends StatefulWidget {
-  const NewExercise({super.key});
-
-  @override
-  State<StatefulWidget> createState() => _NewExercise();
-}
-
-class _NewExercise extends State<NewExercise> {
-  final _exerciseController = TextEditingController();
-  final _weightController = TextEditingController();
-  bool exerciseNotClicked = true;
-  bool weightNotClicked = true;
-  String exerciseUserPost = '';
-  String weightUserPost = '';
-
-  File? image;
-
-  Future pickImage() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) {
-        return;
-      }
-
-      final imageTemporary = File(image.path);
-      setState(() {
-        this.image = imageTemporary;
-      });
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 190,
-      margin: const EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 5),
-      decoration: const BoxDecoration(
-        color: Colors.grey,
-      ),
-      child: Material(
-        elevation: 6,
-        color: Colors.grey,
-        child: Container(
-          margin: const EdgeInsets.only(left: 0, right: 0, top: 5, bottom: 40),
-          child: Row(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(
-                    left: 20, right: 0, top: 0, bottom: 0),
-                width: 140,
-                height: 115,
-                //Image button
-                child: image != null
-                    ? Image.file(image!)
-                    : ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey),
-                        onPressed: () {
-                          pickImage();
-                        },
-                        child: const Tooltip(
-                          message: "Upload your photos here!",
-                          child: Icon(
-                            Icons.add_photo_alternate_outlined,
-                            size: 70,
-                          ),
-                        ),
-                      ),
-              ),
-              Column(
-                children: [
-                  Container(
-                    width: 174,
-                    height: 40,
-                    margin: const EdgeInsets.only(
-                        left: 20, right: 0, top: 13, bottom: 20),
-                    child: exerciseNotClicked
-                        ? TextField(
-                            style: const TextStyle(
-                              color: Colors.black,
-                            ),
-                            controller: _exerciseController,
-                            decoration: InputDecoration(
-                              hintText: 'Exercise',
-                              hintStyle: const TextStyle(color: Colors.black),
-                              border: const OutlineInputBorder(),
-                              suffixIcon: IconButton(
-                                color: Colors.black,
-                                onPressed: () {
-                                  exerciseUserPost = _exerciseController.text;
-                                  setState(() {
-                                    exerciseNotClicked = false;
-                                  });
-                                },
-                                icon: const Icon((Icons.done)),
-                              ),
-                            ),
-                          )
-                        : Container(
-                            margin: const EdgeInsets.only(
-                                left: 0, right: 0, top: 5, bottom: 0),
-                            child: Text(
-                              exerciseUserPost,
-                              style: const TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                  ),
-                  Container(
-                    width: 174,
-                    height: 40,
-                    margin: const EdgeInsets.only(
-                        left: 20, right: 0, top: 0, bottom: 0),
-                    child: weightNotClicked
-                        ? TextField(
-                            style: const TextStyle(
-                              color: Colors.black,
-                            ),
-                            controller: _weightController,
-                            decoration: InputDecoration(
-                              hintText: 'Kilos/Pounds',
-                              hintStyle: const TextStyle(color: Colors.black),
-                              border: const OutlineInputBorder(),
-                              suffixIcon: IconButton(
-                                color: Colors.black,
-                                onPressed: () {
-                                  weightUserPost = _weightController.text;
-                                  setState(() {
-                                    weightNotClicked = false;
-                                  });
-                                },
-                                icon: const Icon((Icons.done)),
-                              ),
-                            ),
-                          )
-                        : Container(
-                            margin: const EdgeInsets.only(
-                                left: 0, right: 0, top: 5, bottom: 0),
-                            child: Text(
-                              weightUserPost,
-                              style: const TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /*Widget newExerciseWidget() => Container(
-        color: Colors.black,
-        width: double.infinity,
-        height: 100,
-      );*/
 }

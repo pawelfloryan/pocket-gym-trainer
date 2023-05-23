@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class Exercise {
   late String? id;
-  late int? sectionId;
+  late String? sectionId;
   late String? image;
   late String? name;
   late List<dynamic>? description;
@@ -25,12 +25,11 @@ class Exercise {
 
   static Exercise fromJson(Map<String, dynamic> json) => Exercise(
         id: json["id"] as String,
-        sectionId: json["sectionId"] as int,
+        sectionId: json["sectionId"] as String,
         image: json["image"] as String,
         name: json["name"] as String,
         description: json["description"] as List<dynamic>,
       );
-
 }
 
 List<Exercise> exerciseFromJsonList(String str) =>
