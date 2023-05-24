@@ -8,7 +8,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 class SectionPage extends StatefulWidget {
   const SectionPage({super.key});
-  static late final sectionKey;
+  static late var sectionKey;
 
   @override
   State<SectionPage> createState() => _SectionPageState();
