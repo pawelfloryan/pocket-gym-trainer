@@ -14,9 +14,10 @@ class ExercisesPage extends StatefulWidget {
 }
 
 class _ExercisesPageState extends State<ExercisesPage> {
-  final _exerciseController = TextEditingController();
+  final _textController = TextEditingController();
   final _weightController = TextEditingController();
-  bool exerciseNotClicked = true;
+  String userPost = '';
+  bool notClicked = false;
   bool weightNotClicked = true;
   String exerciseUserPost = '';
   String weightUserPost = '';
@@ -33,6 +34,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
   String exerciseId = "";
 
   String sectionId = SectionPage.sectionKey;
+  String sectionName = SectionPage.sectionName;
 
   Future pickImage() async {
     try {
@@ -81,13 +83,15 @@ class _ExercisesPageState extends State<ExercisesPage> {
 
   Future<void> addExercise() async {
     setState(() {
-      //userPost = _textController.text;
-      //exerciseCreate.name = userPost;
+      userPost = _textController.text;
+      exerciseCreate.name = userPost;
+      exerciseCreate.sectionId = sectionId;
       createData();
       Future.delayed(const Duration(milliseconds: 10))
           .then((value) => setState(() {}));
-      //notClicked = false;
-      //_textController.text = "";
+      notClicked = false;
+      _textController.text = "";
+      click -= 1;
     });
   }
 
@@ -104,9 +108,9 @@ class _ExercisesPageState extends State<ExercisesPage> {
       click += 1;
       temp = click / 2;
       if (temp % 1 == 0) {
-        //notClicked = true;
+        notClicked = true;
       } else {
-        //notClicked = false;
+        notClicked = false;
       }
       print(click);
     });
@@ -116,7 +120,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Chest exercises"),
+        title: Text(sectionName),
         automaticallyImplyLeading: false,
         leading: IconButton(
             onPressed: () {
@@ -293,14 +297,50 @@ class _ExercisesPageState extends State<ExercisesPage> {
             },
             itemCount: exercises.length,
           ),
+          Visibility(
+          visible: notClicked,
+          child: Container(
+            margin: EdgeInsets.only(
+                left: 18,
+                right: 0,
+                top: MediaQuery.of(context).size.height - 200,
+                bottom: 5),
+            child: Column(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width - 90,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 3.5),
+                      color: Colors.white),
+                  child: Container(
+                    margin: const EdgeInsets.only(
+                        left: 7, top: 0, right: 0, bottom: 0),
+                    child: TextField(
+                      autofocus: true,
+                      controller: _textController,
+                      decoration: InputDecoration(
+                        hintText: 'Name of a new section',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        suffixIcon: IconButton(
+                          color: Colors.black,
+                          onPressed: addExercise,
+                          icon: Icon((Icons.done)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
         ],
       ),
+      
       floatingActionButton: FloatingActionButton(
-        onPressed: _addNewExercise,
+        onPressed: textFieldShow,
         child: Icon(Icons.add),
       ),
     );
   }
-
-  void _addNewExercise() {}
 }

@@ -9,6 +9,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 class SectionPage extends StatefulWidget {
   const SectionPage({super.key});
   static late var sectionKey;
+  static late var sectionName;
 
   @override
   State<SectionPage> createState() => _SectionPageState();
@@ -68,6 +69,7 @@ class _SectionPageState extends State<SectionPage> {
           .then((value) => setState(() {}));
       notClicked = false;
       _textController.text = "";
+      click -= 1;
     });
   }
 
@@ -128,6 +130,8 @@ class _SectionPageState extends State<SectionPage> {
                                         onPressed: () {
                                           SectionPage.sectionKey =
                                               sections[index].id;
+                                          SectionPage.sectionName = 
+                                              sections[index].name;
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
                                               builder: (BuildContext context) {
