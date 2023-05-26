@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import '../model/exercise.dart';
 import '../page/section_page.dart';
 import '../services/exercise_service.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ExercisesPage extends StatefulWidget {
   const ExercisesPage({super.key});
@@ -144,119 +145,139 @@ class _ExercisesPageState extends State<ExercisesPage> {
                             decoration: const BoxDecoration(
                               color: Colors.grey,
                             ),
-                            child: Material(
-                              elevation: 6,
-                              color: Colors.grey,
-                              child: Container(
-                                margin: const EdgeInsets.only(
-                                    left: 0, right: 0, top: 5, bottom: 40),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          left: 20,
-                                          right: 0,
-                                          top: 0,
-                                          bottom: 0),
-                                      width: 140,
-                                      height: 115,
-                                      //Image button
-                                      child: image != null
-                                          ? Image.file(image!)
-                                          : ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.grey),
-                                              onPressed: () {
-                                                pickImage();
-                                              },
-                                              child: const Tooltip(
-                                                message:
-                                                    "Upload your photos here!",
-                                                child: Icon(
-                                                  Icons
-                                                      .add_photo_alternate_outlined,
-                                                  size: 70,
+                            child: Slidable(
+                              endActionPane: ActionPane(
+                                extentRatio: 0.2,
+                                motion: ScrollMotion(),
+                                children: [
+                                  SlidableAction(
+                                    onPressed: (context) =>
+                                        deleteExercise(exercises[index].id!),
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.delete_sharp,
+                                  ),
+                                ],
+                              ),
+                              child: Material(
+                                elevation: 6,
+                                color: Colors.grey,
+                                child: Container(
+                                  margin: const EdgeInsets.only(
+                                      left: 0, right: 0, top: 5, bottom: 40),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                            left: 20,
+                                            right: 0,
+                                            top: 0,
+                                            bottom: 0),
+                                        width: 140,
+                                        height: 115,
+                                        //Image button
+                                        child: image != null
+                                            ? Image.file(image!)
+                                            : ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        Colors.grey),
+                                                onPressed: () {
+                                                  pickImage();
+                                                },
+                                                child: const Tooltip(
+                                                  message:
+                                                      "Upload your photos here!",
+                                                  child: Icon(
+                                                    Icons
+                                                        .add_photo_alternate_outlined,
+                                                    size: 70,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                    ),
-                                    Column(
-                                      children: [
-                                        Container(
-                                          width: 174,
-                                          height: 40,
-                                          margin: const EdgeInsets.only(
-                                              left: 20,
-                                              right: 0,
-                                              top: 13,
-                                              bottom: 20),
-                                          child: Container(
+                                      ),
+                                      Column(
+                                        children: [
+                                          Container(
+                                            width: 174,
+                                            height: 40,
                                             margin: const EdgeInsets.only(
-                                                left: 0,
+                                                left: 20,
                                                 right: 0,
-                                                top: 5,
-                                                bottom: 0),
-                                            child: Text(
-                                              exercises[index].name!,
-                                              style: const TextStyle(
-                                                fontSize: 20,
+                                                top: 13,
+                                                bottom: 20),
+                                            child: Container(
+                                              margin: const EdgeInsets.only(
+                                                  left: 0,
+                                                  right: 0,
+                                                  top: 5,
+                                                  bottom: 0),
+                                              child: Text(
+                                                exercises[index].name!,
+                                                style: const TextStyle(
+                                                  fontSize: 20,
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        Container(
-                                          width: 174,
-                                          height: 40,
-                                          margin: const EdgeInsets.only(
-                                              left: 20,
-                                              right: 0,
-                                              top: 0,
-                                              bottom: 0),
-                                          child: weightNotClicked
-                                              ? TextField(
-                                                  style: const TextStyle(
-                                                    color: Colors.black,
-                                                  ),
-                                                  controller: _weightController,
-                                                  decoration: InputDecoration(
-                                                    hintText: 'Kilos/Pounds',
-                                                    hintStyle: const TextStyle(
-                                                        color: Colors.black),
-                                                    border:
-                                                        const OutlineInputBorder(),
-                                                    suffixIcon: IconButton(
-                                                      color: Colors.black,
-                                                      onPressed: () {
-                                                        weightUserPost =
-                                                            _weightController
-                                                                .text;
-                                                        setState(() {
-                                                          weightNotClicked =
-                                                              false;
-                                                        });
-                                                      },
-                                                      icon: const Icon(
-                                                          (Icons.done)),
-                                                    ),
-                                                  ),
-                                                )
-                                              : Container(
-                                                  margin: const EdgeInsets.only(
-                                                      left: 0,
-                                                      right: 0,
-                                                      top: 5,
-                                                      bottom: 0),
-                                                  child: Text(
-                                                    weightUserPost,
+                                          Container(
+                                            width: 174,
+                                            height: 40,
+                                            margin: const EdgeInsets.only(
+                                                left: 20,
+                                                right: 0,
+                                                top: 0,
+                                                bottom: 0),
+                                            child: weightNotClicked
+                                                ? TextField(
                                                     style: const TextStyle(
-                                                      fontSize: 20,
+                                                      color: Colors.black,
+                                                    ),
+                                                    controller:
+                                                        _weightController,
+                                                    decoration: InputDecoration(
+                                                      hintText: 'Kilos/Pounds',
+                                                      hintStyle:
+                                                          const TextStyle(
+                                                              color:
+                                                                  Colors.black),
+                                                      border:
+                                                          const OutlineInputBorder(),
+                                                      suffixIcon: IconButton(
+                                                        color: Colors.black,
+                                                        onPressed: () {
+                                                          weightUserPost =
+                                                              _weightController
+                                                                  .text;
+                                                          setState(() {
+                                                            weightNotClicked =
+                                                                false;
+                                                          });
+                                                        },
+                                                        icon: const Icon(
+                                                            (Icons.done)),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            left: 0,
+                                                            right: 0,
+                                                            top: 5,
+                                                            bottom: 0),
+                                                    child: Text(
+                                                      weightUserPost,
+                                                      style: const TextStyle(
+                                                        fontSize: 20,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -298,45 +319,44 @@ class _ExercisesPageState extends State<ExercisesPage> {
             itemCount: exercises.length,
           ),
           Visibility(
-          visible: notClicked,
-          child: Container(
-            margin: EdgeInsets.only(
-                left: 18,
-                right: 0,
-                top: MediaQuery.of(context).size.height - 200,
-                bottom: 5),
-            child: Column(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width - 90,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 3.5),
-                      color: Colors.white),
-                  child: Container(
-                    margin: const EdgeInsets.only(
-                        left: 7, top: 0, right: 0, bottom: 0),
-                    child: TextField(
-                      autofocus: true,
-                      controller: _textController,
-                      decoration: InputDecoration(
-                        hintText: 'Name of a new section',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        suffixIcon: IconButton(
-                          color: Colors.black,
-                          onPressed: addExercise,
-                          icon: Icon((Icons.done)),
+            visible: notClicked,
+            child: Container(
+              margin: EdgeInsets.only(
+                  left: 18,
+                  right: 0,
+                  top: MediaQuery.of(context).size.height - 127,
+                  bottom: 5),
+              child: Column(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width - 100,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 3.5),
+                        color: Colors.white),
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                          left: 7, top: 0, right: 0, bottom: 0),
+                      child: TextField(
+                        autofocus: true,
+                        controller: _textController,
+                        decoration: InputDecoration(
+                          hintText: 'Name of a new exercise',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          suffixIcon: IconButton(
+                            color: Colors.black,
+                            onPressed: addExercise,
+                            icon: Icon((Icons.done)),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
         ],
       ),
-      
       floatingActionButton: FloatingActionButton(
         onPressed: textFieldShow,
         child: Icon(Icons.add),
