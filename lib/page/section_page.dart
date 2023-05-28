@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:gymbro/page/exercises_page.dart';
 import 'package:gymbro/model/section.dart';
 import 'package:http/http.dart';
@@ -101,12 +102,6 @@ class _SectionPageState extends State<SectionPage> {
         ListView.builder(
           itemBuilder: (context, index) {
             return Container(
-              //decoration: const BoxDecoration(
-              //  border: Border(
-              //    left: BorderSide(color: Colors.black, width: 2.5),
-              //    right: BorderSide(color: Colors.black, width: 2.5),
-              //  ),
-              //),
               child: Center(
                 child: Column(
                   children: <Widget>[
@@ -132,13 +127,7 @@ class _SectionPageState extends State<SectionPage> {
                                               sections[index].id;
                                           SectionPage.sectionName = 
                                               sections[index].name;
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (BuildContext context) {
-                                                return const ExercisesPage();
-                                              },
-                                            ),
-                                          );
+                                          context.push('/exercises');
                                         },
                                         child: Text(
                                           sections[index].name!,

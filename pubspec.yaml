@@ -17,6 +17,7 @@ dependencies:
   http: ^0.13.5
   uuid: ^3.0.6
   flutter_slidable: any
+  go_router: ^7.1.1
 
 
 
