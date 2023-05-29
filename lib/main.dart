@@ -16,10 +16,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: primaryBlack),
-      routerConfig: _router,
+      home: RootPage(),
     );
   }
 }
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
 final _router = GoRouter(
   routes: [
     GoRoute(
-      path: '/home',
+      path: '/',
       builder: (context, state) => HomePage(),
     ),
     GoRoute(
