@@ -5,6 +5,7 @@ import 'package:gymbro/page/register_page.dart';
 import 'package:gymbro/page/section_page.dart';
 import 'package:gymbro/page/stats_page.dart';
 import 'package:gymbro/page/home_page.dart';
+import 'package:gymbro/page/main_page.dart';
 import 'package:go_router/go_router.dart';
 
 void main() {
@@ -16,10 +17,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: primaryBlack),
-      home: RootPage(),
+      routerConfig: _router,
     );
   }
 }
@@ -28,6 +29,10 @@ final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
+      builder: (context, state) => RootPage(),
+    ),
+    GoRoute(
+      path: '/home',
       builder: (context, state) => HomePage(),
     ),
     GoRoute(
@@ -65,7 +70,6 @@ const MaterialColor primaryBlack = MaterialColor(
   },
 );
 const int _blackPrimaryValue = 0xFF000000;
-const int itemCount = 20;
 
 class RootPage extends StatefulWidget {
   const RootPage({super.key});
@@ -75,43 +79,12 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
-  bool _isVisible = true;
-  int currentPage = 0;
-  List<Widget> pages = const [HomePage(), SectionPage(), StatsPage()];
-  void show() {
-    setState(() {
-      _isVisible = !_isVisible;
-    });
-  }
+  bool logged = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            show();
-          },
-          icon: Icon(Icons.menu),
-        ),
-        title: const Text("Dashboard"),
-      ),
-      body: pages[currentPage],
-      bottomNavigationBar: NavigationBar(
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-          NavigationDestination(
-              icon: Icon(Icons.sports_gymnastics), label: 'Exercises'),
-          NavigationDestination(
-              icon: Icon(Icons.info_outline), label: 'Statistics'),
-        ],
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPage = index;
-          });
-        },
-        selectedIndex: currentPage,
-      ),
-    );
+    return logged ?
+      MainPage()
+      : LoginPage();
   }
 }
