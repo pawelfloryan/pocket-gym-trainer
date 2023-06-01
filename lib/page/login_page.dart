@@ -12,6 +12,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
   String name = "";
+  bool isElevated = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,36 +33,84 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: height * 0.04),
-                Text(
-                  "Welcome back!",
-                  style: TextStyle(fontSize: 30, color: Color(0xFF363f93)),
-                ),
-                SizedBox(height: height * 0.04),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: "Enter your email"
+                Container(
+                  margin: const EdgeInsets.only(
+                      left: 0, top: 20, right: 0, bottom: 25),
+                  child: Text(
+                    "Welcome back!",
+                    style: TextStyle(fontSize: 30, color: Color(0xFF363f93)),
                   ),
-                  validator: (value) {
-                    if(value!.isEmpty){
-                      return "Enter correct email";
-                    }else {
-                      return null;
-                    }
-                  },
+                ),
+                Container(
+                  margin: const EdgeInsets.only(
+                      left: 0, top: 0, right: 0, bottom: 12),
+                  child: TextFormField(
+                    decoration: InputDecoration(labelText: "Enter your email"),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Enter correct email";
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
                 ),
                 TextFormField(
-                  decoration: InputDecoration(
-                    labelText: "Enter your password"
-                  ),
+                  decoration: InputDecoration(labelText: "Enter your password"),
                   validator: (value) {
-                    if(value!.isEmpty){
+                    if (value!.isEmpty) {
                       return "Enter correct password";
-                    }else {
+                    } else {
                       return null;
                     }
                   },
-                )
+                ),
+                Container(
+                  margin: const EdgeInsets.only(
+                      left: 170, top: 50, right: 0, bottom: 0),
+                  child: GestureDetector(
+                  //  onPressed: () {
+                  //    if (formKey.currentState!.validate()) {}
+                  //  },
+                  //  child: Text(
+                  //    "SUBMIT",
+                  //    style: const TextStyle(fontSize: 70),
+                  //  ),
+                    onTap: () {
+                      setState(() {
+                        isElevated = !isElevated;
+                      });
+                    },
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 200),
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(35),
+                        boxShadow: isElevated ? 
+                        [
+                          BoxShadow(
+                            color: Colors.grey[500]!,
+                            offset: Offset(4,4),
+                            blurRadius: 15,
+                            spreadRadius: 1
+                          ),
+                          BoxShadow(
+                            color: Colors.white,
+                            offset: Offset(-4,-4),
+                            blurRadius: 15,
+                            spreadRadius: 1
+                          ),
+                        ] : null,
+                      ),
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 50,
+                        ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
