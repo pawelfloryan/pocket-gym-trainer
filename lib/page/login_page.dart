@@ -49,7 +49,9 @@ class _LoginPageState extends State<LoginPage> {
                   child: TextFormField(
                     decoration: InputDecoration(labelText: "Enter your email"),
                     validator: (value) {
-                      if (value!.isEmpty) {
+                      if (value!.isEmpty ||
+                          !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}')
+                              .hasMatch(value!)) {
                         return "Enter correct email";
                       } else {
                         return null;
@@ -62,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputDecoration(
                     labelText: "Enter your password",
-                    ),
+                  ),
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "Enter correct password";
@@ -80,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Text(
                         "Haven't made \nan account yet?",
                         style: TextStyle(fontSize: 17),
-                        ),
+                      ),
                     ),
                     Container(
                       //MediaQuery.of(context).size.width
