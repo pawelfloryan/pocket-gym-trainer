@@ -1,6 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:gymbro/model/auth_result.dart';
+import '../model/login.dart';
+import '../services/login_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,8 +17,38 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
-  String name = "";
   bool isElevated = false;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  Login login = Login();
+  AuthResult authResult = AuthResult(result: false);
+  bool visible = false;
+  String errorText = "";
+
+  void loginAction() async {
+    authResult = (await LoginService().loginAction(login));
+    Future.delayed(const Duration(milliseconds: 10))
+        .then((value) => setState(() {}));
+  }
+
+  void authenticate() {
+    setState(() {
+      login.email = _emailController.text;
+      login.password = _passwordController.text;
+      loginAction();
+      errors();
+      if (authResult.result == false) {
+        visible = true;
+      }else{
+        visible = false;
+      }
+    });
+  }
+
+  String errors() {
+    authResult.errors?.forEach((error) { errorText = error;});
+    return errorText;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                   margin: const EdgeInsets.only(
                       left: 0, top: 0, right: 0, bottom: 12),
                   child: TextFormField(
+                    controller: _emailController,
                     decoration: InputDecoration(labelText: "Enter your email"),
                     validator: (value) {
                       if (value!.isEmpty ||
@@ -60,6 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 TextFormField(
+                  controller: _passwordController,
                   obscureText: true,
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputDecoration(
@@ -95,16 +133,13 @@ class _LoginPageState extends State<LoginPage> {
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: GestureDetector(
-                          //  onPressed: () {
-                          //    if (formKey.currentState!.validate()) {}
-                          //  },
-                          //  child: Text(
-                          //    "SUBMIT",
-                          //    style: const TextStyle(fontSize: 70),
-                          //  ),
                           onTap: () {
                             setState(() {
                               isElevated = !isElevated;
+                              authenticate();
+                              context.push('/exercises');
+                              //TODO Fix the error by updating both tables with userId keys
+                              // and specyfing which sections to show
                             });
                             if (formKey.currentState!.validate()) {
                               final snackBar =
@@ -144,6 +179,15 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ],
+                ),
+                Visibility(
+                  visible: visible,
+                  child: Text(
+                    "Error: " + errorText,
+                    style: TextStyle(
+                      color: Colors.red
+                    ),
+                  ),
                 ),
               ],
             ),
