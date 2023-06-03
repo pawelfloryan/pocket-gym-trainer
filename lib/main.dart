@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro/model/login.dart';
 import 'package:gymbro/page/exercises_page.dart';
 import 'package:gymbro/page/login_page.dart';
 import 'package:gymbro/page/register_page.dart';
 import 'package:gymbro/page/section_page.dart';
 import 'package:gymbro/page/stats_page.dart';
 import 'package:gymbro/page/home_page.dart';
-import 'package:gymbro/page/main_page.dart';
+import 'package:gymbro/page/dashboard_page.dart';
 import 'package:go_router/go_router.dart';
 
 void main() {
@@ -30,6 +31,10 @@ final _router = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) => RootPage(),
+    ),
+    GoRoute(
+      path: '/dashboard',
+      builder: (context, state) => DashboardPage(),
     ),
     GoRoute(
       path: '/home',
@@ -73,18 +78,18 @@ const int _blackPrimaryValue = 0xFF000000;
 
 class RootPage extends StatefulWidget {
   const RootPage({super.key});
+  static late bool logged = false;
 
   @override
   State<RootPage> createState() => _RootPageState();
 }
 
 class _RootPageState extends State<RootPage> {
-  bool logged = false;
 
   @override
   Widget build(BuildContext context) {
-    return logged ?
-      MainPage()
+    return RootPage.logged ?
+      DashboardPage()
       : LoginPage();
   }
 }

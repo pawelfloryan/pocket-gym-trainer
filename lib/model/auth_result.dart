@@ -3,12 +3,12 @@ import 'dart:ffi';
 
 class AuthResult {
   late String? token;
-  late bool result;
+  late bool? result;
   late List<dynamic>? errors;
 
   AuthResult({
     this.token,
-    required this.result,
+    this.result,
     this.errors,
   });
 

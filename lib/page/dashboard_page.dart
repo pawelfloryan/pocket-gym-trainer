@@ -3,14 +3,14 @@ import 'package:gymbro/page/home_page.dart';
 import 'package:gymbro/page/section_page.dart';
 import 'package:gymbro/page/stats_page.dart';
 
-class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+class DashboardPage extends StatefulWidget {
+  const DashboardPage({super.key});
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<DashboardPage> createState() => _DashboardPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _DashboardPageState extends State<DashboardPage> {
   bool _isVisible = true;
   int currentPage = 0;
   List<Widget> pages = const [HomePage(), SectionPage(), StatsPage()];

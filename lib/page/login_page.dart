@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro/model/auth_result.dart';
 import '../model/login.dart';
-import '../services/login_service.dart';
+import '../services/auth_service.dart';
+import '../main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+  static late bool loggedInto = false;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -17,16 +19,17 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
-  bool isElevated = false;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   Login login = Login();
-  AuthResult authResult = AuthResult(result: false);
-  bool visible = false;
+  AuthResult authResult = AuthResult();
   String errorText = "";
 
+  bool isElevated = false;
+  bool isVisible = false;
+
   void loginAction() async {
-    authResult = (await LoginService().loginAction(login));
+    authResult = (await AuthService().loginAction(login));
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
   }
@@ -37,16 +40,13 @@ class _LoginPageState extends State<LoginPage> {
       login.password = _passwordController.text;
       loginAction();
       errors();
-      if (authResult.result == false) {
-        visible = true;
-      }else{
-        visible = false;
-      }
     });
   }
 
   String errors() {
-    authResult.errors?.forEach((error) { errorText = error;});
+    authResult.errors?.forEach((error) {
+      errorText = error;
+    });
     return errorText;
   }
 
@@ -117,9 +117,14 @@ class _LoginPageState extends State<LoginPage> {
                     Container(
                       margin: const EdgeInsets.only(
                           left: 0, top: 0, right: 40, bottom: 0),
-                      child: Text(
-                        "Haven't made \nan account yet?",
-                        style: TextStyle(fontSize: 17),
+                      child: GestureDetector(
+                        onTap: () {
+                          context.push('/register');
+                        },
+                        child: Text(
+                          "Haven't made \nan account yet?",
+                          style: TextStyle(fontSize: 17),
+                        ),
                       ),
                     ),
                     Container(
@@ -132,61 +137,78 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: Align(
                         alignment: Alignment.centerRight,
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isElevated = !isElevated;
-                              authenticate();
-                              context.push('/exercises');
-                              //TODO Fix the error by updating both tables with userId keys
-                              // and specyfing which sections to show
-                            });
-                            if (formKey.currentState!.validate()) {
-                              final snackBar =
-                                  SnackBar(content: Text('Submitting form...'));
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            }
-                          },
-                          child: AnimatedContainer(
-                            duration: Duration(milliseconds: 200),
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(35),
-                              boxShadow: isElevated
-                                  ? [
-                                      BoxShadow(
-                                          color: Colors.grey[500]!,
-                                          offset: Offset(4, 4),
-                                          blurRadius: 15,
-                                          spreadRadius: 1),
-                                      BoxShadow(
-                                          color: Colors.white,
-                                          offset: Offset(-4, -4),
-                                          blurRadius: 15,
-                                          spreadRadius: 1),
-                                    ]
-                                  : null,
-                            ),
-                            child: Icon(
-                              Icons.arrow_forward,
-                              size: 75,
+                          child: GestureDetector(
+                            onTapDown: (details) {
+                              setState(() {
+                                isElevated = !isElevated;
+                              });
+                              if (formKey.currentState!.validate()) {
+                                authenticate();
+                                Future.delayed(const Duration(seconds: 5))
+                                    .then((value) => setState(() {}));
+                                print(authResult.token);
+                                print(authResult.result);
+                                if (authResult.result == true) {
+                                  isVisible = false;
+                                  LoginPage.loggedInto = true;
+                                  setState(() {
+                                    RootPage.logged = true;
+                                  });
+                                  Future.delayed(const Duration(seconds: 2))
+                                      .then((value) => setState(() {
+                                            context.push('/dashboard');
+                                          }));
+                                  //TODO Update both tables with userId keys
+                                  // and specify which sections to show
+                                } else if (authResult.result == false) {
+                                  isVisible = true;
+                                }
+
+                                final snackBar = SnackBar(
+                                  content: Text('Submitting form...'),
+                                  duration: Duration(seconds: 1),
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              }
+                            },
+                            child: AnimatedContainer(
+                              duration: Duration(milliseconds: 200),
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(35),
+                                boxShadow: isElevated
+                                    ? [
+                                        BoxShadow(
+                                            color: Colors.grey[500]!,
+                                            offset: Offset(4, 4),
+                                            blurRadius: 15,
+                                            spreadRadius: 1),
+                                        BoxShadow(
+                                            color: Colors.white,
+                                            offset: Offset(-4, -4),
+                                            blurRadius: 15,
+                                            spreadRadius: 1),
+                                      ]
+                                    : null,
+                              ),
+                              child: Icon(
+                                Icons.arrow_forward,
+                                size: 75,
+                              ),
                             ),
                           ),
-                        ),
                       ),
                     ),
                   ],
                 ),
                 Visibility(
-                  visible: visible,
+                  visible: isVisible,
                   child: Text(
                     "Error: " + errorText,
-                    style: TextStyle(
-                      color: Colors.red
-                    ),
+                    style: TextStyle(color: Colors.red),
                   ),
                 ),
               ],
