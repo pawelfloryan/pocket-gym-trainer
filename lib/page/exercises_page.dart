@@ -125,6 +125,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
         automaticallyImplyLeading: false,
         leading: IconButton(
             onPressed: () {
+              //context.go('/sections');
               Navigator.of(context).pop();
             },
             icon: const Icon(Icons.arrow_back_ios)),

@@ -127,7 +127,7 @@ class _SectionPageState extends State<SectionPage> {
                                               sections[index].id;
                                           SectionPage.sectionName = 
                                               sections[index].name;
-                                          context.push('/exercises');
+                                          context.go('/exercises');
                                         },
                                         child: Text(
                                           sections[index].name!,
