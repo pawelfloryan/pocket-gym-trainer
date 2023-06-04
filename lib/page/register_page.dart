@@ -28,11 +28,18 @@ class _RegisterPageState extends State<RegisterPage> {
 
   bool isElevated = false;
   bool isVisible = false;
+  
+  bool badUsername = false;
+  bool badEmail = false;
+  bool badPassword = false;
 
   void registerAction() async {
     authResult = (await AuthService().registerAction(register));
     Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
+        .then((value) => setState(() {
+              errors();
+              authenticated();
+            }));
   }
 
   void authenticate() {
@@ -41,8 +48,33 @@ class _RegisterPageState extends State<RegisterPage> {
       register.email = _emailController.text;
       register.password = _passwordController.text;
       registerAction();
-      errors();
     });
+  }
+
+  Future<void> authenticated() async {
+    print(authResult.token);
+    print(authResult.result);
+    if (authResult.result == true) {
+      isVisible = false;
+      RegisterPage.loggedInto = true;
+      setState(() {
+        RootPage.logged = true;
+      });
+      Future.delayed(const Duration(seconds: 2)).then((value) => setState(() {
+            context.push('/dashboard');
+          }));
+    } else if (authResult.result == false) {
+      Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {
+            isElevated = !isElevated;
+          }));
+      isVisible = true;
+    }
+
+    final snackBar = SnackBar(
+      content: Text('Submitting form...'),
+      duration: Duration(seconds: 1),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   String errors() {
@@ -50,6 +82,14 @@ class _RegisterPageState extends State<RegisterPage> {
       errorText = error;
     });
     return errorText;
+  }
+
+  Future<void> inputErrors() async {
+    if (badUsername || badEmail || badPassword) {
+      Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {
+            isElevated = !isElevated;
+          }));
+    }
   }
 
   @override
@@ -86,11 +126,18 @@ class _RegisterPageState extends State<RegisterPage> {
                       left: 0, top: 0, right: 0, bottom: 12),
                   child: TextFormField(
                     controller: _nameController,
-                    decoration: InputDecoration(labelText: "Enter your username"),
+                    decoration:
+                        InputDecoration(labelText: "Enter your username"),
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return "Enter correct email";
+                        setState(() {
+                          badUsername = true;
+                        });
+                        return "Enter correct username";
                       } else {
+                        setState(() {
+                          badUsername = false;
+                        });
                         return null;
                       }
                     },
@@ -106,8 +153,14 @@ class _RegisterPageState extends State<RegisterPage> {
                       if (value!.isEmpty ||
                           !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}')
                               .hasMatch(value!)) {
+                        setState(() {
+                          badEmail = true;
+                        });
                         return "Enter correct email";
                       } else {
+                        setState(() {
+                          badEmail = false;
+                        });
                         return null;
                       }
                     },
@@ -122,8 +175,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
+                      setState(() {
+                        badPassword = true;
+                      });
                       return "Enter correct password";
                     } else {
+                      setState(() {
+                        badPassword = false;
+                      });
                       return null;
                     }
                   },
@@ -136,10 +195,10 @@ class _RegisterPageState extends State<RegisterPage> {
                           left: 0, top: 0, right: 40, bottom: 0),
                       child: GestureDetector(
                         onTap: () {
-                          context.pop();
+                          context.go('/login');
                         },
                         child: Text(
-                          "Back to the \nlogin page",
+                          "Back to the \nlogin page...",
                           style: TextStyle(fontSize: 17),
                         ),
                       ),
@@ -154,69 +213,47 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       child: Align(
                         alignment: Alignment.centerRight,
-                          child: GestureDetector(
-                            onTapDown: (details) {
-                              setState(() {
-                                isElevated = !isElevated;
-                              });
-                              if (formKey.currentState!.validate()) {
-                                authenticate();
-                                Future.delayed(const Duration(seconds: 5))
-                                    .then((value) => setState(() {}));
-                                print(authResult.token);
-                                print(authResult.result);
-                                if (authResult.result == true) {
-                                  isVisible = false;
-                                  RegisterPage.loggedInto = true;
-                                  setState(() {
-                                    RootPage.logged = true;
-                                  });
-                                  Future.delayed(const Duration(seconds: 2))
-                                      .then((value) => setState(() {
-                                            context.push('/dashboard');
-                                          }));
-                                  //TODO Update both tables with userId keys
-                                  // and specify which sections to show
-                                } else if (authResult.result == false) {
-                                  isVisible = true;
-                                }
-
-                                final snackBar = SnackBar(
-                                  content: Text('Submitting form...'),
-                                  duration: Duration(seconds: 1),
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              }
-                            },
-                            child: AnimatedContainer(
-                              duration: Duration(milliseconds: 200),
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(35),
-                                boxShadow: isElevated
-                                    ? [
-                                        BoxShadow(
-                                            color: Colors.grey[500]!,
-                                            offset: Offset(4, 4),
-                                            blurRadius: 15,
-                                            spreadRadius: 1),
-                                        BoxShadow(
-                                            color: Colors.white,
-                                            offset: Offset(-4, -4),
-                                            blurRadius: 15,
-                                            spreadRadius: 1),
-                                      ]
-                                    : null,
-                              ),
-                              child: Icon(
-                                Icons.arrow_forward,
-                                size: 75,
-                              ),
+                        child: GestureDetector(
+                          onTapDown: (details) {
+                            setState(() {
+                              isElevated = !isElevated;
+                            });
+                            Future.delayed(const Duration(milliseconds: 5))
+                                .then((value) => setState(() {
+                                      inputErrors();
+                                    }));
+                            if (formKey.currentState!.validate()) {
+                              authenticate();
+                            }
+                          },
+                          child: AnimatedContainer(
+                            duration: Duration(milliseconds: 200),
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(35),
+                              boxShadow: isElevated
+                                  ? [
+                                      BoxShadow(
+                                          color: Colors.grey[500]!,
+                                          offset: Offset(4, 4),
+                                          blurRadius: 15,
+                                          spreadRadius: 1),
+                                      BoxShadow(
+                                          color: Colors.white,
+                                          offset: Offset(-4, -4),
+                                          blurRadius: 15,
+                                          spreadRadius: 1),
+                                    ]
+                                  : null,
+                            ),
+                            child: Icon(
+                              Icons.arrow_forward,
+                              size: 75,
                             ),
                           ),
+                        ),
                       ),
                     ),
                   ],
