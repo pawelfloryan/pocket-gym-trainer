@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gymbro/page/home_page.dart';
 import 'package:gymbro/page/section_page.dart';
 import 'package:gymbro/page/stats_page.dart';
+import 'package:sidebarx/sidebarx.dart';
+import '../components/sidebar.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -11,6 +13,8 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+  final _sidebarController =
+      SidebarXController(selectedIndex: 0, extended: true);
   bool _isVisible = true;
   int currentPage = 0;
   List<Widget> pages = const [HomePage(), SectionPage(), StatsPage()];
@@ -47,6 +51,13 @@ class _DashboardPageState extends State<DashboardPage> {
           });
         },
         selectedIndex: currentPage,
+      ),
+      drawer: SidebarX(
+        controller: _sidebarController,
+        items: [
+          SidebarXItem(icon: Icons.home, label: 'Home'),
+          SidebarXItem(icon: Icons.search, label: 'Search'),
+        ],
       ),
     );
   }
