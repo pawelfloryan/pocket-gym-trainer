@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro/page/exercises_page.dart';
 import 'package:gymbro/model/section.dart';
+import 'package:gymbro/page/login_page.dart';
 import 'package:http/http.dart';
 import 'package:uuid/uuid.dart';
 import 'package:gymbro/services/section_services.dart';
@@ -32,6 +33,8 @@ class _SectionPageState extends State<SectionPage> {
   Section sectionDelete = Section();
   String sectionId = "";
 
+  String jwtToken = LoginPage.token;
+
   @override
   void initState() {
     super.initState();
@@ -39,20 +42,20 @@ class _SectionPageState extends State<SectionPage> {
   }
 
   void getData() async {
-    sections = (await SectionService().getSection());
+    sections = (await SectionService().getSection(jwtToken));
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
   }
 
   void createData() async {
-    section = (await SectionService().createSection(sectionCreate))!;
+    section = (await SectionService().createSection(sectionCreate, jwtToken))!;
     sections.add(section);
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
   }
 
   void deleteData(String sectionId) async {
-    await SectionService().deleteSection(sectionId);
+    await SectionService().deleteSection(sectionId, jwtToken);
     getData();
     sectionDelete.id = sectionId;
     newSectionsDelete = sections;

@@ -12,6 +12,7 @@ import '../main.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
   static late bool loggedInto = false;
+  static late String token = "";
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -51,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> authenticated() async {
     print(authResult.token);
     print(authResult.result);
+    LoginPage.token = authResult.token!;
     if (authResult.result == true) {
       isVisible = false;
       LoginPage.loggedInto = true;
