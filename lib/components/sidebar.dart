@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sidebarx/sidebarx.dart';
+import '../page/dashboard_page.dart';
+import '../main.dart';
 
 class Sidebar extends StatelessWidget {
   const Sidebar({Key? key}) : super(key: key);
@@ -29,11 +32,16 @@ class Sidebar extends StatelessWidget {
               icon: Icons.supervised_user_circle_rounded,
               label: 'Your profile'),
           SidebarXItem(icon: Icons.map_outlined, label: 'Muscle Map'),
-          SidebarXItem(icon: Icons.logout_sharp, label: 'Sign out'),
+          SidebarXItem(icon: Icons.logout_sharp, label: 'Sign out', onTap: (() {
+            RootPage.logged = false;
+            //DashboardPage.logOut = true;
+            //TODO Find out how to make the context pop() not go()
+            context.go('/login');
+          })),
         ],
         theme: const SidebarXTheme(
           itemTextPadding: const EdgeInsets.all(10.0),
-          itemMargin: EdgeInsets.only(left: 5, top: 0, right: 0, bottom: 0),
+          itemMargin: EdgeInsets.only(left: 10, top: 0, right: 0, bottom: 0),
           decoration: BoxDecoration(
             color: Colors.black,
           ),

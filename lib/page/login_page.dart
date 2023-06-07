@@ -62,8 +62,6 @@ class _LoginPageState extends State<LoginPage> {
       Future.delayed(const Duration(seconds: 2)).then((value) => setState(() {
             context.push('/dashboard');
           }));
-      //TODO Update both tables with userId keys
-      // and specify which sections to show
     } else if (authResult.result == false) {
       Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {
             isElevated = !isElevated;

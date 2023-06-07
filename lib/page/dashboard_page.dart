@@ -5,10 +5,10 @@ import 'package:gymbro/page/section_page.dart';
 import 'package:gymbro/page/stats_page.dart';
 import 'package:sidebarx/sidebarx.dart';
 import '../components/sidebar.dart';
-import '../main.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
+  //static late bool logOut = false;
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
@@ -20,8 +20,6 @@ class _DashboardPageState extends State<DashboardPage> {
   final _key = GlobalKey<ScaffoldState>();
   void showSidebar() {
     setState(() {
-      //RootPage.logged = false;
-      //context.pop();
       _key.currentState?.openDrawer();
     });
   }
