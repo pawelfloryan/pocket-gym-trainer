@@ -19,6 +19,8 @@ dependencies:
   flutter_slidable: any
   go_router: ^7.1.1
   sidebarx: ^0.15.0
+  carousel_slider: ^4.2.1
+  fl_chart: ^0.62.0
 
 
 

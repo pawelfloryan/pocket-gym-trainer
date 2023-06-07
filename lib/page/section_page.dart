@@ -128,9 +128,9 @@ class _SectionPageState extends State<SectionPage> {
                                         onPressed: () {
                                           SectionPage.sectionKey =
                                               sections[index].id;
-                                          SectionPage.sectionName = 
+                                          SectionPage.sectionName =
                                               sections[index].name;
-                                          context.go('/exercises');
+                                          context.push('/exercises');
                                         },
                                         child: Text(
                                           sections[index].name!,

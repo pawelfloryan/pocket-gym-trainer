@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import '../model/exercise.dart';
 import '../page/section_page.dart';
@@ -126,7 +127,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
         leading: IconButton(
             onPressed: () {
               //context.go('/sections');
-              Navigator.of(context).pop();
+              context.pop();
             },
             icon: const Icon(Icons.arrow_back_ios)),
       ),
@@ -230,33 +231,37 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                                 top: 0,
                                                 bottom: 0),
                                             child: weightNotClicked
-                                                ? TextField(
-                                                    style: const TextStyle(
-                                                      color: Colors.black,
-                                                    ),
-                                                    controller:
-                                                        _weightController,
-                                                    decoration: InputDecoration(
-                                                      hintText: 'Kilos/Pounds',
-                                                      hintStyle:
-                                                          const TextStyle(
-                                                              color:
-                                                                  Colors.black),
-                                                      border:
-                                                          const OutlineInputBorder(),
-                                                      suffixIcon: IconButton(
+                                                ? Container(
+                                                    child: TextField(
+                                                      style: const TextStyle(
                                                         color: Colors.black,
-                                                        onPressed: () {
-                                                          weightUserPost =
-                                                              _weightController
-                                                                  .text;
-                                                          setState(() {
-                                                            weightNotClicked =
-                                                                false;
-                                                          });
-                                                        },
-                                                        icon: const Icon(
-                                                            (Icons.done)),
+                                                      ),
+                                                      controller:
+                                                          _weightController,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        hintText:
+                                                            'Kilos/Pounds',
+                                                        hintStyle:
+                                                            const TextStyle(
+                                                                color: Colors
+                                                                    .black),
+                                                        border:
+                                                            const OutlineInputBorder(),
+                                                        suffixIcon: IconButton(
+                                                          color: Colors.black,
+                                                          onPressed: () {
+                                                            weightUserPost =
+                                                                _weightController
+                                                                    .text;
+                                                            setState(() {
+                                                              weightNotClicked =
+                                                                  false;
+                                                            });
+                                                          },
+                                                          icon: const Icon(
+                                                              (Icons.done)),
+                                                        ),
                                                       ),
                                                     ),
                                                   )
