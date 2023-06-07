@@ -5,8 +5,9 @@ import 'package:gymbro/model/section.dart';
 import 'package:gymbro/page/login_page.dart';
 import 'package:http/http.dart';
 import 'package:uuid/uuid.dart';
-import 'package:gymbro/services/section_services.dart';
+import '../services/section_services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import '../components/section.dart';
 
 class SectionPage extends StatefulWidget {
   const SectionPage({super.key});
@@ -33,7 +34,7 @@ class _SectionPageState extends State<SectionPage> {
   Section sectionDelete = Section();
   String sectionId = "";
 
-  String jwtToken = LoginPage.token;
+  String? jwtToken = LoginPage.token;
 
   @override
   void initState() {
@@ -42,20 +43,20 @@ class _SectionPageState extends State<SectionPage> {
   }
 
   void getData() async {
-    sections = (await SectionService().getSection(jwtToken));
+    sections = (await SectionService().getSection(jwtToken!));
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
   }
 
   void createData() async {
-    section = (await SectionService().createSection(sectionCreate, jwtToken))!;
+    section = (await SectionService().createSection(sectionCreate, jwtToken!))!;
     sections.add(section);
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
   }
 
   void deleteData(String sectionId) async {
-    await SectionService().deleteSection(sectionId, jwtToken);
+    await SectionService().deleteSection(sectionId, jwtToken!);
     getData();
     sectionDelete.id = sectionId;
     newSectionsDelete = sections;
@@ -108,108 +109,47 @@ class _SectionPageState extends State<SectionPage> {
               child: Center(
                 child: Column(
                   children: <Widget>[
-                    sections.isNotEmpty
-                        ? Container(
-                            margin: const EdgeInsets.only(
-                                left: 20, top: 10, right: 20, bottom: 0),
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 110,
-                                  child: Slidable(
-                                    // ignore: sort_child_properties_last
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 110,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.black),
-                                        onPressed: () {
-                                          SectionPage.sectionKey =
-                                              sections[index].id;
-                                          SectionPage.sectionName =
-                                              sections[index].name;
-                                          context.push('/exercises');
-                                        },
-                                        child: Text(
-                                          sections[index].name!,
-                                          style: const TextStyle(fontSize: 70),
-                                        ),
-                                      ),
-                                    ),
-                                    endActionPane: ActionPane(
-                                      extentRatio: 0.2,
-                                      motion: ScrollMotion(),
-                                      children: [
-                                        SlidableAction(
-                                          onPressed: (context) => deleteSection(
-                                              sections[index].id!),
-                                          backgroundColor: Colors.red,
-                                          foregroundColor: Colors.white,
-                                          icon: Icons.delete_sharp,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  //Container(
-                                  //  height: 110,
-                                  //  width: 55,
-                                  //  margin: const EdgeInsets.only(
-                                  //        left: 0, top: 10, right: 10, bottom: 0),
-                                  //  child: ElevatedButton(
-                                  //  onPressed: () {},
-                                  //  child: const Icon(
-                                  //    Icons.settings,
-                                  //    color: Colors.white,
-                                  //    ),
-                                  //  ),
-                                  //),
-                                ),
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 0,
-                                  child: Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 20, top: 0, right: 20, bottom: 0),
-                                    width: double.infinity,
-                                    height: 110,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        : Container(
-                            margin: const EdgeInsets.only(
-                                left: 0, top: 50, right: 0, bottom: 0),
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  "images/bodybuilder.png",
-                                  scale: 0.8,
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 20, top: 10, right: 0, bottom: 0),
-                                  width: 370,
-                                  child: const Text(
-                                    "Click the button on the right bottom",
-                                    style: TextStyle(fontSize: 22),
-                                  ),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 55, top: 0, right: 0, bottom: 0),
-                                  width: 350,
-                                  child: const Text(
-                                    "to add new exercise sections",
-                                    style: TextStyle(fontSize: 22),
-                                  ),
-                                ),
-                              ],
+                    Container(
+                      margin: const EdgeInsets.only(
+                          left: 20, top: 10, right: 20, bottom: 0),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 110,
+                        child: Slidable(
+                          // ignore: sort_child_properties_last
+                          child: Container(
+                            width: double.infinity,
+                            height: 110,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black),
+                              onPressed: () {
+                                SectionPage.sectionKey = sections[index].id;
+                                SectionPage.sectionName = sections[index].name;
+                                context.push('/exercises');
+                              },
+                              child: Text(
+                                sections[index].name!,
+                                style: const TextStyle(fontSize: 70),
+                              ),
                             ),
                           ),
+                          endActionPane: ActionPane(
+                            extentRatio: 0.2,
+                            motion: ScrollMotion(),
+                            children: [
+                              SlidableAction(
+                                onPressed: (context) =>
+                                    deleteSection(sections[index].id!),
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white,
+                                icon: Icons.delete_sharp,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),

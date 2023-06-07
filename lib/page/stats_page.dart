@@ -39,9 +39,9 @@ class StatsPage extends StatelessWidget {
         Column(
           children: [
             Container(
-              margin: EdgeInsets.only(top: 35, right: 60),
+              margin: EdgeInsets.only(top: 35, right: 65),
               child: const Text(
-                "Last workout",
+                "Statistics charts",
                 style: TextStyle(
                   fontSize: 45,
                   fontWeight: FontWeight.w800,
@@ -49,7 +49,8 @@ class StatsPage extends StatelessWidget {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 10, right: 150),
+              margin: EdgeInsets.only(top: 10, right: 215),
+              padding: EdgeInsets.only(left: 10),
               child: DropdownButton(
                 items: dropdownItems,
                 value: "Last workout",
@@ -58,18 +59,27 @@ class StatsPage extends StatelessWidget {
             ),
           ],
         ),
-        CarouselSlider(
-          options: CarouselOptions(
-            height: MediaQuery.of(context).size.height * 0.5,
-          ),
-          items: charts
-              .map((item) => Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 3.5),
-                    ),
+        Container(
+          decoration: BoxDecoration(color: Colors.white, boxShadow: [
+            BoxShadow(
+                color: Colors.grey[500]!,
+                offset: Offset(4, 4),
+                blurRadius: 15,
+                spreadRadius: 1),
+          ]),
+          margin: EdgeInsets.only(left:30, right: 30, bottom: 30),
+          child: CarouselSlider(
+            options: CarouselOptions(
+              height: MediaQuery.of(context).size.height * 0.5,
+            ),
+            items: charts
+                .map(
+                  (item) => Container(
                     child: Center(child: item),
-                  ))
-              .toList(),
+                  ),
+                )
+                .toList(),
+          ),
         ),
       ],
     );
