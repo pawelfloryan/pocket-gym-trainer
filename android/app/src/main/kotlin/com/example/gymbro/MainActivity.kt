@@ -1,4 +1,4 @@
-package com.example.gymbro
+package com.example.PocketGymTrainer
 
 import io.flutter.embedding.android.FlutterActivity
 

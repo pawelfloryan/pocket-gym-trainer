@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:http/http.dart' as http;
-import 'package:gymbro/constants.dart';
-import 'package:gymbro/model/login.dart';
-import 'package:gymbro/model/register.dart';
+import '../constants.dart';
+import '../model/login.dart';
+import '../model/register.dart';
 import '../model/auth_result.dart';
 
 class AuthService{

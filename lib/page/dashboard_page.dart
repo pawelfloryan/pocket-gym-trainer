@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gymbro/page/home_page.dart';
-import 'package:gymbro/page/section_page.dart';
-import 'package:gymbro/page/stats_page.dart';
+import '../page/home_page.dart';
+import '../page/section_page.dart';
+import '../page/stats_page.dart';
 import 'package:sidebarx/sidebarx.dart';
 import '../components/sidebar.dart';
 

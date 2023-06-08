@@ -4,7 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gymbro/model/auth_result.dart';
+import '../model/auth_result.dart';
 import '../model/register.dart';
 import '../services/auth_service.dart';
 import '../main.dart';

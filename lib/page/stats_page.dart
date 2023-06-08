@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:gymbro/components/exercise_count_chart.dart';
-import 'package:gymbro/components/exercise_days_chart.dart';
-import 'package:gymbro/components/exercise_time_chart.dart';
+import '../components/exercise_count_chart.dart';
+import '../components/exercise_days_chart.dart';
+import '../components/exercise_time_chart.dart';
 
 List<Widget> charts = const [
   ExerciseCountChart(),

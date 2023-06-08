@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:http/http.dart' as http;
-import 'package:gymbro/constants.dart';
-import 'package:gymbro/model/exercise.dart';
+import '../constants.dart';
+import '../model/exercise.dart';
 
 class ExerciseService {
   Future<Exercise?> createExercise(Exercise exercise) async {

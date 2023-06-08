@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:gymbro/model/auth_result.dart';
+import '../model/auth_result.dart';
 import 'package:http/http.dart' as http;
-import 'package:gymbro/constants.dart';
-import 'package:gymbro/model/section.dart';
+import '../constants.dart';
+import '../model/section.dart';
 import '../services/auth_service.dart';
 
 class SectionService {

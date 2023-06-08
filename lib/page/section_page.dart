@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gymbro/page/exercises_page.dart';
-import 'package:gymbro/model/section.dart';
-import 'package:gymbro/page/login_page.dart';
+import '../page/exercises_page.dart';
+import '../model/section.dart';
+import '../page/login_page.dart';
 import 'package:http/http.dart';
 import 'package:uuid/uuid.dart';
 import '../services/section_services.dart';

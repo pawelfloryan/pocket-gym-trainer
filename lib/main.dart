@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:gymbro/model/login.dart';
-import 'package:gymbro/page/exercises_page.dart';
-import 'package:gymbro/page/login_page.dart';
-import 'package:gymbro/page/register_page.dart';
-import 'package:gymbro/page/section_page.dart';
-import 'package:gymbro/page/stats_page.dart';
-import 'package:gymbro/page/home_page.dart';
-import 'package:gymbro/page/dashboard_page.dart';
+import '../model/login.dart';
+import '../page/exercises_page.dart';
+import '../page/login_page.dart';
+import '../page/register_page.dart';
+import '../page/section_page.dart';
+import '../page/stats_page.dart';
+import '../page/home_page.dart';
+import '../page/dashboard_page.dart';
 import 'package:go_router/go_router.dart';
 
 void main() {
