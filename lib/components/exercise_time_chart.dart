@@ -1,17 +1,31 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class ExerciseTimeChart extends StatefulWidget {
-  const ExerciseTimeChart({Key? key}) : super(key: key);
+class ExerciseTimeChart extends StatelessWidget {
+  const ExerciseTimeChart({super.key});
 
-  @override
-  _ExerciseTimeChartState createState() => _ExerciseTimeChartState();
-}
-
-class _ExerciseTimeChartState extends State<ExerciseTimeChart> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text("Time"),
+      child: LineChart(
+        LineChartData(
+          minX: 0,
+          maxX: 10,
+          minY: 0,
+          maxY: 6,
+          lineBarsData: [
+            LineChartBarData(
+              spots: [
+                FlSpot(0, 2),
+                FlSpot(2, 4),
+                FlSpot(5, 1),
+                FlSpot(8, 5),
+                FlSpot(10, 3)
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,3 +1,4 @@
+import '../page/title_page.dart';
 import 'package:flutter/material.dart';
 import '../model/login.dart';
 import '../page/exercises_page.dart';
@@ -31,6 +32,10 @@ final _router = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) => RootPage(),
+    ),
+    GoRoute(
+      path: '/title',
+      builder: (context, state) => TitlePage(),
     ),
     GoRoute(
       path: '/dashboard',

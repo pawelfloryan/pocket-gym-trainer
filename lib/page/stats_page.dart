@@ -71,6 +71,7 @@ class StatsPage extends StatelessWidget {
           child: CarouselSlider(
             options: CarouselOptions(
               height: MediaQuery.of(context).size.height * 0.5,
+              viewportFraction: 1
             ),
             items: charts
                 .map(
