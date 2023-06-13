@@ -12,11 +12,11 @@ class _ExerciseCountChartState extends State<ExerciseCountChart> {
   @override
   Widget build(BuildContext context) {
     return Container(
-    //    child: RadarChart(
-    //  RadarChartData(),
-    //  swapAnimationDuration: Duration(milliseconds: 150),
-    //  swapAnimationCurve: Curves.linear,
-    //)
+      child: RadarChart(
+        RadarChartData(dataSets: []),
+        swapAnimationDuration: Duration(milliseconds: 150),
+        swapAnimationCurve: Curves.linear,
+      ),
     );
   }
 }
