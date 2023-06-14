@@ -1,3 +1,6 @@
+import 'package:PocketGymTrainer/page/profile_page.dart';
+
+import '../page/forgot_password_page.dart';
 import '../page/title_page.dart';
 import 'package:flutter/material.dart';
 import '../model/login.dart';
@@ -61,6 +64,14 @@ final _router = GoRouter(
       path: '/register',
       builder: (context, state) => RegisterPage(),
     ),
+    GoRoute(
+      path: '/forgotPassword',
+      builder: (context, state) => ForgotPasswordPage(),
+    ),
+    GoRoute(
+      path: '/profile',
+      builder: (context, state) => ProfilePage(),
+    ),
   ],
 );
 
@@ -92,6 +103,6 @@ class RootPage extends StatefulWidget {
 class _RootPageState extends State<RootPage> {
   @override
   Widget build(BuildContext context) {
-    return RootPage.logged ? DashboardPage() : LoginPage();
+    return RootPage.logged ? DashboardPage() : TitlePage();
   }
 }

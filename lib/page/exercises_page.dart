@@ -196,77 +196,36 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                   children: [
                                     Container(
                                       width: 174,
-                                      height: 40,
+                                      height: 60,
                                       margin: const EdgeInsets.only(
-                                          left: 20,
-                                          right: 0,
-                                          top: 13,
-                                          bottom: 20),
-                                      child: Container(
-                                        margin: const EdgeInsets.only(
-                                            left: 0,
-                                            right: 0,
-                                            top: 5,
-                                            bottom: 0),
-                                        child: Text(
-                                          exercises[index].name!,
-                                          style: const TextStyle(
-                                            fontSize: 20,
-                                          ),
+                                        left: 30,
+                                        right: 0,
+                                        top: 18,
+                                        bottom: 20,
+                                      ),
+                                      padding: EdgeInsets.only(left: 20),
+                                      child: Text(
+                                        exercises[index].name!,
+                                        style: const TextStyle(
+                                          backgroundColor: Colors.black,
+                                          color: Colors.white,
+                                          fontSize: 40,
+                                          fontFamily: "Verdana",
                                         ),
                                       ),
                                     ),
                                     Container(
-                                      width: 174,
+                                      width: 110,
                                       height: 40,
-                                      margin: const EdgeInsets.only(
-                                          left: 20,
-                                          right: 0,
-                                          top: 0,
-                                          bottom: 0),
-                                      child: weightNotClicked
-                                          ? Container(
-                                              child: TextField(
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                                controller: _weightController,
-                                                decoration: InputDecoration(
-                                                  hintText: 'Kilos/Pounds',
-                                                  hintStyle: const TextStyle(
-                                                      color: Colors.black),
-                                                  border:
-                                                      const OutlineInputBorder(),
-                                                  suffixIcon: IconButton(
-                                                    color: Colors.black,
-                                                    onPressed: () {
-                                                      weightUserPost =
-                                                          _weightController
-                                                              .text;
-                                                      setState(() {
-                                                        weightNotClicked =
-                                                            false;
-                                                      });
-                                                    },
-                                                    icon: const Icon(
-                                                        (Icons.done)),
-                                                  ),
-                                                ),
-                                              ),
-                                            )
-                                          : Container(
-                                              margin: const EdgeInsets.only(
-                                                  left: 0,
-                                                  right: 0,
-                                                  top: 5,
-                                                  bottom: 0),
-                                              child: Text(
-                                                weightUserPost,
-                                                style: const TextStyle(
-                                                  fontSize: 20,
-                                                ),
-                                              ),
-                                            ),
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.black),
+                                        onPressed: (() {}),
+                                        child: Text(
+                                          "Done!",
+                                          style: const TextStyle(fontSize: 25),
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),

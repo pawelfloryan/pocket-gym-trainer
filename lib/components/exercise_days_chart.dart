@@ -9,28 +9,44 @@ class ExerciseDaysChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: BarChart(
-        BarChartData(
-          alignment: BarChartAlignment.center,
-          maxY: 3,
-          minY: 0,
-          groupsSpace: 12,
-          barTouchData: BarTouchData(enabled: true),
-          barGroups: DaysChartData.daysChartData
-              .map(
-                (data) => BarChartGroupData(
-                  x: data.id!,
-                  barRods: [
-                    BarChartRodData(
-                      toY: data.amount!.toDouble(),
-                      width: 20,
-                      color: Colors.black
-                    ),
-                  ],
-                ),
-              )
-              .toList(),
-        ),
+      child: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 15, bottom: 15),
+            child: const Text(
+              "Exercise performance",
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
+          Expanded(
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.center,
+                maxY: 3,
+                minY: 0,
+                groupsSpace: 12,
+                barTouchData: BarTouchData(enabled: true),
+                barGroups: DaysChartData.daysChartData
+                    .map(
+                      (data) => BarChartGroupData(
+                        x: data.id!,
+                        barRods: [
+                          BarChartRodData(
+                            toY: data.amount!.toDouble(),
+                            width: 20,
+                            color: Colors.black,
+                          ),
+                        ],
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -29,15 +29,23 @@ class Sidebar extends StatelessWidget {
           ),
           //Make Icons.person a user image
           SidebarXItem(
-              icon: Icons.supervised_user_circle_rounded,
-              label: 'Your profile'),
+            icon: Icons.supervised_user_circle_rounded,
+            label: 'Your profile',
+            onTap: (() {
+              context.push('/profile');
+            }),
+          ),
           SidebarXItem(icon: Icons.map_outlined, label: 'Muscle Map'),
-          SidebarXItem(icon: Icons.logout_sharp, label: 'Sign out', onTap: (() {
-            RootPage.logged = false;
-            //DashboardPage.logOut = true;
-            //TODO Find out how to make the context pop() not go()
-            context.go('/login');
-          })),
+          SidebarXItem(
+            icon: Icons.logout_sharp,
+            label: 'Sign out',
+            onTap: (() {
+              RootPage.logged = false;
+              //DashboardPage.logOut = true;
+              //TODO Find out how to make the context pop() not go()
+              context.go('/login');
+            }),
+          ),
         ],
         theme: const SidebarXTheme(
           itemTextPadding: const EdgeInsets.all(10.0),

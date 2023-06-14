@@ -33,13 +33,23 @@ class StatsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+
+    final double horizontalMargin = screenSize.width * 0.1;
+    final double verticalMargin = screenSize.height * 0.021;
+
+    final double horizontalMarginList = screenSize.width * 0.1;
+    final double verticalMarginList = screenSize.height * 0.005;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
           children: [
             Container(
-              margin: EdgeInsets.only(top: 35, right: 65),
+              margin: EdgeInsets.symmetric(
+                vertical: verticalMargin,
+              ),
               child: const Text(
                 "Statistics charts",
                 style: TextStyle(
@@ -49,9 +59,14 @@ class StatsPage extends StatelessWidget {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 10, right: 215),
-              padding: EdgeInsets.only(left: 10),
+              margin: EdgeInsets.symmetric(
+                vertical: verticalMarginList,
+              ),
               child: DropdownButton(
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                ),
                 items: dropdownItems,
                 value: "Last workout",
                 onChanged: (String? value) {},
@@ -67,11 +82,14 @@ class StatsPage extends StatelessWidget {
                 blurRadius: 15,
                 spreadRadius: 1),
           ]),
-          margin: EdgeInsets.only(left:30, right: 30, bottom: 30),
+          margin: EdgeInsets.symmetric(
+            horizontal: horizontalMargin,
+            vertical: verticalMargin,
+          ),
           child: CarouselSlider(
             options: CarouselOptions(
               height: MediaQuery.of(context).size.height * 0.5,
-              viewportFraction: 1
+              viewportFraction: 1,
             ),
             items: charts
                 .map(
