@@ -11,7 +11,7 @@ class TitlePage extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Colors.white, Colors.black],
+          colors: [Colors.white, Colors.white],
         ),
       ),
       child: Scaffold(
@@ -22,19 +22,16 @@ class TitlePage extends StatelessWidget {
             children: [
               const Text(
                 "PGT",
-                style: TextStyle(
-                  fontSize: 65,
-                  fontWeight: FontWeight.w800,
-                ),
+                style: TextStyle(fontSize: 125),
               ),
               Container(
                 width: 180,
                 margin: EdgeInsets.only(
-                  top: 5,
+                  top: 15,
                 ),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
+                    backgroundColor: Colors.white,
                   ),
                   onPressed: () {
                     context.go('/login');
@@ -43,8 +40,11 @@ class TitlePage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
                       Text(
-                        "Login",
-                        style: TextStyle(fontSize: 30),
+                        "LOG IN",
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: Colors.black,
+                        ),
                       ),
                     ],
                   ),
@@ -53,23 +53,24 @@ class TitlePage extends StatelessWidget {
               Container(
                 width: 180,
                 margin: EdgeInsets.only(
-                  top: 5,
+                  top: 15,
                 ),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
+                    backgroundColor: Colors.white,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    context.go('/login');
+                  },
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
-                      Icon(
-                        Icons.add_business_rounded,
-                        size: 30,
-                      ),
                       Text(
-                        "Selfhost",
-                        style: TextStyle(fontSize: 30),
+                        "SELFHOST",
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: Colors.black,
+                        ),
                       ),
                     ],
                   ),

@@ -43,7 +43,7 @@ class Sidebar extends StatelessWidget {
               RootPage.logged = false;
               //DashboardPage.logOut = true;
               //TODO Find out how to make the context pop() not go()
-              context.go('/login');
+              context.go('/');
             }),
           ),
         ],

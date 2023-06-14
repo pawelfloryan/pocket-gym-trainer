@@ -118,7 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       left: 0, top: 20, right: 0, bottom: 25),
                   child: Text(
                     "Welcome to PGT!",
-                    style: TextStyle(fontSize: 30, color: Color(0xFF363f93)),
+                    style: TextStyle(fontSize: 40, color: Color(0xFF363f93)),
                   ),
                 ),
                 Container(

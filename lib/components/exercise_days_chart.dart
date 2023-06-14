@@ -32,7 +32,7 @@ class ExerciseDaysChart extends StatelessWidget {
                 barGroups: DaysChartData.daysChartData
                     .map(
                       (data) => BarChartGroupData(
-                        x: data.id!,
+                        x: data.weekDay!,
                         barRods: [
                           BarChartRodData(
                             toY: data.amount!.toDouble(),

@@ -3,20 +3,24 @@ import 'dart:convert';
 class DaysChart {
   late int? id;
   late int? amount;
+  late int? weekDay;
 
   DaysChart({
     this.id,
     this.amount,
+    this.weekDay,
   });
 
   Map<String, Object?> toJson() => {
         "id": id,
-        "sectionId": amount
+        "sectionId": amount,
+        "weekDay": weekDay
       };
 
   static DaysChart fromJson(Map<String, dynamic> json) => DaysChart(
         id: json["id"] as int,
         amount: json["sectionId"] as int,
+        weekDay: json["weekDay"] as int,
       );
 }
 

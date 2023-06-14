@@ -2,25 +2,25 @@ import 'dart:convert';
 
 class TimeChart {
   late int? id;
-  late String? sectionId;
-  late String? name;
+  late String? time;
+  late int? daysAmount;
 
   TimeChart({
     this.id,
-    this.sectionId,
-    this.name,
+    this.time,
+    this.daysAmount,
   });
 
   Map<String, Object?> toJson() => {
         "id": id,
-        "sectionId": sectionId,
-        "name": name
+        "time": time,
+        "daysAmount": daysAmount
       };
 
   static TimeChart fromJson(Map<String, dynamic> json) => TimeChart(
         id: json["id"] as int,
-        sectionId: json["sectionId"] as String,
-        name: json["name"] as String,
+        time: json["time"] as String,
+        daysAmount: json["daysAmount"] as int,
       );
 }
 

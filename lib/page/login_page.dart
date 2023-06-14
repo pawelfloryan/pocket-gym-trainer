@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:math';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../model/auth_result.dart';
@@ -60,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
         RootPage.logged = true;
       });
       Future.delayed(const Duration(seconds: 2)).then((value) => setState(() {
-            context.push('/dashboard');
+            context.go('/dashboard');
           }));
     } else if (authResult.result == false) {
       Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {
@@ -110,6 +109,22 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Color(0xFFffffff),
       body: Column(
         children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              margin: EdgeInsets.only(left: 35, bottom: 10),
+              child: GestureDetector(
+                onTap: () {
+                  context.go('/title');
+                },
+                child: FaIcon(
+                  FontAwesomeIcons.arrowLeftLong,
+                  color: Colors.grey,
+                  size: 25,
+                ),
+              ),
+            ),
+          ),
           Container(
             padding: const EdgeInsets.only(left: 40, right: 40),
             child: Form(
@@ -122,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                         left: 0, top: 20, right: 0, bottom: 25),
                     child: Text(
                       "Welcome back!",
-                      style: TextStyle(fontSize: 30, color: Color(0xFF363f93)),
+                      style: TextStyle(fontSize: 40, color: Color(0xFF363f93)),
                     ),
                   ),
                   Container(
@@ -204,7 +219,6 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                       Container(
-                        //MediaQuery.of(context).size.width
                         margin: EdgeInsets.only(
                           left: 0,
                           top: 50,
@@ -260,9 +274,12 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Visibility(
                     visible: isVisible,
-                    child: Text(
-                      "Error: " + errorText,
-                      style: TextStyle(color: Colors.red),
+                    child: Container(
+                      margin: EdgeInsets.only(top: 25),
+                      child: Text(
+                        "Error: " + errorText,
+                        style: TextStyle(color: Colors.red),
+                      ),
                     ),
                   ),
                 ],

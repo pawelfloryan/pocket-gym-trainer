@@ -2,25 +2,25 @@ import 'dart:convert';
 
 class CountChart {
   late int? id;
-  late String? sectionId;
   late String? name;
+  late String? amount;
 
   CountChart({
     this.id,
-    this.sectionId,
     this.name,
+    this.amount,
   });
 
   Map<String, Object?> toJson() => {
         "id": id,
-        "sectionId": sectionId,
-        "name": name
+        "name": name,
+        "amount": amount
       };
 
   static CountChart fromJson(Map<String, dynamic> json) => CountChart(
         id: json["id"] as int,
-        sectionId: json["sectionId"] as String,
         name: json["name"] as String,
+        amount: json["amount"] as String,
       );
 }
 
