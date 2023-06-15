@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "gymbro" "\0"
+            VALUE "FileDescription", "PocketGymTrainer" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "gymbro" "\0"
+            VALUE "InternalName", "PocketGymTrainer" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "gymbro.exe" "\0"
-            VALUE "ProductName", "gymbro" "\0"
+            VALUE "OriginalFilename", "PocketGymTrainer.exe" "\0"
+            VALUE "ProductName", "PocketGymTrainer" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
