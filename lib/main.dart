@@ -1,3 +1,4 @@
+import 'package:PocketGymTrainer/page/about.dart';
 import 'package:PocketGymTrainer/page/profile_page.dart';
 
 import '../page/forgot_password_page.dart';
@@ -72,6 +73,10 @@ final _router = GoRouter(
       path: '/profile',
       builder: (context, state) => ProfilePage(),
     ),
+    GoRoute(
+      path: '/about',
+      builder: (context, state) => AboutPage(),
+    ),
   ],
 );
 
@@ -103,6 +108,6 @@ class RootPage extends StatefulWidget {
 class _RootPageState extends State<RootPage> {
   @override
   Widget build(BuildContext context) {
-    return RootPage.logged ? DashboardPage() : TitlePage();
+    return RootPage.logged ? DashboardPage() : DashboardPage();
   }
 }

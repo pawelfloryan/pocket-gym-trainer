@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sidebarx/sidebarx.dart';
 import '../page/dashboard_page.dart';
@@ -21,13 +22,13 @@ class Sidebar extends StatelessWidget {
             iconWidget: Container(
               margin: EdgeInsets.only(left: 50),
               child: Icon(
+                //Make Icons.person a user image
                 Icons.person,
                 size: 50,
                 color: Colors.white,
               ),
             ),
           ),
-          //Make Icons.person a user image
           SidebarXItem(
             icon: Icons.supervised_user_circle_rounded,
             label: 'Your profile',
@@ -36,6 +37,13 @@ class Sidebar extends StatelessWidget {
             }),
           ),
           SidebarXItem(icon: Icons.map_outlined, label: 'Muscle Map'),
+          SidebarXItem(
+            icon: FontAwesomeIcons.circleInfo,
+            label: 'About',
+            onTap: (() {
+              context.push('/about');
+            }),
+          ),
           SidebarXItem(
             icon: Icons.logout_sharp,
             label: 'Sign out',
