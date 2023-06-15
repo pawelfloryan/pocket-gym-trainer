@@ -15,6 +15,7 @@ class TitlePage extends StatelessWidget {
         ),
       ),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
         body: Center(
           child: Column(

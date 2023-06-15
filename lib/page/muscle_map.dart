@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class AboutPage extends StatelessWidget {
-  const AboutPage({super.key});
+class MuscleMapPage extends StatelessWidget {
+  const MuscleMapPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text("About"),
+        title: Text("Muscle Map"),
         automaticallyImplyLeading: false,
         leading: IconButton(
             onPressed: () {

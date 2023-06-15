@@ -121,6 +121,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(sectionName),
         automaticallyImplyLeading: false,
@@ -140,12 +141,9 @@ class _ExercisesPageState extends State<ExercisesPage> {
                   children: <Widget>[
                     Container(
                       width: double.infinity,
-                      height: 190,
+                      height: 195,
                       margin: const EdgeInsets.only(
                           left: 10, top: 10, right: 10, bottom: 5),
-                      decoration: const BoxDecoration(
-                        color: Colors.grey,
-                      ),
                       child: Slidable(
                         endActionPane: ActionPane(
                           extentRatio: 0.2,
@@ -162,7 +160,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
                         ),
                         child: Material(
                           elevation: 6,
-                          color: Colors.grey,
+                          color: Colors.grey[600],
                           child: Container(
                             margin: const EdgeInsets.only(
                                 left: 0, right: 0, top: 5, bottom: 40),
@@ -195,22 +193,51 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                 Column(
                                   children: [
                                     Container(
-                                      width: 174,
-                                      height: 60,
+                                      width: 140,
+                                      height: 70,
                                       margin: const EdgeInsets.only(
                                         left: 30,
                                         right: 0,
                                         top: 18,
                                         bottom: 20,
                                       ),
-                                      padding: EdgeInsets.only(left: 20),
-                                      child: Text(
+                                      padding: EdgeInsets.only(left: 10),
+                                      //TODO Figure out how to add scrollbars if necessary
+                                      child: exercises[index].name!.length > 15 ?
+                                      Text(
                                         exercises[index].name!,
                                         style: const TextStyle(
-                                          backgroundColor: Colors.black,
                                           color: Colors.white,
-                                          fontSize: 40,
-                                          fontFamily: "Verdana",
+                                          fontSize: 30,
+                                          fontFamily: "Times New Roman",
+                                          fontWeight: FontWeight.w600
+                                        ),
+                                      ) : exercises[index].name!.length > 6 ?
+                                      Text(
+                                        exercises[index].name!,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 30,
+                                          fontFamily: "Times New Roman",
+                                          fontWeight: FontWeight.w600
+                                        ),
+                                      ) : exercises[index].name!.length > 4 ?
+                                      Text(
+                                        exercises[index].name!,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 35,
+                                          fontFamily: "Times New Roman",
+                                          fontWeight: FontWeight.w600
+                                        ),
+                                      ) :
+                                      Text(
+                                        exercises[index].name!,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 50,
+                                          fontFamily: "Times New Roman",
+                                          fontWeight: FontWeight.w600
                                         ),
                                       ),
                                     ),

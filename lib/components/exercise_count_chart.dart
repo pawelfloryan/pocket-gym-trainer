@@ -37,12 +37,12 @@ class ExerciseCountChart extends StatelessWidget {
                   if (index == 0)
                     return RadarChartTitle(text: "Arms");
                   else if (index == 1)
-                    return RadarChartTitle(text: "Back");
+                    return RadarChartTitle(text: "Back", angle: -50);
                   else
-                    return RadarChartTitle(text: "Legs");
+                    return RadarChartTitle(text: "Legs", angle: 50);
                 },
-                titleTextStyle: TextStyle(color: Colors.black, fontSize: 20),
-                titlePositionPercentageOffset: 0.15,
+                titleTextStyle: TextStyle(color: Colors.black, fontSize: 15),
+                titlePositionPercentageOffset: 0.10,
               ),
               swapAnimationDuration: Duration(milliseconds: 150),
               swapAnimationCurve: Curves.linear,

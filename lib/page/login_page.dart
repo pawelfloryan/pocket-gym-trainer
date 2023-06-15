@@ -101,6 +101,7 @@ class _LoginPageState extends State<LoginPage> {
         MediaQuery.of(context).size.width;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.transparent,

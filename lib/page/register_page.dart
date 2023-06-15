@@ -28,7 +28,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   bool isElevated = false;
   bool isVisible = false;
-  
+
   bool badUsername = false;
   bool badEmail = false;
   bool badPassword = false;
@@ -100,6 +100,7 @@ class _RegisterPageState extends State<RegisterPage> {
         MediaQuery.of(context).size.width;
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         key: _scaffoldKey,
         appBar: AppBar(
           backgroundColor: Colors.transparent,

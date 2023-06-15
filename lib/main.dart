@@ -1,6 +1,6 @@
-import 'package:PocketGymTrainer/page/about.dart';
-import 'package:PocketGymTrainer/page/profile_page.dart';
-
+import '../page/about.dart';
+import '../page/muscle_map.dart';
+import '../page/profile_page.dart';
 import '../page/forgot_password_page.dart';
 import '../page/title_page.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +74,10 @@ final _router = GoRouter(
       builder: (context, state) => ProfilePage(),
     ),
     GoRoute(
+      path: '/muscleMap',
+      builder: (context, state) => MuscleMapPage(),
+    ),
+    GoRoute(
       path: '/about',
       builder: (context, state) => AboutPage(),
     ),
@@ -108,6 +112,6 @@ class RootPage extends StatefulWidget {
 class _RootPageState extends State<RootPage> {
   @override
   Widget build(BuildContext context) {
-    return RootPage.logged ? DashboardPage() : DashboardPage();
+    return RootPage.logged ? DashboardPage() : TitlePage();
   }
 }

@@ -36,7 +36,13 @@ class Sidebar extends StatelessWidget {
               context.push('/profile');
             }),
           ),
-          SidebarXItem(icon: Icons.map_outlined, label: 'Muscle Map'),
+          SidebarXItem(
+            icon: Icons.map_outlined,
+            label: 'Muscle Map',
+            onTap: () {
+              context.push('/muscleMap');
+            },
+          ),
           SidebarXItem(
             icon: FontAwesomeIcons.circleInfo,
             label: 'About',
