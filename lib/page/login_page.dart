@@ -52,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
     print(authResult.token);
     print(authResult.result);
     LoginPage.token = authResult.token;
+    RootPage.token = LoginPage.token!;
     if (authResult.result == true) {
       isVisible = false;
       LoginPage.loggedInto = true;

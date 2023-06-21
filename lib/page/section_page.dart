@@ -1,5 +1,7 @@
+import 'package:PocketGymTrainer/main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import '../page/exercises_page.dart';
 import '../model/section.dart';
 import '../page/login_page.dart';
@@ -36,6 +38,9 @@ class _SectionPageState extends State<SectionPage> {
 
   String? jwtToken = LoginPage.token;
 
+  late Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken!);
+  late String decodedUserId = decodedToken["id"];
+
   @override
   void initState() {
     super.initState();
@@ -43,13 +48,14 @@ class _SectionPageState extends State<SectionPage> {
   }
 
   void getData() async {
-    sections = (await SectionService().getSection(jwtToken!));
+    print(decodedUserId);
+    sections = (await SectionService().getSection(jwtToken!, decodedUserId));
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
   }
 
   void createData() async {
-    section = (await SectionService().createSection(sectionCreate, jwtToken!))!;
+    section = (await SectionService().createSection(sectionCreate))!;
     sections.add(section);
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
@@ -69,6 +75,7 @@ class _SectionPageState extends State<SectionPage> {
     setState(() {
       userPost = _textController.text;
       sectionCreate.name = userPost;
+      sectionCreate.userId = decodedUserId;
       createData();
       Future.delayed(const Duration(milliseconds: 10))
           .then((value) => setState(() {}));
@@ -100,6 +107,7 @@ class _SectionPageState extends State<SectionPage> {
       print(click);
     });
   }
+  
 
   @override
   Widget build(BuildContext context) {

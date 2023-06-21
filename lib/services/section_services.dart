@@ -8,14 +8,13 @@ import '../model/section.dart';
 import '../services/auth_service.dart';
 
 class SectionService {
-  Future<Section?> createSection(Section section, String result) async {
+  Future<Section?> createSection(Section section) async {
     try {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.sectionEndpoint);
       var sectionJson = section.toJson();
       var response = await http.post(url,
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
-            'Authorization': 'Bearer $result',
           },
           body: json.encode(sectionJson));
 
@@ -29,7 +28,7 @@ class SectionService {
     }
   }
 
-  Future<List<Section>> getSection(String result) async {
+  Future<List<Section>> getSection(String result, String userId) async {
     var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.sectionEndpoint);
     var response = await http.get(
       url,
@@ -40,7 +39,13 @@ class SectionService {
     );
 
     if (response.statusCode == 200) {
-      List<Section> sections = sectionFromJsonList(response.body);
+      List<Section> sectionsTemp = sectionFromJsonList(response.body);
+      List<Section> sections = <Section>[];
+      for (Section section in sectionsTemp) {
+        if (section.userId == userId) {
+          sections.add(section);
+        }
+      }
       return sections;
     } else {
       List<Section> sections = <Section>[];

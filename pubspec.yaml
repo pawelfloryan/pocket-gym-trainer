@@ -23,7 +23,7 @@ dependencies:
   fl_chart: ^0.62.0
   font_awesome_flutter: ^10.4.0
   shared_preferences: ^2.1.2
-
+  jwt_decoder: ^2.0.1
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
