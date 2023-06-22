@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import '../main.dart';
 import '../model/exercise.dart';
 import '../page/section_page.dart';
 import '../services/exercise_service.dart';
@@ -38,6 +40,11 @@ class _ExercisesPageState extends State<ExercisesPage> {
   String sectionId = SectionPage.sectionKey;
   String sectionName = SectionPage.sectionName;
 
+  String? jwtToken = RootPage.token;
+
+  late Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken!);
+  late String decodedUserId = decodedToken["id"];
+
   Future pickImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -61,7 +68,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
   }
 
   void getData(sectionId) async {
-    exercises = (await ExerciseService().getExercise(sectionId));
+    exercises = (await ExerciseService().getExercise(sectionId, decodedUserId));
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
   }
@@ -88,6 +95,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
       userPost = _textController.text;
       exerciseCreate.name = userPost;
       exerciseCreate.sectionId = sectionId;
+      exerciseCreate.userId = decodedUserId;
       createData();
       Future.delayed(const Duration(milliseconds: 10))
           .then((value) => setState(() {}));

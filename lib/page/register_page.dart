@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../model/auth_result.dart';
@@ -54,6 +52,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<void> authenticated() async {
     print(authResult.token);
     print(authResult.result);
+    RootPage.token = authResult.token!;
     if (authResult.result == true) {
       isVisible = false;
       RegisterPage.loggedInto = true;

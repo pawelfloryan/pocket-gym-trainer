@@ -36,7 +36,7 @@ class _SectionPageState extends State<SectionPage> {
   Section sectionDelete = Section();
   String sectionId = "";
 
-  String? jwtToken = LoginPage.token;
+  String? jwtToken = RootPage.token;
 
   late Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken!);
   late String decodedUserId = decodedToken["id"];
