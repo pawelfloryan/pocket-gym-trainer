@@ -45,4 +45,8 @@ flutter:
     - images/bodybuilder.png
     - images/exercise.png
     - images/push-up.png
+  fonts:
+  - family: DigitalDisplay
+    fonts:
+      - asset: fonts/DigitalDisplayRegular-ODEO.ttf
 

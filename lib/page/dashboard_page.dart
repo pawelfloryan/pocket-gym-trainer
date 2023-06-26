@@ -1,3 +1,4 @@
+import 'package:PocketGymTrainer/components/workout_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../page/home_page.dart';
@@ -8,7 +9,7 @@ import '../components/sidebar.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
-  //static late bool logOut = false;
+  static late bool workoutStart = true;
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
@@ -29,17 +30,23 @@ class _DashboardPageState extends State<DashboardPage> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-            leading: IconButton(
-              onPressed: () {
-                showSidebar();
-              },
-              icon: Icon(Icons.menu),
-            ),
-            title: currentPage == 0
-                ? const Text("Home")
-                : currentPage == 1
-                    ? const Text("Exercises")
-                    : const Text("Statistics")),
+          leading: IconButton(
+            onPressed: () {
+              showSidebar();
+            },
+            icon: Icon(Icons.menu),
+          ),
+          title: currentPage == 0
+              ? const Text("Home")
+              : currentPage == 1
+                  ? const Text("Exercises")
+                  : const Text("Statistics"),
+          actions: [
+            DashboardPage.workoutStart ?
+            WorkoutTimer()
+            : Container()
+          ],
+        ),
         key: _key,
         body: pages[currentPage],
         bottomNavigationBar: NavigationBar(

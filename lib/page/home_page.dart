@@ -1,3 +1,4 @@
+import 'package:PocketGymTrainer/components/workout_controls.dart';
 import 'package:flutter/material.dart';
 import '../components/workout_counter.dart';
 
@@ -12,13 +13,7 @@ class HomePage extends StatelessWidget {
       child: Column(
         children: [
           WorkoutCounter(),
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              "Start workout!",
-              style: TextStyle(fontSize: 35, fontWeight: FontWeight.w800),
-            ),
-          ),
+          WorkoutControls()
           //workout
           //    ? TextButton(
           //        onPressed: () {

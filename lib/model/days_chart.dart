@@ -13,13 +13,13 @@ class DaysChart {
 
   Map<String, Object?> toJson() => {
         "id": id,
-        "sectionId": amount,
+        "amount": amount,
         "weekDay": weekDay
       };
 
   static DaysChart fromJson(Map<String, dynamic> json) => DaysChart(
         id: json["id"] as int,
-        amount: json["sectionId"] as int,
+        amount: json["amount"] as int,
         weekDay: json["weekDay"] as int,
       );
 }
