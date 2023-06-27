@@ -25,6 +25,7 @@ dependencies:
   shared_preferences: ^2.1.2
   jwt_decoder: ^2.0.1
   cupertino_icons: ^1.0.2
+  stop_watch_timer: ^2.0.0
 
 dev_dependencies:
   flutter_launcher_icons: "^0.13.1"

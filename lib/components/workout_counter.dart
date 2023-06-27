@@ -9,7 +9,6 @@ class WorkoutCounter extends StatefulWidget {
 
 class _WorkoutCounterState extends State<WorkoutCounter> {
   int clickCount = 0;
-  int counter = 0;
 
   @override
   Widget build(BuildContext context) {

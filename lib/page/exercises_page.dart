@@ -122,7 +122,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
       } else {
         notClicked = false;
       }
-      print(click);
     });
   }
 

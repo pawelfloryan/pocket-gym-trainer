@@ -9,7 +9,7 @@ import '../components/sidebar.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
-  static late bool workoutStart = true;
+  static late bool workoutStart = false;
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
@@ -42,9 +42,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   ? const Text("Exercises")
                   : const Text("Statistics"),
           actions: [
-            DashboardPage.workoutStart ?
             WorkoutTimer()
-            : Container()
           ],
         ),
         key: _key,

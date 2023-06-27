@@ -14,19 +14,6 @@ class HomePage extends StatelessWidget {
         children: [
           WorkoutCounter(),
           WorkoutControls()
-          //workout
-          //    ? TextButton(
-          //        onPressed: () {
-          //          setState(() {
-          //            workout = false;
-          //          });
-          //        },
-          //        child: const Text(
-          //          "End workout?",
-          //          style: TextStyle(fontSize: 35, fontWeight: FontWeight.w800),
-          //        ),
-          //      )
-          //    : Text(""),
         ],
       ),
     );

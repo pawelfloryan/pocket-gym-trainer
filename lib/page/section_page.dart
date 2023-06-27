@@ -48,7 +48,6 @@ class _SectionPageState extends State<SectionPage> {
   }
 
   void getData() async {
-    print(decodedUserId);
     sections = (await SectionService().getSection(jwtToken!, decodedUserId));
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
@@ -104,7 +103,6 @@ class _SectionPageState extends State<SectionPage> {
       } else {
         notClicked = false;
       }
-      print(click);
     });
   }
   

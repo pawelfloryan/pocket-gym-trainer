@@ -4,4 +4,5 @@ class ApiConstants {
   static String sectionEndpoint = '/sections';
   static String loginEndpoint = '/auth/login';
   static String registerEndpoint = '/auth/register';
+  static String workoutEndpoint = '/workouts';
 }
