@@ -2,8 +2,13 @@ import 'package:PocketGymTrainer/page/dashboard_page.dart';
 import 'package:flutter/material.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
+enum TimerStatus { running, paused, stopped }
+
 class WorkoutTimer extends StatefulWidget {
   const WorkoutTimer({super.key});
+  static late int elapsedTime = 0;
+  static TimerStatus status = TimerStatus.stopped;
+
   static final StopWatchTimer _stopWatchTimer = StopWatchTimer(
     onChange: (value) => print('onChange $value'),
     onChangeRawMinute: (value) => print('onChangeRawMinute $value'),
@@ -16,6 +21,7 @@ class WorkoutTimer extends StatefulWidget {
   );
   static void startTimer(){
     _stopWatchTimer.onStartTimer();
+    status = TimerStatus.running;
   }
 
   static void stopTimer(){
@@ -24,14 +30,23 @@ class WorkoutTimer extends StatefulWidget {
   }
 
   static void pauseTimer(){
+    if(status == TimerStatus.running){
+      _stopWatchTimer.onStopTimer();
+      elapsedTime = _stopWatchTimer.rawTime.value;
+      status = TimerStatus.paused;
+    }else if(status == TimerStatus.paused){
+      _stopWatchTimer.onStartTimer();
+      status = TimerStatus.running;
+    }
   }
 
   @override
   State<WorkoutTimer> createState() => _WorkoutTimerState();
 }
 
-class _WorkoutTimerState extends State<WorkoutTimer> {
 
+
+class _WorkoutTimerState extends State<WorkoutTimer> {
   @override
   void initState() {
     super.initState();
@@ -53,11 +68,10 @@ class _WorkoutTimerState extends State<WorkoutTimer> {
         margin: EdgeInsets.only(right: 20, top: 17),
         child: StreamBuilder<int>(
           stream: WorkoutTimer._stopWatchTimer.rawTime,
-          initialData: WorkoutTimer._stopWatchTimer.minuteTime.value,
+          initialData: WorkoutTimer._stopWatchTimer.rawTime.value,
           builder: (context, snapshot) {
             final value = snapshot.data!;
-            final displayTime = StopWatchTimer.getDisplayTime(value, hours: true, 
-                second: false, milliSecond: false);
+            final displayTime = StopWatchTimer.getDisplayTime(value, hours: true);
             return Column(
               children: [
                 Text(
