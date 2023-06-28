@@ -217,7 +217,7 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                         ),
                         date == null
                             ? Text(
-                                "No workouts yet",
+                                "No workouts",
                                 style: TextStyle(
                                     color: Colors.black87, fontSize: 30),
                               )

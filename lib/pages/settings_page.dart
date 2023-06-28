@@ -22,22 +22,28 @@ class _SettingsPageState extends State<SettingsPage> {
   late String decodedUserEmail = decodedToken["email"];
 
   Theme? selectedTheme = Theme.light;
+
+  String stringValue = "";
   
   Future<void> lightTheme() async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt("lightMode", 0);
+    prefs.setString("radioLight", stringValue);
   }
   Future<void> darkTheme() async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt("darkMode", 1);
+    prefs.setString("radioDark", stringValue);
   }
   Future<void> neonTheme() async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt("neonMode", 2);
+    prefs.setString("radioNeon", stringValue);
   }
   Future<void> falconTheme() async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt("falconMode", 3);
+    prefs.setString("radioFalcon", stringValue);
   }
 
   @override

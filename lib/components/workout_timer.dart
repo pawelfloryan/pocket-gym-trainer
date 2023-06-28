@@ -80,7 +80,7 @@ class _WorkoutTimerState extends State<WorkoutTimer> {
                 Text(
                   displayTime,
                   style: TextStyle(
-                    fontSize: 36,
+                    fontSize: 30,
                     fontFamily: "DigitalDisplay",
                   ),
                 ),

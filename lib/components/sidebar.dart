@@ -42,7 +42,7 @@ class Sidebar extends StatelessWidget {
                 Divider(
                   color: Colors.grey,
                   thickness: 5,
-                )
+                ),
               ],
             ),
           ),

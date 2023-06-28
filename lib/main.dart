@@ -111,7 +111,7 @@ class RootPage extends StatefulWidget {
   const RootPage({super.key});
   static late bool logged = false;
   static late String token;
-  static late int theme;
+  static late int theme = 0;
 
   Future<void> getLightPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
