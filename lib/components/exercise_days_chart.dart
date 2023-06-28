@@ -1,5 +1,4 @@
 import 'package:PocketGymTrainer/data/days_chart_data.dart';
-import 'package:PocketGymTrainer/model/days_chart.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 

@@ -1,10 +1,9 @@
 import 'package:PocketGymTrainer/components/workout_timer.dart';
+import 'package:PocketGymTrainer/main.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import '../page/home_page.dart';
-import '../page/section_page.dart';
-import '../page/stats_page.dart';
-import 'package:sidebarx/sidebarx.dart';
+import '../pages/home_page.dart';
+import '../pages/section_page.dart';
+import '../pages/stats_page.dart';
 import '../components/sidebar.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -28,6 +27,7 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: RootPage.theme == 1 ? Colors.black : Colors.white,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           leading: IconButton(
@@ -41,9 +41,7 @@ class _DashboardPageState extends State<DashboardPage> {
               : currentPage == 1
                   ? const Text("Exercises")
                   : const Text("Statistics"),
-          actions: [
-            WorkoutTimer()
-          ],
+          actions: [WorkoutTimer()],
         ),
         key: _key,
         body: pages[currentPage],

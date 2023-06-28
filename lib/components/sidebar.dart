@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sidebarx/sidebarx.dart';
-import '../page/dashboard_page.dart';
+import '../pages/dashboard_page.dart';
 import '../main.dart';
 
 class Sidebar extends StatelessWidget {
@@ -19,14 +19,31 @@ class Sidebar extends StatelessWidget {
         animationDuration: Duration(seconds: 0),
         items: [
           SidebarXItem(
-            iconWidget: Container(
-              margin: EdgeInsets.only(left: 50),
-              child: Icon(
-                //Make Icons.person a user image
-                Icons.person,
-                size: 50,
-                color: Colors.white,
-              ),
+            iconWidget: Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 10, right: 15),
+                      child: Icon(
+                        //Make Icons.person a user image
+                        Icons.person,
+                        size: 50,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      "Pablo\nPicasso",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+                //TODO Fix why divider is not showing up
+                Divider(
+                  color: Colors.grey,
+                  thickness: 5,
+                )
+              ],
             ),
           ),
           SidebarXItem(
@@ -48,6 +65,13 @@ class Sidebar extends StatelessWidget {
             label: 'About',
             onTap: (() {
               context.push('/about');
+            }),
+          ),
+          SidebarXItem(
+            icon: Icons.settings,
+            label: 'Settings',
+            onTap: (() {
+              context.push('/settings');
             }),
           ),
           SidebarXItem(

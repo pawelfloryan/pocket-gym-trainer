@@ -1,4 +1,4 @@
-import 'package:PocketGymTrainer/page/dashboard_page.dart';
+import 'package:PocketGymTrainer/pages/dashboard_page.dart';
 import 'package:flutter/material.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
@@ -8,6 +8,7 @@ class WorkoutTimer extends StatefulWidget {
   const WorkoutTimer({super.key});
   static late int elapsedTime = 0;
   static TimerStatus status = TimerStatus.stopped;
+  static late var finishedTime;
 
   static final StopWatchTimer _stopWatchTimer = StopWatchTimer(
     onChange: (value) => print('onChange $value'),
@@ -27,6 +28,8 @@ class WorkoutTimer extends StatefulWidget {
   static void stopTimer(){
     _stopWatchTimer.onStopTimer();
     _stopWatchTimer.onResetTimer();
+    finishedTime = _stopWatchTimer.rawTime.value;
+    print(finishedTime);
   }
 
   static void pauseTimer(){

@@ -1,18 +1,20 @@
-import '../page/about.dart';
-import '../page/muscle_map.dart';
-import '../page/profile_page.dart';
-import '../page/forgot_password_page.dart';
-import '../page/title_page.dart';
+import 'pages/about_page.dart';
+import 'pages/muscle_map.dart';
+import 'pages/profile_page.dart';
+import 'pages/forgot_password_page.dart';
+import 'pages/title_page.dart';
 import 'package:flutter/material.dart';
 import '../model/login.dart';
-import '../page/exercises_page.dart';
-import '../page/login_page.dart';
-import '../page/register_page.dart';
-import '../page/section_page.dart';
-import '../page/stats_page.dart';
-import '../page/home_page.dart';
-import '../page/dashboard_page.dart';
+import 'pages/exercises_page.dart';
+import 'pages/login_page.dart';
+import 'pages/register_page.dart';
+import 'pages/section_page.dart';
+import 'pages/stats_page.dart';
+import 'pages/home_page.dart';
+import 'pages/dashboard_page.dart';
+import 'pages/settings_page.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -81,6 +83,10 @@ final _router = GoRouter(
       path: '/about',
       builder: (context, state) => AboutPage(),
     ),
+    GoRoute(
+      path: '/settings',
+      builder: (context, state) => SettingsPage(),
+    ),
   ],
 );
 
@@ -105,6 +111,47 @@ class RootPage extends StatefulWidget {
   const RootPage({super.key});
   static late bool logged = false;
   static late String token;
+  static late int theme;
+
+  Future<void> getLightPrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? lightMode = prefs.getInt("lightMode");
+
+    if (lightMode != null) {
+      theme = lightMode;
+    }
+    print(theme);
+  }
+
+  Future<void> getDarkPrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? darkMode = prefs.getInt("darkMode");
+
+    if (darkMode != null) {
+      theme = darkMode;
+    }
+    print(theme);
+  }
+
+  Future<void> getNeonPrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? neonMode = prefs.getInt("neonMode");
+
+    if(neonMode != null){
+      theme = neonMode;
+    }
+    print(theme);
+  }
+
+  Future<void> getFalconPrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? falconMode = prefs.getInt("falconMode");
+
+    if(falconMode != null){
+      theme = falconMode;
+    }
+    print(theme);
+  }
 
   @override
   State<RootPage> createState() => _RootPageState();
