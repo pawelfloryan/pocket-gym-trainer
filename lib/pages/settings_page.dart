@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
 
-enum Theme { light, dark, neon, falcon }
+List<String> themes = ["light", "dark", "neon", "falcon"];
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -21,29 +21,41 @@ class _SettingsPageState extends State<SettingsPage> {
   late String decodedUserName = decodedToken["name"];
   late String decodedUserEmail = decodedToken["email"];
 
-  Theme? selectedTheme = Theme.light;
+  String? selectedTheme;
 
-  String stringValue = "";
+
+  @override
+  void initState(){
+    super.initState();
+    selectedTheme = themes[0];
+    //final SharedPreferences prefs = await SharedPreferences.getInstance();
+    //prefs.setInt("lightMode", 0);
+    //prefs.setString("selectedTheme", selectedTheme!);
+  }
   
   Future<void> lightTheme() async{
+    selectedTheme = themes[0];
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt("lightMode", 0);
-    prefs.setString("radioLight", stringValue);
+    prefs.setString("selectedTheme", selectedTheme!);
   }
   Future<void> darkTheme() async{
+    selectedTheme = themes[1];
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt("darkMode", 1);
-    prefs.setString("radioDark", stringValue);
+    prefs.setString("selectedTheme", selectedTheme!);
   }
   Future<void> neonTheme() async{
+    selectedTheme = themes[2];
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt("neonMode", 2);
-    prefs.setString("radioNeon", stringValue);
+    prefs.setString("selectedTheme", selectedTheme!);
   }
   Future<void> falconTheme() async{
+    selectedTheme = themes[3];
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt("falconMode", 3);
-    prefs.setString("radioFalcon", stringValue);
+    prefs.setString("selectedTheme", selectedTheme!);
   }
 
   @override
@@ -199,10 +211,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         alignment: Alignment.centerRight,
                         child: Container(
                           margin: EdgeInsets.only(right: 15),
-                          child: Radio<Theme>(
-                            value: Theme.light,
-                            groupValue: selectedTheme,
-                            onChanged: (Theme? value) {
+                          child: Radio<String>(
+                            value: themes[0],
+                            groupValue: RootPage.theme == 0 ? themes[0] : themes[1],
+                            onChanged: (String? value) {
                               setState(() {
                                 selectedTheme = value!;
                               });
@@ -239,10 +251,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         alignment: Alignment.centerRight,
                         child: Container(
                           margin: EdgeInsets.only(right: 15),
-                          child: Radio<Theme>(
-                            value: Theme.dark,
-                            groupValue: selectedTheme,
-                            onChanged: (Theme? value) {
+                          child: Radio<String>(
+                            value: themes[1],
+                            groupValue: RootPage.theme == 1 ? themes[1] : themes[0],
+                            onChanged: (String? value) {
                               setState(() {
                                 selectedTheme = value!;
                               });
@@ -279,10 +291,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         alignment: Alignment.centerRight,
                         child: Container(
                           margin: EdgeInsets.only(right: 15),
-                          child: Radio<Theme>(
-                            value: Theme.neon,
-                            groupValue: selectedTheme,
-                            onChanged: (Theme? value) {
+                          child: Radio<String>(
+                            value: themes[2],
+                            groupValue: RootPage.theme == 2 ? themes[2] : themes[0],
+                            onChanged: (String? value) {
                               setState(() {
                                 selectedTheme = value!;
                               });
@@ -319,10 +331,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         alignment: Alignment.centerRight,
                         child: Container(
                           margin: EdgeInsets.only(right: 15),
-                          child: Radio<Theme>(
-                            value: Theme.falcon,
-                            groupValue: selectedTheme,
-                            onChanged: (Theme? value) {
+                          child: Radio<String>(
+                            value: themes[3],
+                            groupValue: RootPage.theme == 3 ? themes[3] : themes[0],
+                            onChanged: (String? value) {
                               setState(() {
                                 selectedTheme = value!;
                               });
