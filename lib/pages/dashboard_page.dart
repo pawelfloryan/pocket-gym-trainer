@@ -27,7 +27,6 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: RootPage.theme == 1 ? Colors.black : Colors.white,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           leading: IconButton(

@@ -22,13 +22,107 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+  static late int theme = 0;
+
+  Future<void> getLightPrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? lightMode = prefs.getInt("lightMode");
+
+    if (lightMode != null) {
+      theme = lightMode;
+    }
+    print(theme);
+  }
+
+  Future<void> getDarkPrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? darkMode = prefs.getInt("darkMode");
+
+    if (darkMode != null) {
+      theme = darkMode;
+    }
+    print(theme);
+  }
+
+  Future<void> getNeonPrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? neonMode = prefs.getInt("neonMode");
+
+    if (neonMode != null) {
+      theme = neonMode;
+    }
+    print(theme);
+  }
+
+  Future<void> getFalconPrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? falconMode = prefs.getInt("falconMode");
+
+    if (falconMode != null) {
+      theme = falconMode;
+    }
+    print(theme);
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: primaryBlack),
       routerConfig: _router,
+      theme: theme == 0
+          ? ThemeData(
+              scaffoldBackgroundColor: Colors.white,
+              primarySwatch: primaryBlack,
+              appBarTheme: AppBarTheme(backgroundColor: Colors.black),
+              floatingActionButtonTheme: FloatingActionButtonThemeData(
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+              ),
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll<Color>(
+                    Colors.black,
+                  ),
+                  foregroundColor: MaterialStatePropertyAll<Color>(
+                    Colors.white,
+                  ),
+                ),
+              ),
+            )
+          : ThemeData(
+              scaffoldBackgroundColor: Colors.black,
+              primarySwatch: primaryBlack,
+              appBarTheme: AppBarTheme(backgroundColor: Colors.grey[900]),
+              navigationBarTheme: NavigationBarThemeData(
+                backgroundColor: Colors.grey[700],
+                iconTheme: MaterialStateProperty.resolveWith<IconThemeData>(
+                  (Set<MaterialState> states) {
+                    return IconThemeData(
+                      color: Colors.white,
+                    );
+                  },
+                ),
+                labelTextStyle: MaterialStateProperty.resolveWith<TextStyle>(
+                  (Set<MaterialState> states) {
+                    return TextStyle(color: Colors.white);
+                  },
+                ),
+              ),
+              floatingActionButtonTheme: FloatingActionButtonThemeData(
+                backgroundColor: Colors.grey[300],
+                foregroundColor: Colors.black,
+              ),
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll<Color>(
+                    Colors.grey[400]!,
+                  ),
+                  foregroundColor: MaterialStatePropertyAll<Color>(
+                    Colors.black,
+                  ),
+                ),
+              ),
+            ),
     );
   }
 }
@@ -111,47 +205,6 @@ class RootPage extends StatefulWidget {
   const RootPage({super.key});
   static late bool logged = false;
   static late String token;
-  static late int theme = 0;
-
-  Future<void> getLightPrefs() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? lightMode = prefs.getInt("lightMode");
-
-    if (lightMode != null) {
-      theme = lightMode;
-    }
-    print(theme);
-  }
-
-  Future<void> getDarkPrefs() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? darkMode = prefs.getInt("darkMode");
-
-    if (darkMode != null) {
-      theme = darkMode;
-    }
-    print(theme);
-  }
-
-  Future<void> getNeonPrefs() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? neonMode = prefs.getInt("neonMode");
-
-    if(neonMode != null){
-      theme = neonMode;
-    }
-    print(theme);
-  }
-
-  Future<void> getFalconPrefs() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? falconMode = prefs.getInt("falconMode");
-
-    if(falconMode != null){
-      theme = falconMode;
-    }
-    print(theme);
-  }
 
   @override
   State<RootPage> createState() => _RootPageState();

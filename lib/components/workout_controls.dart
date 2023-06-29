@@ -80,7 +80,10 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                         child: ElevatedButton(
                           style: ButtonStyle(
                             backgroundColor: MaterialStatePropertyAll<Color>(
-                                Colors.grey[200]!),
+                              MyApp.theme == 0
+                                  ? Colors.grey[200]!
+                                  : Colors.grey[400]!,
+                            ),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(
                               RoundedRectangleBorder(
@@ -138,8 +141,11 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                     ]),
                     child: ElevatedButton(
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStatePropertyAll<Color>(Colors.grey[200]!),
+                        backgroundColor: MaterialStatePropertyAll<Color>(
+                          MyApp.theme == 0
+                              ? Colors.grey[200]!
+                              : Colors.grey[400]!,
+                        ),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
@@ -170,8 +176,11 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                   height: 100,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStatePropertyAll<Color>(Colors.grey[200]!),
+                      backgroundColor: MaterialStatePropertyAll<Color>(
+                        MyApp.theme == 0
+                            ? Colors.grey[200]!
+                            : Colors.grey[400]!,
+                      ),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18.0),
@@ -202,7 +211,9 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                   height: 120,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[200],
+                      backgroundColor: MyApp.theme == 0
+                          ? Colors.grey[200]!
+                          : Colors.grey[400]!,
                     ),
                     onPressed: (() {}),
                     child: Column(
@@ -218,8 +229,7 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                         date == null
                             ? Text(
                                 "No workouts",
-                                style: TextStyle(
-                                    color: Colors.black87, fontSize: 30),
+                                style: TextStyle(color: Colors.black87, fontSize: 30),
                               )
                             : Text(
                                 "${date!.day}.${date!.month}.${date!.year}",

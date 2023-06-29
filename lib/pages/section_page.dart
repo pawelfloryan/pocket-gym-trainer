@@ -130,8 +130,6 @@ class _SectionPageState extends State<SectionPage> {
                             width: double.infinity,
                             height: 110,
                             child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.black),
                               onPressed: () {
                                 SectionPage.sectionKey = sections[index].id;
                                 SectionPage.sectionName = sections[index].name;

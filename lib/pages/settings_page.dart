@@ -61,6 +61,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //backgroundColor: MyApp.theme == 0 ? Colors.grey[200] : Colors.grey[900],
       backgroundColor: Colors.grey[200],
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -80,6 +81,7 @@ class _SettingsPageState extends State<SettingsPage> {
               Container(
                 margin: EdgeInsets.only(top: 30, bottom: 10),
                 width: double.infinity,
+                //color: MyApp.theme == 0 ? Colors.white : Colors.black,
                 color: Colors.white,
                 child: Row(
                   children: [
@@ -124,6 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   border: Border(
                     bottom: BorderSide(width: 2, color: Colors.grey[200]!),
                   ),
+                  //color: MyApp.theme == 0 ? Colors.white : Colors.black,
                   color: Colors.white,
                 ),
                 child: Row(
@@ -213,14 +216,14 @@ class _SettingsPageState extends State<SettingsPage> {
                           margin: EdgeInsets.only(right: 15),
                           child: Radio<String>(
                             value: themes[0],
-                            groupValue: RootPage.theme == 0 ? themes[0] : themes[1],
+                            groupValue: MyApp.theme == 0 ? themes[0] : themes[1],
                             onChanged: (String? value) {
                               setState(() {
                                 selectedTheme = value!;
                               });
                               print(selectedTheme);
                               lightTheme();
-                              RootPage().getLightPrefs();
+                              MyApp().getLightPrefs();
                             },
                           ),
                         ),
@@ -253,14 +256,14 @@ class _SettingsPageState extends State<SettingsPage> {
                           margin: EdgeInsets.only(right: 15),
                           child: Radio<String>(
                             value: themes[1],
-                            groupValue: RootPage.theme == 1 ? themes[1] : themes[0],
+                            groupValue: MyApp.theme == 1 ? themes[1] : themes[0],
                             onChanged: (String? value) {
                               setState(() {
                                 selectedTheme = value!;
                               });
                               print(selectedTheme);
                               darkTheme();
-                              RootPage().getDarkPrefs();
+                              MyApp().getDarkPrefs();
                             },
                           ),
                         ),
@@ -293,14 +296,14 @@ class _SettingsPageState extends State<SettingsPage> {
                           margin: EdgeInsets.only(right: 15),
                           child: Radio<String>(
                             value: themes[2],
-                            groupValue: RootPage.theme == 2 ? themes[2] : themes[0],
+                            groupValue: MyApp.theme == 2 ? themes[2] : themes[0],
                             onChanged: (String? value) {
                               setState(() {
                                 selectedTheme = value!;
                               });
                               print(selectedTheme);
                               neonTheme();
-                              RootPage().getNeonPrefs();
+                              MyApp().getNeonPrefs();
                             },
                           ),
                         ),
@@ -333,14 +336,14 @@ class _SettingsPageState extends State<SettingsPage> {
                           margin: EdgeInsets.only(right: 15),
                           child: Radio<String>(
                             value: themes[3],
-                            groupValue: RootPage.theme == 3 ? themes[3] : themes[0],
+                            groupValue: MyApp.theme == 3 ? themes[3] : themes[0],
                             onChanged: (String? value) {
                               setState(() {
                                 selectedTheme = value!;
                               });
                               print(selectedTheme);
                               falconTheme();
-                              RootPage().getFalconPrefs();
+                              MyApp().getFalconPrefs();
                             },
                           ),
                         ),
