@@ -45,10 +45,10 @@ class _WorkoutControlsState extends State<WorkoutControls> {
 
   Future<void> addWorkout() async {
     setState(() {
-      int weekDate = DateTime.now().weekday;
+      DateTime workoutDate = DateTime.now();
       date = DateTime.now();
       workoutCreate.time = WorkoutTimer.finishedTime;
-      workoutCreate.weekDay = weekDays[weekDate - 1];
+      workoutCreate.workoutDate = workoutDate;
       workoutCreate.userId = decodedUserId;
       createData();
     });

@@ -204,7 +204,7 @@ const int _blackPrimaryValue = 0xFF000000;
 class RootPage extends StatefulWidget {
   const RootPage({super.key});
   static late bool logged = false;
-  static late String token;
+  static late String? token;
 
   @override
   State<RootPage> createState() => _RootPageState();

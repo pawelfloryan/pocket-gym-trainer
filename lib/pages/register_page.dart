@@ -52,7 +52,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<void> authenticated() async {
     print(authResult.token);
     print(authResult.result);
-    RootPage.token = authResult.token!;
+    RootPage.token = authResult.token;
     if (authResult.result == true) {
       isVisible = false;
       RegisterPage.loggedInto = true;

@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> authenticated() async {
     print(authResult.token);
     print(authResult.result);
-    RootPage.token = authResult.token!;
+    RootPage.token = authResult.token;
     if (authResult.result == true) {
       isVisible = false;
       LoginPage.loggedInto = true;
