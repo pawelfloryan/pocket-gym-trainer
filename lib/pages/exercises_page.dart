@@ -128,6 +128,8 @@ class _ExercisesPageState extends State<ExercisesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -293,48 +295,56 @@ class _ExercisesPageState extends State<ExercisesPage> {
             },
             itemCount: exercises.length,
           ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Container(
+              margin:
+                  const EdgeInsets.only(left: 0, top: 0, right: 10, bottom: 10),
+              child: FloatingActionButton(
+                backgroundColor: Colors.black,
+                onPressed: textFieldShow,
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
           Visibility(
             visible: notClicked,
-            child: Container(
-              margin: EdgeInsets.only(
-                  left: 18,
-                  right: 0,
-                  top: MediaQuery.of(context).size.height - 127,
-                  bottom: 5),
-              child: Column(
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width - 100,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black, width: 3.5),
-                        color: Colors.white),
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                          left: 7, top: 0, right: 0, bottom: 0),
-                      child: TextField(
-                        autofocus: true,
-                        controller: _textController,
-                        decoration: InputDecoration(
-                          hintText: 'Name of a new exercise',
-                          hintStyle: TextStyle(color: Colors.grey),
-                          suffixIcon: IconButton(
-                            color: Colors.black,
-                            onPressed: addExercise,
-                            icon: Icon((Icons.done)),
-                          ),
-                        ),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: MediaQuery.of(context).size.width - 90,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 3.5),
+                    color: Colors.white),
+                margin: EdgeInsets.only(
+                  left: 0,
+                  right: screenSize.width * 0.15,
+                  top: 0,
+                  bottom: 10,
+                ),
+                child: Container(
+                  margin:
+                      const EdgeInsets.only(left: 7, top: 0, right: 0, bottom: 0),
+                  child: TextField(
+                    controller: _textController,
+                    decoration: InputDecoration(
+                      hintText: 'Name of a new section',
+                      hintStyle: TextStyle(color: Colors.grey),
+                      suffixIcon: IconButton(
+                        color: Colors.black,
+                        onPressed: addExercise,
+                        icon: Icon((Icons.done)),
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: textFieldShow,
-        child: Icon(Icons.add),
       ),
     );
   }

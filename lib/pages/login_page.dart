@@ -30,6 +30,26 @@ class _LoginPageState extends State<LoginPage> {
   bool badEmail = false;
   bool badPassword = false;
 
+  late FocusNode passwordFocus = FocusNode();
+  bool focus = false;
+
+  late bool obscure = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    passwordFocus.addListener(() {
+      if (passwordFocus.hasFocus) {
+        setState(() {
+          focus = passwordFocus.hasFocus;
+        });
+      } else {
+        focus = false;
+      }
+    });
+  }
+
   void loginAction() async {
     authResult = (await AuthService().loginAction(login));
     Future.delayed(const Duration(milliseconds: 10))
@@ -145,8 +165,9 @@ class _LoginPageState extends State<LoginPage> {
                         left: 0, top: 0, right: 0, bottom: 12),
                     child: TextFormField(
                       controller: _emailController,
-                      decoration:
-                          InputDecoration(labelText: "Enter your email"),
+                      decoration: InputDecoration(
+                        labelText: "Enter your email",
+                      ),
                       validator: (value) {
                         if (value!.isEmpty ||
                             !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}')
@@ -165,12 +186,27 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   TextFormField(
+                    focusNode: passwordFocus,
+                    onTapOutside: (details) {
+                      setState(() {
+                        passwordFocus.unfocus();
+                      });
+                    },
                     controller: _passwordController,
-                    obscureText: true,
+                    obscureText: obscure,
                     textAlignVertical: TextAlignVertical.center,
                     decoration: InputDecoration(
-                      labelText: "Enter your password",
-                    ),
+                        labelText: "Enter your password",
+                        suffixIcon: focus
+                            ? GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    obscure = !obscure;
+                                  });
+                                },
+                                child: Icon(Icons.remove_red_eye),
+                              )
+                            : null),
                     validator: (value) {
                       if (value!.isEmpty) {
                         setState(() {
@@ -286,24 +322,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          //Container(
-          //  width: 160,
-          //  margin: EdgeInsets.only(
-          //    top: 100,
-          //  ),
-          //  child: ElevatedButton(
-          //    style: ElevatedButton.styleFrom(
-          //      backgroundColor: Colors.grey,
-          //    ),
-          //    onPressed: () {},
-          //    child: Row(
-          //      children: [
-          //        Icon(Icons.add_business_rounded),
-          //        Text("Wanna selfhost?"),
-          //      ],
-          //    ),
-          //  ),
-          //),
         ],
       ),
     );

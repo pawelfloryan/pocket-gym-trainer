@@ -31,6 +31,26 @@ class _RegisterPageState extends State<RegisterPage> {
   bool badEmail = false;
   bool badPassword = false;
 
+  late FocusNode passwordFocus = FocusNode();
+  bool focus = false;
+
+  late bool obscure = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    passwordFocus.addListener(() {
+      if (passwordFocus.hasFocus) {
+        setState(() {
+          focus = passwordFocus.hasFocus;
+        });
+      } else {
+        focus = false;
+      }
+    });
+  }
+
   void registerAction() async {
     authResult = (await AuthService().registerAction(register));
     Future.delayed(const Duration(milliseconds: 10))
@@ -167,12 +187,27 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 TextFormField(
+                  focusNode: passwordFocus,
+                  onTapOutside: (details) {
+                    setState(() {
+                      passwordFocus.unfocus();
+                    });
+                  },
                   controller: _passwordController,
-                  obscureText: true,
+                  obscureText: obscure,
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputDecoration(
-                    labelText: "Enter your password",
-                  ),
+                      labelText: "Enter your password",
+                      suffixIcon: focus
+                          ? GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  obscure = !obscure;
+                                });
+                              },
+                              child: Icon(Icons.remove_red_eye),
+                            )
+                          : null),
                   validator: (value) {
                     if (value!.isEmpty) {
                       setState(() {
