@@ -14,7 +14,7 @@ import '../services/workout_service.dart';
 
 class WorkoutControls extends StatefulWidget {
   const WorkoutControls({super.key});
-  static final countNotifier = ValueNotifier(0);
+  static final count = ValueNotifier(0);
 
   @override
   State<WorkoutControls> createState() => _WorkoutControlsState();
@@ -40,6 +40,8 @@ class _WorkoutControlsState extends State<WorkoutControls> {
 
   DateTime? date;
   bool toolTip = false;
+
+  static final count = ValueNotifier(0);
 
   void createData() async {
     await WorkoutService().createWorkout(workoutCreate);
@@ -77,8 +79,6 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                             WorkoutTimer.stopTimer();
                             DashboardPage.workoutStart = false;
                             addWorkout();
-                            WorkoutControls.countNotifier.value++;
-                            WorkoutCounter.number = WorkoutControls.countNotifier;
                           });
                         },
                         child: ElevatedButton(
@@ -143,30 +143,39 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                         blurRadius: 15,
                       )
                     ]),
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll<Color>(
-                          MyApp.theme == 0
-                              ? Colors.grey[200]!
-                              : Colors.grey[400]!,
-                        ),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
+                    child: ValueListenableBuilder<int>(
+                      valueListenable: count,
+                      builder: (context, value, child) {
+                        return ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStatePropertyAll<Color>(
+                              MyApp.theme == 0
+                                  ? Colors.grey[200]!
+                                  : Colors.grey[400]!,
+                            ),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      onPressed: (() {
-                        setState(() {
-                          WorkoutTimer.startTimer();
-                          DashboardPage.workoutStart = true;
-                        });
-                      }),
-                      child: Text(
-                        "START",
-                        style: TextStyle(color: Colors.black87, fontSize: 50),
-                      ),
+                          onPressed: (() {
+                            setState(() {
+                              //WorkoutTimer.startTimer();
+                              //DashboardPage.workoutStart = true;
+                            });
+                              count.value++;
+                              print(count.value);
+                              WorkoutCounter(count);
+                          }),
+                          child: Text(
+                            "START",
+                            style:
+                                TextStyle(color: Colors.black87, fontSize: 50),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
