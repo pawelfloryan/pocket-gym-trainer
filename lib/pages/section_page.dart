@@ -91,19 +91,6 @@ class _SectionPageState extends State<SectionPage> {
 
   void editSection() {}
 
-  Future<void> textFieldShow() async {
-    setState(() {
-      click += 1;
-      temp = click / 2;
-      if (temp % 1 == 0) {
-        notClicked = true;
-      } else {
-        notClicked = false;
-      }
-    });
-  }
-  
-
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -182,7 +169,11 @@ class _SectionPageState extends State<SectionPage> {
                   const EdgeInsets.only(left: 0, top: 0, right: 10, bottom: 10),
               child: FloatingActionButton(
                 backgroundColor: Colors.white,
-                onPressed: textFieldShow,
+                onPressed: () {
+                  setState(() {          
+                    notClicked = !notClicked;
+                  });
+                },
                 child: const Icon(
                   Icons.add,
                   color: Colors.black,

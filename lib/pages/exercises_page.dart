@@ -114,18 +114,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
 
   void editExercise() {}
 
-  Future<void> textFieldShow() async {
-    setState(() {
-      click += 1;
-      temp = click / 2;
-      if (temp % 1 == 0) {
-        notClicked = true;
-      } else {
-        notClicked = false;
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -302,7 +290,11 @@ class _ExercisesPageState extends State<ExercisesPage> {
                   const EdgeInsets.only(left: 0, top: 0, right: 10, bottom: 10),
               child: FloatingActionButton(
                 backgroundColor: Colors.black,
-                onPressed: textFieldShow,
+                onPressed: () {
+                  setState(() {          
+                    notClicked = !notClicked;
+                  });
+                },
                 child: const Icon(
                   Icons.add,
                   color: Colors.white,
