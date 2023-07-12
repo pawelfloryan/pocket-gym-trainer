@@ -10,7 +10,7 @@ class HomePage extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          WorkoutCounter(WorkoutControls.count),
+          WorkoutCounter(),
           WorkoutControls()
         ],
       ),
