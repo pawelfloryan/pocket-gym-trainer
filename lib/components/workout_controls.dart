@@ -14,7 +14,6 @@ import '../services/workout_service.dart';
 
 class WorkoutControls extends StatefulWidget {
   const WorkoutControls({super.key});
-  static final countNotifier = ValueNotifier(0);
 
   @override
   State<WorkoutControls> createState() => _WorkoutControlsState();
@@ -23,15 +22,6 @@ class WorkoutControls extends StatefulWidget {
 class _WorkoutControlsState extends State<WorkoutControls> {
   Workout workout = Workout();
   Workout workoutCreate = Workout();
-  List<String> weekDays = <String>[
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday"
-  ];
 
   String? jwtToken = RootPage.token;
 
@@ -77,8 +67,7 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                             WorkoutTimer.stopTimer();
                             DashboardPage.workoutStart = false;
                             addWorkout();
-                            WorkoutControls.countNotifier.value++;
-                            WorkoutCounter.number = WorkoutControls.countNotifier;
+                            WorkoutCounter.number.value++;
                           });
                         },
                         child: ElevatedButton(
