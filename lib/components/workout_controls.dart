@@ -1,5 +1,7 @@
 import 'dart:ffi';
 
+import 'package:intl/intl.dart';
+
 import '../components/workout_counter.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -28,7 +30,8 @@ class _WorkoutControlsState extends State<WorkoutControls> {
   late Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken!);
   late String decodedUserId = decodedToken["id"];
 
-  DateTime? date;
+  DateTime workoutDate = DateTime.now();
+  String formattedDate = "";
   bool toolTip = false;
 
   void createData() async {
@@ -37,10 +40,9 @@ class _WorkoutControlsState extends State<WorkoutControls> {
 
   Future<void> addWorkout() async {
     setState(() {
-      DateTime workoutDate = DateTime.now();
-      date = DateTime.now();
+      formattedDate = DateFormat("yyyy-MM-dd").format(workoutDate);
       workoutCreate.time = WorkoutTimer.finishedTime;
-      workoutCreate.workoutDate = workoutDate;
+      workoutCreate.workoutDate = formattedDate;
       workoutCreate.userId = decodedUserId;
       createData();
     });
@@ -66,6 +68,7 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                           setState(() {
                             WorkoutTimer.stopTimer();
                             DashboardPage.workoutStart = false;
+                            print("///////////////////////////////////////////// ${workoutDate}");
                             addWorkout();
                             WorkoutCounter.number.value++;
                           });
@@ -219,14 +222,14 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                                 TextStyle(color: Colors.black87, fontSize: 30),
                           ),
                         ),
-                        date == null
+                        workoutDate == null
                             ? Text(
                                 "No workouts",
                                 style: TextStyle(
                                     color: Colors.black87, fontSize: 30),
                               )
                             : Text(
-                                "${date!.day}.${date!.month}.${date!.year}",
+                                "${workoutDate.day}.${workoutDate.month}.${workoutDate.year}",
                                 style: TextStyle(
                                     color: Colors.black87, fontSize: 30),
                               ),

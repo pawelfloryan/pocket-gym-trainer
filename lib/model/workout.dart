@@ -3,7 +3,7 @@ import 'dart:convert';
 class Workout {
   late int? id;
   late int? time;
-  late DateTime? workoutDate;
+  late String? workoutDate;
   late String? userId;
 
   Workout({
@@ -23,7 +23,7 @@ class Workout {
   static Workout fromJson(Map<String, dynamic> json) => Workout(
         id: json["id"] as int,
         time: json["time"] as int,
-        workoutDate: json["workoutDate"] as DateTime,
+        workoutDate: json["workoutDate"] as String,
         userId: json["userId"] as String,
       );
 }
