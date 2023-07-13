@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -10,7 +8,6 @@ import '../main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
-  static late bool loggedInto = false;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -22,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
   Login login = Login();
   AuthResult authResult = AuthResult();
+
   String errorText = "";
 
   bool isElevated = false;
@@ -73,7 +71,6 @@ class _LoginPageState extends State<LoginPage> {
     RootPage.token = authResult.token;
     if (authResult.result == true) {
       isVisible = false;
-      LoginPage.loggedInto = true;
       setState(() {
         RootPage.logged = true;
       });

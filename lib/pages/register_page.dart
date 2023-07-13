@@ -2,14 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import '../model/auth_result.dart';
 import '../model/register.dart';
+import '../model/user_stats.dart';
 import '../services/auth_service.dart';
 import '../main.dart';
+import '../services/user_stats_service.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
-  static late bool loggedInto = false;
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -22,6 +24,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final _passwordController = TextEditingController();
   Register register = Register();
   AuthResult authResult = AuthResult();
+  UserStats userStats = UserStats();
+  
   String errorText = "";
 
   bool isElevated = false;
@@ -51,6 +55,16 @@ class _RegisterPageState extends State<RegisterPage> {
     });
   }
 
+  void createUserStats() async {
+    userStats = (await UserStatsService().createUserStats(userStats))!;
+  }
+
+  Future<void> setUserStats(String statsId) async {
+    userStats.id = statsId;
+    userStats.entries = 0;
+    createUserStats();
+  }
+
   void registerAction() async {
     authResult = (await AuthService().registerAction(register));
     Future.delayed(const Duration(milliseconds: 10))
@@ -74,8 +88,10 @@ class _RegisterPageState extends State<RegisterPage> {
     print(authResult.result);
     RootPage.token = authResult.token;
     if (authResult.result == true) {
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(authResult.token!);
+      String decodedUserId = decodedToken["id"];
+      setUserStats(decodedUserId);
       isVisible = false;
-      RegisterPage.loggedInto = true;
       setState(() {
         RootPage.logged = true;
       });
