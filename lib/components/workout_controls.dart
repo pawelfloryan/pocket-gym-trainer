@@ -68,7 +68,6 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                           setState(() {
                             WorkoutTimer.stopTimer();
                             DashboardPage.workoutStart = false;
-                            print("///////////////////////////////////////////// ${workoutDate}");
                             addWorkout();
                             WorkoutCounter.number.value++;
                           });

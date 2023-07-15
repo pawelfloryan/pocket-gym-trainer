@@ -7,7 +7,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import '../main.dart';
 
 class WorkoutCounter extends StatefulWidget {
-  static late int entry;
+  static late int? entry = 0;
   static late ValueNotifier<int> number = ValueNotifier<int>(0);
 
   @override
@@ -25,22 +25,27 @@ class _WorkoutCounterState extends State<WorkoutCounter> {
   @override
   void initState() {
     super.initState();
-    getUserStats();
+    getUserEntries();
   }
 
-  void getUserStats() async {
+  void getUserEntries() async {
     userStats = (await UserStatsService().getUserStats(jwtToken!, decodedUserId));
     setState(() {
-      WorkoutCounter.entry = userStats.entries!;
+      WorkoutCounter.entry = userStats.entries;
+      if(userStats.entries != null){
+        
+      }
     });
     print(decodedUserId);
     print(userStats.entries);
   }
 
+  void updateUserEntries() async {
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    int clickCount = WorkoutCounter.number.value;
-
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 30),
         child: Container(
@@ -54,10 +59,10 @@ class _WorkoutCounterState extends State<WorkoutCounter> {
               valueListenable: WorkoutCounter.number,
               builder: (context, value, child) {
                 return Text(
-                  "${WorkoutCounter.number.value + WorkoutCounter.entry}",
-                  style: clickCount < 100
+                  "${WorkoutCounter.entry}",
+                  style: WorkoutCounter.entry! < 100
                       ? const TextStyle(fontSize: 100)
-                      : clickCount < 1000
+                      : WorkoutCounter.entry! < 1000
                           ? const TextStyle(fontSize: 75)
                           : const TextStyle(fontSize: 50),
                 );
