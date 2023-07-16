@@ -69,13 +69,15 @@ class SectionService {
     }
   }
 
-  Future<List<Section>?> upsertSection() async {
+  Future<Section?> upsertSection(String id) async {
     try {
-      var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.sectionEndpoint);
+      var url = Uri.parse(
+          ApiConstants.baseUrl + ApiConstants.sectionEndpoint + "/${id}");
       var response = await http.put(url);
-      if (response.statusCode == 200) {
-        List<Section> _model = sectionFromJsonList(response.body);
-        return _model;
+      if (response.statusCode == 201) {
+        Map<String, dynamic> jsonMap = json.decode(response.body);
+        Section section = Section.fromJson(jsonMap);
+        return section;
       }
     } catch (e) {
       log(e.toString());

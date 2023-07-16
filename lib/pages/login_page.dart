@@ -22,6 +22,8 @@ class _LoginPageState extends State<LoginPage> {
 
   String errorText = "";
 
+  bool processing = false;
+
   bool isElevated = false;
   bool isVisible = false;
 
@@ -108,10 +110,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final double horizontalMargin = screenSize.width * 0.5;
-    final double verticalMargin = screenSize.height * 0.07;
-
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     double deviceWidth(BuildContext context) =>
         MediaQuery.of(context).size.width;
@@ -201,7 +199,12 @@ class _LoginPageState extends State<LoginPage> {
                                     obscure = !obscure;
                                   });
                                 },
-                                child: Icon(Icons.remove_red_eye),
+                                child: Icon(
+                                  Icons.remove_red_eye,
+                                  color: obscure
+                                      ? Colors.black
+                                      : Color(0xFF363f93),
+                                ),
                               )
                             : null),
                     validator: (value) {
@@ -262,15 +265,20 @@ class _LoginPageState extends State<LoginPage> {
                           alignment: Alignment.centerRight,
                           child: GestureDetector(
                             onTapDown: (details) {
-                              setState(() {
-                                isElevated = !isElevated;
-                              });
-                              Future.delayed(const Duration(milliseconds: 5))
-                                  .then((value) => setState(() {
-                                        inputErrors();
-                                      }));
-                              if (formKey.currentState!.validate()) {
-                                authenticate();
+                              if (!processing) {
+                                setState(() {
+                                  isElevated = !isElevated;
+                                });
+                                Future.delayed(const Duration(milliseconds: 5))
+                                    .then((value) => setState(() {
+                                          inputErrors();
+                                        }));
+                                if (formKey.currentState!.validate()) {
+                                  processing = !processing;
+                                  authenticate();
+                                }
+                              }else if(processing){
+                                null;
                               }
                             },
                             child: AnimatedContainer(

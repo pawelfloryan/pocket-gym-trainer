@@ -22,15 +22,18 @@ class _SectionPageState extends State<SectionPage> {
   final _textController = TextEditingController();
   String userPost = '';
   bool notClicked = false;
+  bool editing = false;
   double click = 1;
   double temp = 1;
 
   List<Section> sections = <Section>[];
   List<Section> newSections = <Section>[];
   List<Section> newSectionsDelete = <Section>[];
+  List<Section> newSectionsUpsert = <Section>[];
   Section sectionCreate = Section();
   Section section = Section();
   Section sectionDelete = Section();
+  Section sectionUpsert = Section();
   String sectionId = "";
 
   String? jwtToken = RootPage.token;
@@ -67,6 +70,13 @@ class _SectionPageState extends State<SectionPage> {
         .then((value) => setState(() {}));
   }
 
+  void upsertData(String sectionId) async {
+    await SectionService().upsertSection(sectionId);
+    getData();
+    sectionUpsert.id = sectionId;
+    newSectionsUpsert = sections;
+  }
+
   Future<void> addSection() async {
     setState(() {
       userPost = _textController.text;
@@ -89,7 +99,14 @@ class _SectionPageState extends State<SectionPage> {
     });
   }
 
-  void editSection() {}
+  void editSection(String id) async {
+    setState(() {
+      editing = false;
+      sectionId = id;
+      upsertData(sectionId);
+      sections = newSectionsUpsert;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +129,6 @@ class _SectionPageState extends State<SectionPage> {
                         height: 110,
                         child: Slidable(
                           closeOnScroll: true,
-                          // ignore: sort_child_properties_last
                           child: Container(
                             width: double.infinity,
                             height: 110,
@@ -122,10 +138,34 @@ class _SectionPageState extends State<SectionPage> {
                                 SectionPage.sectionName = sections[index].name;
                                 context.push('/exercises');
                               },
-                              child: Text(
-                                sections[index].name!,
-                                style: const TextStyle(fontSize: 70),
-                              ),
+                              child: !editing
+                                  ? Text(
+                                      sections[index].name!,
+                                      style: const TextStyle(fontSize: 70),
+                                    )
+                                  : Container(
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.grey[700]!,
+                                            width: 3.5),
+                                      ),
+                                      child: Container(
+                                        margin: const EdgeInsets.only(left: 7),
+                                        child: TextField(
+                                          autofocus: true,
+                                          controller: _textController,
+                                          decoration: InputDecoration(
+                                            suffixIcon: IconButton(
+                                              color: Colors.white,
+                                              onPressed: () => editSection(
+                                                  sections[index].id!),
+                                              icon: Icon((Icons.done)),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                             ),
                           ),
                           startActionPane: ActionPane(
@@ -133,7 +173,9 @@ class _SectionPageState extends State<SectionPage> {
                             motion: ScrollMotion(),
                             children: [
                               SlidableAction(
-                                onPressed: (context) => editSection(),
+                                onPressed: (context) => setState(() {
+                                  editing = true;
+                                }),
                                 backgroundColor: Colors.blue,
                                 foregroundColor: Colors.white,
                                 icon: Icons.edit,
@@ -170,7 +212,7 @@ class _SectionPageState extends State<SectionPage> {
               child: FloatingActionButton(
                 backgroundColor: Colors.white,
                 onPressed: () {
-                  setState(() {          
+                  setState(() {
                     notClicked = !notClicked;
                   });
                 },
@@ -197,8 +239,8 @@ class _SectionPageState extends State<SectionPage> {
                   bottom: 10,
                 ),
                 child: Container(
-                  margin:
-                      const EdgeInsets.only(left: 7, top: 0, right: 0, bottom: 0),
+                  margin: const EdgeInsets.only(
+                      left: 7, top: 0, right: 0, bottom: 0),
                   child: TextField(
                     controller: _textController,
                     decoration: InputDecoration(
