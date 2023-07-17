@@ -69,11 +69,16 @@ class SectionService {
     }
   }
 
-  Future<Section?> upsertSection(String id) async {
+  Future<Section?> upsertSection(String id, Section section) async {
     try {
       var url = Uri.parse(
           ApiConstants.baseUrl + ApiConstants.sectionEndpoint + "/${id}");
-      var response = await http.put(url);
+      var sectionJson = section.toJson();
+      var response = await http.put(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: json.encode(sectionJson));
       if (response.statusCode == 201) {
         Map<String, dynamic> jsonMap = json.decode(response.body);
         Section section = Section.fromJson(jsonMap);

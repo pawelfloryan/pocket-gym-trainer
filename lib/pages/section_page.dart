@@ -18,18 +18,17 @@ class SectionPage extends StatefulWidget {
 }
 
 class _SectionPageState extends State<SectionPage> {
-  bool isLoading = false;
   final _textController = TextEditingController();
   String userPost = '';
+  String sectionName = '';
   bool notClicked = false;
   bool editing = false;
-  double click = 1;
-  double temp = 1;
+  int selectedSectionIndex = -1;
+  int sectionIndex = -1;
 
   List<Section> sections = <Section>[];
   List<Section> newSections = <Section>[];
   List<Section> newSectionsDelete = <Section>[];
-  List<Section> newSectionsUpsert = <Section>[];
   Section sectionCreate = Section();
   Section section = Section();
   Section sectionDelete = Section();
@@ -71,10 +70,12 @@ class _SectionPageState extends State<SectionPage> {
   }
 
   void upsertData(String sectionId) async {
-    await SectionService().upsertSection(sectionId);
+    section = (await SectionService().upsertSection(sectionId, sectionUpsert))!;
     getData();
-    sectionUpsert.id = sectionId;
-    newSectionsUpsert = sections;
+    newSections = sections;
+    newSections[sectionIndex].name = sectionUpsert.name;
+    Future.delayed(const Duration(milliseconds: 10))
+        .then((value) => setState(() {}));
   }
 
   Future<void> addSection() async {
@@ -87,7 +88,6 @@ class _SectionPageState extends State<SectionPage> {
           .then((value) => setState(() {}));
       notClicked = false;
       _textController.text = "";
-      click -= 1;
     });
   }
 
@@ -101,10 +101,15 @@ class _SectionPageState extends State<SectionPage> {
 
   void editSection(String id) async {
     setState(() {
+      userPost = _textController.text;
+      sectionUpsert.name = userPost;
+      sectionUpsert.userId = decodedUserId;
       editing = false;
       sectionId = id;
       upsertData(sectionId);
-      sections = newSectionsUpsert;
+      getData();
+      sections = newSections;
+      _textController.text = "";
     });
   }
 
@@ -136,31 +141,42 @@ class _SectionPageState extends State<SectionPage> {
                               onPressed: () {
                                 SectionPage.sectionKey = sections[index].id;
                                 SectionPage.sectionName = sections[index].name;
+                                editing = false;
+                                selectedSectionIndex = -1;
                                 context.push('/exercises');
                               },
-                              child: !editing
+                              child: !editing || selectedSectionIndex != index
                                   ? Text(
                                       sections[index].name!,
                                       style: const TextStyle(fontSize: 70),
                                     )
                                   : Container(
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.grey[700]!,
-                                            width: 3.5),
-                                      ),
-                                      child: Container(
-                                        margin: const EdgeInsets.only(left: 7),
-                                        child: TextField(
-                                          autofocus: true,
-                                          controller: _textController,
-                                          decoration: InputDecoration(
-                                            suffixIcon: IconButton(
+                                      margin: const EdgeInsets.only(
+                                          left: 7, right: 10),
+                                      child: TextField(
+                                        cursorColor: Colors.white,
+                                        autofocus: true,
+                                        controller: _textController,
+                                        style: TextStyle(
+                                          fontSize: 50,
+                                          color: Colors.white,
+                                        ),
+                                        decoration: InputDecoration(
+                                          focusedBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
                                               color: Colors.white,
-                                              onPressed: () => editSection(
-                                                  sections[index].id!),
-                                              icon: Icon((Icons.done)),
+                                            ),
+                                          ),
+                                          suffixIcon: IconButton(
+                                            color: Colors.white,
+                                            onPressed: () {
+                                              sectionIndex = index;
+                                              editSection(sections[index].id!);
+                                              _textController.text = "";
+                                            },
+                                            icon: Icon(
+                                              Icons.done,
+                                              size: 40,
                                             ),
                                           ),
                                         ),
@@ -174,11 +190,29 @@ class _SectionPageState extends State<SectionPage> {
                             children: [
                               SlidableAction(
                                 onPressed: (context) => setState(() {
-                                  editing = true;
+                                  if (!editing) {
+                                    editing = true;
+                                    _textController.text =
+                                        sections[index].name!;
+                                    selectedSectionIndex = index;
+                                  } else {
+                                    if (selectedSectionIndex != index) {
+                                      editing = true;
+                                      _textController.text =
+                                          sections[index].name!;
+                                      selectedSectionIndex =  index;
+                                    }else{
+                                      editing = false;
+                                      _textController.text = "";
+                                      selectedSectionIndex = -1;
+                                    }
+                                  }
                                 }),
                                 backgroundColor: Colors.blue,
                                 foregroundColor: Colors.white,
-                                icon: Icons.edit,
+                                icon: !editing || selectedSectionIndex != index
+                                    ? Icons.edit
+                                    : Icons.subdirectory_arrow_left_sharp ,
                               ),
                             ],
                           ),
