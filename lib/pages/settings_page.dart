@@ -1,3 +1,4 @@
+import 'package:PocketGymTrainer/theme_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -31,31 +32,6 @@ class _SettingsPageState extends State<SettingsPage> {
     //final SharedPreferences prefs = await SharedPreferences.getInstance();
     //prefs.setInt("lightMode", 0);
     //prefs.setString("selectedTheme", selectedTheme!);
-  }
-  
-  Future<void> lightTheme() async{
-    selectedTheme = themes[0];
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt("lightMode", 0);
-    prefs.setString("selectedTheme", selectedTheme!);
-  }
-  Future<void> darkTheme() async{
-    selectedTheme = themes[1];
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt("darkMode", 1);
-    prefs.setString("selectedTheme", selectedTheme!);
-  }
-  Future<void> neonTheme() async{
-    selectedTheme = themes[2];
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt("neonMode", 2);
-    prefs.setString("selectedTheme", selectedTheme!);
-  }
-  Future<void> falconTheme() async{
-    selectedTheme = themes[3];
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt("falconMode", 3);
-    prefs.setString("selectedTheme", selectedTheme!);
   }
 
   @override
@@ -222,7 +198,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 selectedTheme = value!;
                               });
                               print(selectedTheme);
-                              lightTheme();
+                              ThemeMethods.lightTheme();
                               MyApp().getLightPrefs();
                             },
                           ),
@@ -262,7 +238,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 selectedTheme = value!;
                               });
                               print(selectedTheme);
-                              darkTheme();
+                              ThemeMethods.darkTheme();
                               MyApp().getDarkPrefs();
                             },
                           ),
@@ -302,7 +278,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 selectedTheme = value!;
                               });
                               print(selectedTheme);
-                              neonTheme();
+                              ThemeMethods.neonTheme();
                               MyApp().getNeonPrefs();
                             },
                           ),
@@ -342,7 +318,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 selectedTheme = value!;
                               });
                               print(selectedTheme);
-                              falconTheme();
+                              ThemeMethods.falconTheme();
                               MyApp().getFalconPrefs();
                             },
                           ),

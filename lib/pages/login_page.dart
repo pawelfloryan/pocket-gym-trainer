@@ -75,6 +75,7 @@ class _LoginPageState extends State<LoginPage> {
       isVisible = false;
       setState(() {
         RootPage.logged = true;
+        processing = !processing;
       });
       Future.delayed(const Duration(seconds: 2)).then((value) => setState(() {
             context.go('/dashboard');
@@ -274,7 +275,6 @@ class _LoginPageState extends State<LoginPage> {
                                           inputErrors();
                                         }));
                                 if (formKey.currentState!.validate()) {
-                                  processing = !processing;
                                   authenticate();
                                 }
                               }else if(processing){
