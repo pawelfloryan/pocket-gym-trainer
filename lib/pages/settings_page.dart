@@ -1,4 +1,7 @@
-import 'package:PocketGymTrainer/theme_methods.dart';
+import 'package:PocketGymTrainer/components/theme_setting.dart';
+
+import '../components/setting.dart';
+import '../theme_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -7,10 +10,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
 
 List<String> themes = ["light", "dark", "neon", "falcon"];
+List<String> settings = [
+  "Language",
+  "Tooltips",
+  "Light",
+  "Dark",
+  "Neon",
+  "Falcon"
+];
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
-
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
@@ -24,9 +33,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   String? selectedTheme;
 
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
     selectedTheme = themes[0];
     //final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -96,65 +104,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
               ),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(width: 2, color: Colors.grey[200]!),
-                  ),
-                  //color: MyApp.theme == 0 ? Colors.white : Colors.black,
-                  color: Colors.white,
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(bottom: 10, top: 10, left: 15),
-                      child: Text(
-                        "Language",
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                    ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Container(
-                          margin: EdgeInsets.only(right: 5),
-                          child: Icon(Icons.arrow_forward_ios),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(width: 2, color: Colors.grey[200]!),
-                  ),
-                  color: Colors.white,
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(bottom: 10, top: 10, left: 15),
-                      child: Text(
-                        "Tooltips",
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                    ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Container(
-                          margin: EdgeInsets.only(right: 5),
-                          child: Icon(Icons.arrow_forward_ios),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              Setting(text: settings[0].toString()),
+              Setting(text: settings[1].toString()),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
@@ -168,165 +119,29 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
               ),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(width: 2, color: Colors.grey[200]!),
-                  ),
-                  color: Colors.white,
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(bottom: 10, top: 10, left: 15),
-                      child: Text(
-                        "Light",
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                    ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Container(
-                          margin: EdgeInsets.only(right: 15),
-                          child: Radio<String>(
-                            value: themes[0],
-                            groupValue: MyApp.theme == 0 ? themes[0] : themes[1],
-                            onChanged: (String? value) {
-                              setState(() {
-                                selectedTheme = value!;
-                              });
-                              print(selectedTheme);
-                              ThemeMethods.lightTheme();
-                              MyApp().getLightPrefs();
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              ThemeSetting(
+                text: settings[2].toString(),
+                themeNumber: 0,
+                onThemeChanged: ThemeMethods.lightTheme(),
+                getThemePrefs: MyApp().getLightPrefs(),
               ),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(width: 2, color: Colors.grey[200]!),
-                  ),
-                  color: Colors.white,
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(bottom: 10, top: 10, left: 15),
-                      child: Text(
-                        "Dark",
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                    ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Container(
-                          margin: EdgeInsets.only(right: 15),
-                          child: Radio<String>(
-                            value: themes[1],
-                            groupValue: MyApp.theme == 1 ? themes[1] : themes[0],
-                            onChanged: (String? value) {
-                              setState(() {
-                                selectedTheme = value!;
-                              });
-                              print(selectedTheme);
-                              ThemeMethods.darkTheme();
-                              MyApp().getDarkPrefs();
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              ThemeSetting(
+                text: settings[3].toString(),
+                themeNumber: 1,
+                onThemeChanged: ThemeMethods.darkTheme(),
+                getThemePrefs: MyApp().getDarkPrefs(),
               ),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(width: 2, color: Colors.grey[200]!),
-                  ),
-                  color: Colors.white,
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(bottom: 10, top: 10, left: 15),
-                      child: Text(
-                        "Neon",
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                    ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Container(
-                          margin: EdgeInsets.only(right: 15),
-                          child: Radio<String>(
-                            value: themes[2],
-                            groupValue: MyApp.theme == 2 ? themes[2] : themes[0],
-                            onChanged: (String? value) {
-                              setState(() {
-                                selectedTheme = value!;
-                              });
-                              print(selectedTheme);
-                              ThemeMethods.neonTheme();
-                              MyApp().getNeonPrefs();
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              ThemeSetting(
+                text: settings[4].toString(),
+                themeNumber: 2,
+                onThemeChanged: ThemeMethods.neonTheme(),
+                getThemePrefs: MyApp().getNeonPrefs(),
               ),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(width: 2, color: Colors.grey[200]!),
-                  ),
-                  color: Colors.white,
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(bottom: 10, top: 10, left: 15),
-                      child: Text(
-                        "Falcon",
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                    ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Container(
-                          margin: EdgeInsets.only(right: 15),
-                          child: Radio<String>(
-                            value: themes[3],
-                            groupValue: MyApp.theme == 3 ? themes[3] : themes[0],
-                            onChanged: (String? value) {
-                              setState(() {
-                                selectedTheme = value!;
-                              });
-                              print(selectedTheme);
-                              ThemeMethods.falconTheme();
-                              MyApp().getFalconPrefs();
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              ThemeSetting(
+                text: settings[5].toString(),
+                themeNumber: 3,
+                onThemeChanged: ThemeMethods.falconTheme(),
+                getThemePrefs: MyApp().getFalconPrefs(),
               ),
             ],
           ),
