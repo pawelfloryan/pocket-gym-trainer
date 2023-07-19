@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class Setting extends StatelessWidget {
   late String text = "";
-  Setting({required this.text});
+  final Widget child;
+  Setting({required this.text, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class Setting extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: Container(
                 margin: EdgeInsets.only(right: 5),
-                child: Icon(Icons.arrow_forward_ios),
+                child: child,
               ),
             ),
           ),

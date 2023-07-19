@@ -6,8 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../theme_methods.dart';
 
 import '../main.dart';
+
+String? selectedTheme = themes[0];
+List<String> themes = ["light", "dark", "neon", "falcon"];
 
 List<String> settings = [
   "Language",
@@ -100,8 +104,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
               ),
-              Setting(text: settings[0].toString()),
-              Setting(text: settings[1].toString()),
+              Setting(
+                text: settings[0].toString(),
+                child: Icon(Icons.arrow_forward_ios),
+              ),
+              Setting(
+                text: settings[1].toString(),
+                child: Icon(Icons.arrow_forward_ios),
+              ),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
@@ -115,29 +125,61 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
               ),
-              ThemeSetting(
+              Setting(
                 text: settings[2].toString(),
-                themeNumber: 0,
-                onThemeChanged: ThemeMethods.lightTheme(),
-                getThemePrefs: MyApp().getLightPrefs(),
+                child: Radio<String>(
+                  value: themes[0],
+                  groupValue: selectedTheme,
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedTheme = value!;
+                    });
+                    print(themes[0]);
+                    print(selectedTheme);
+                  },
+                ),
               ),
-              ThemeSetting(
+              Setting(
                 text: settings[3].toString(),
-                themeNumber: 1,
-                onThemeChanged: ThemeMethods.darkTheme(),
-                getThemePrefs: MyApp().getDarkPrefs(),
+                child: Radio<String>(
+                  value: themes[1],
+                  groupValue: selectedTheme,
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedTheme = value!;
+                    });
+                    print(themes[1]);
+                    print(selectedTheme);
+                  },
+                ),
               ),
-              ThemeSetting(
+              Setting(
                 text: settings[4].toString(),
-                themeNumber: 2,
-                onThemeChanged: ThemeMethods.neonTheme(),
-                getThemePrefs: MyApp().getNeonPrefs(),
+                child: Radio<String>(
+                  value: themes[2],
+                  groupValue: selectedTheme,
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedTheme = value!;
+                    });
+                    print(themes[2]);
+                    print(selectedTheme);
+                  },
+                ),
               ),
-              ThemeSetting(
+              Setting(
                 text: settings[5].toString(),
-                themeNumber: 3,
-                onThemeChanged: ThemeMethods.falconTheme(),
-                getThemePrefs: MyApp().getFalconPrefs(),
+                child: Radio<String>(
+                  value: themes[3],
+                  groupValue: selectedTheme,
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedTheme = value!;
+                    });
+                    print(themes[3]);
+                    print(selectedTheme);
+                  },
+                ),
               ),
             ],
           ),
