@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-String? selectedTheme;
+String? selectedTheme = themes[0];
 List<String> themes = ["light", "dark", "neon", "falcon"];
 
 class ThemeMethods {

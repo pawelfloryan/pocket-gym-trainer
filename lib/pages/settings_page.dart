@@ -9,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
 
-List<String> themes = ["light", "dark", "neon", "falcon"];
 List<String> settings = [
   "Language",
   "Tooltips",
@@ -31,12 +30,9 @@ class _SettingsPageState extends State<SettingsPage> {
   late String decodedUserName = decodedToken["name"];
   late String decodedUserEmail = decodedToken["email"];
 
-  String? selectedTheme;
-
   @override
   void initState() {
     super.initState();
-    selectedTheme = themes[0];
     //final SharedPreferences prefs = await SharedPreferences.getInstance();
     //prefs.setInt("lightMode", 0);
     //prefs.setString("selectedTheme", selectedTheme!);

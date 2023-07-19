@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../main.dart';
-import '../theme_methods.dart';
+
+String? selectedTheme = themes[0];
+List<String> themes = ["light", "dark", "neon", "falcon"];
 
 class ThemeSetting extends StatefulWidget {
   late String text = "";
@@ -21,6 +23,8 @@ class ThemeSetting extends StatefulWidget {
 }
 
 class _ThemeSettingState extends State<ThemeSetting> {
+
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,10 +56,8 @@ class _ThemeSettingState extends State<ThemeSetting> {
                     setState(() {
                       selectedTheme = value!;
                     });
-                    print(widget.themeNumber);
+                    print(themes[widget.themeNumber]);
                     print(selectedTheme);
-                    widget.onThemeChanged;
-                    widget.getThemePrefs;
                   },
                 ),
               ),
