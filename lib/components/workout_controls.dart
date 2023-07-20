@@ -7,11 +7,13 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 
 import '../components/workout_timer.dart';
 import '../main.dart';
+import '../model/user_stats.dart';
 import '../model/workout.dart';
 import '../pages/dashboard_page.dart';
 import 'package:flutter/material.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
+import '../services/user_stats_service.dart';
 import '../services/workout_service.dart';
 
 class WorkoutControls extends StatefulWidget {
@@ -24,6 +26,10 @@ class WorkoutControls extends StatefulWidget {
 class _WorkoutControlsState extends State<WorkoutControls> {
   Workout workout = Workout();
   Workout workoutCreate = Workout();
+
+  UserStats userStats = UserStats();
+  UserStats newUserStats = UserStats();
+  UserStats userStatsUpsert = UserStats();
 
   String? jwtToken = RootPage.token;
 
@@ -45,6 +51,36 @@ class _WorkoutControlsState extends State<WorkoutControls> {
       workoutCreate.workoutDate = formattedDate;
       workoutCreate.userId = decodedUserId;
       createData();
+    });
+  }
+
+  void getUserEntries() async {
+    userStats =
+        (await UserStatsService().getUserStats(jwtToken!, decodedUserId));
+    if (userStats.entries != null) {
+      setState(() {
+        WorkoutCounter.number.value = userStats.entries!;
+      });
+    }
+    print(decodedUserId);
+    print(userStats.entries);
+  }
+
+  void upsertUserEntries() async {
+    userStats = (await UserStatsService().upsertUserStats(decodedUserId, userStatsUpsert))!;
+    getUserEntries();
+    newUserStats = userStats;
+    newUserStats.entries = userStatsUpsert.entries;
+    Future.delayed(const Duration(milliseconds: 10))
+        .then((value) => setState(() {}));
+  }
+
+  void editUserEntries() async {
+    setState(() {
+      userStatsUpsert.entries = WorkoutCounter.number.value;
+      userStatsUpsert.id = decodedUserId;
+      upsertUserEntries();
+      userStats = newUserStats;
     });
   }
 
@@ -70,6 +106,7 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                             DashboardPage.workoutStart = false;
                             addWorkout();
                             WorkoutCounter.number.value++;
+                            editUserEntries();
                           });
                         },
                         child: ElevatedButton(

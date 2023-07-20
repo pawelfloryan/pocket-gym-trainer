@@ -1,6 +1,9 @@
 import 'package:PocketGymTrainer/components/theme_setting.dart';
 
 import '../components/setting.dart';
+import '../components/workout_counter.dart';
+import '../model/user_stats.dart';
+import '../services/user_stats_service.dart';
 import '../theme_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -33,13 +36,48 @@ class _SettingsPageState extends State<SettingsPage> {
   late Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken!);
   late String decodedUserName = decodedToken["name"];
   late String decodedUserEmail = decodedToken["email"];
+  late String decodedUserId = decodedToken["id"];
+
+  UserStats userStats = UserStats();
+  UserStats newUserStats = UserStats();
+  UserStats userStatsUpsert = UserStats();
 
   @override
   void initState() {
     super.initState();
+    getUserEntries();
     //final SharedPreferences prefs = await SharedPreferences.getInstance();
     //prefs.setInt("lightMode", 0);
     //prefs.setString("selectedTheme", selectedTheme!);
+  }
+
+  void getUserEntries() async {
+    userStats =
+        (await UserStatsService().getUserStats(jwtToken!, decodedUserId));
+    if (userStats.entries != null) {
+      setState(() {
+        WorkoutCounter.number.value = userStats.entries!;
+      });
+    }
+    print(decodedUserId);
+    print(userStats.entries);
+  }
+
+  void upsertUserEntries() async {
+    userStats = (await UserStatsService()
+        .upsertUserStats(decodedUserId, userStatsUpsert))!;
+    getUserEntries();
+    newUserStats = userStats;
+    newUserStats.entries = userStatsUpsert.entries;
+  }
+
+  void editUserEntries() async {
+    setState(() {
+      userStatsUpsert.entries = WorkoutCounter.number.value;
+      userStatsUpsert.id = decodedUserId;
+      upsertUserEntries();
+      userStats = newUserStats;
+    });
   }
 
   @override
@@ -88,6 +126,56 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ],
                     ),
+                    //VerticalDivider(
+                    //  color: Colors.grey,
+                    //  thickness: 5,
+                    //  width: 20,
+                    //),
+                    Container(
+                      margin: EdgeInsets.only(left: 30),
+                      child: Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(bottom: 10),
+                            child: Text(
+                              "${WorkoutCounter.number.value}",
+                              style: WorkoutCounter.number.value < 100
+                                  ? const TextStyle(fontSize: 50)
+                                  : WorkoutCounter.number.value < 1000
+                                      ? const TextStyle(fontSize: 45)
+                                      : const TextStyle(fontSize: 35),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 7),
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      WorkoutCounter.number.value++;
+                                      print(WorkoutCounter.number.value);
+                                      editUserEntries();
+                                    });
+                                  },
+                                  child: Icon(Icons.add, size: 35),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      WorkoutCounter.number.value--;
+                                      print(WorkoutCounter.number.value);
+                                      editUserEntries();
+                                    });
+                                  },
+                                  child: Icon(Icons.remove, size: 35),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -98,9 +186,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: Text(
                     "Performance settings",
                     style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.w500),
+                      color: Colors.black,
+                      fontSize: 25,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),

@@ -46,4 +46,24 @@ class UserStatsService{
       return userStats;
     }
   }
+
+  Future<UserStats?> upsertUserStats(String id, UserStats userStats) async {
+    try {
+      var url = Uri.parse(
+          ApiConstants.baseUrl + ApiConstants.userStatsEndpoint + "/${id}");
+      var userStatsJson = userStats.toJson();
+      var response = await http.put(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: json.encode(userStatsJson));
+      if (response.statusCode == 201) {
+        Map<String, dynamic> jsonMap = json.decode(response.body);
+        UserStats userStats = UserStats.fromJson(jsonMap);
+        return userStats;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 }

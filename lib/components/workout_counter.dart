@@ -35,14 +35,10 @@ class _WorkoutCounterState extends State<WorkoutCounter> {
       setState(() {
         WorkoutCounter.number.value = userStats.entries!;
       });
-      print(userStats.entries);
-      print("////////////////////////////////////////////////////////////");
     }
     print(decodedUserId);
     print(userStats.entries);
   }
-
-  void updateUserEntries() async {}
 
   @override
   Widget build(BuildContext context) {
