@@ -46,9 +46,6 @@ class _SettingsPageState extends State<SettingsPage> {
   void initState() {
     super.initState();
     getUserEntries();
-    //final SharedPreferences prefs = await SharedPreferences.getInstance();
-    //prefs.setInt("lightMode", 0);
-    //prefs.setString("selectedTheme", selectedTheme!);
   }
 
   void getUserEntries() async {
@@ -126,11 +123,6 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ],
                     ),
-                    //VerticalDivider(
-                    //  color: Colors.grey,
-                    //  thickness: 5,
-                    //  width: 20,
-                    //),
                     Container(
                       margin: EdgeInsets.only(left: 30),
                       child: Row(
