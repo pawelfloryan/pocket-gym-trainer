@@ -112,8 +112,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
     });
   }
 
-  void editExercise() {}
-
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -143,18 +141,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
                       margin: const EdgeInsets.only(
                           left: 10, top: 10, right: 10, bottom: 5),
                       child: Slidable(
-                        startActionPane: ActionPane(
-                          extentRatio: 0.15,
-                          motion: ScrollMotion(),
-                          children: [
-                            SlidableAction(
-                              onPressed: (context) => editExercise(),
-                              backgroundColor: Colors.blue,
-                              foregroundColor: Colors.white,
-                              icon: Icons.edit,
-                            ),
-                          ],
-                        ),
                         endActionPane: ActionPane(
                           extentRatio: 0.2,
                           motion: ScrollMotion(),

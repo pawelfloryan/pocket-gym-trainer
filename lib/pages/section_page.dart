@@ -1,4 +1,5 @@
 import 'package:PocketGymTrainer/main.dart';
+import 'package:PocketGymTrainer/providers/section_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -12,6 +13,7 @@ class SectionPage extends StatefulWidget {
   const SectionPage({super.key});
   static late var sectionKey;
   static late var sectionName;
+  static late int sectionIndex = -1;
 
   @override
   State<SectionPage> createState() => _SectionPageState();
@@ -24,15 +26,7 @@ class _SectionPageState extends State<SectionPage> {
   bool notClicked = false;
   bool editing = false;
   int selectedSectionIndex = -1;
-  int sectionIndex = -1;
 
-  List<Section> sections = <Section>[];
-  List<Section> newSections = <Section>[];
-  List<Section> newSectionsDelete = <Section>[];
-  Section sectionCreate = Section();
-  Section section = Section();
-  Section sectionDelete = Section();
-  Section sectionUpsert = Section();
   String sectionId = "";
 
   String? jwtToken = RootPage.token;
@@ -43,39 +37,8 @@ class _SectionPageState extends State<SectionPage> {
   @override
   void initState() {
     super.initState();
-    getData();
-  }
-
-  void getData() async {
-    sections = (await SectionService().getSection(jwtToken!, decodedUserId));
-    Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
-  }
-
-  void createData() async {
-    section = (await SectionService().createSection(sectionCreate))!;
-    sections.add(section);
-    Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
-  }
-
-  void deleteData(String sectionId) async {
-    await SectionService().deleteSection(sectionId, jwtToken!);
-    getData();
-    sectionDelete.id = sectionId;
-    newSectionsDelete = sections;
-    newSectionsDelete.remove(sectionDelete);
-    Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
-  }
-
-  void upsertData(String sectionId) async {
-    section = (await SectionService().upsertSection(sectionId, sectionUpsert))!;
-    getData();
-    newSections = sections;
-    newSections[sectionIndex].name = sectionUpsert.name;
-    Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
+    SectionProvider().getData();
+    print(sections);
   }
 
   Future<void> addSection() async {
@@ -83,7 +46,7 @@ class _SectionPageState extends State<SectionPage> {
       userPost = _textController.text;
       sectionCreate.name = userPost;
       sectionCreate.userId = decodedUserId;
-      createData();
+      SectionProvider().createData();
       Future.delayed(const Duration(milliseconds: 10))
           .then((value) => setState(() {}));
       notClicked = false;
@@ -94,7 +57,9 @@ class _SectionPageState extends State<SectionPage> {
   void deleteSection(String id) {
     setState(() {
       sectionId = id;
-      deleteData(sectionId);
+      SectionProvider().deleteData(sectionId);
+      Future.delayed(const Duration(milliseconds: 10))
+          .then((value) => setState(() {}));
       sections = newSectionsDelete;
     });
   }
@@ -106,8 +71,12 @@ class _SectionPageState extends State<SectionPage> {
       sectionUpsert.userId = decodedUserId;
       editing = false;
       sectionId = id;
-      upsertData(sectionId);
-      getData();
+      SectionProvider().upsertData(sectionId);
+      Future.delayed(const Duration(milliseconds: 10))
+          .then((value) => setState(() {}));
+      SectionProvider().getData();
+      Future.delayed(const Duration(milliseconds: 10))
+          .then((value) => setState(() {}));
       sections = newSections;
       _textController.text = "";
     });
@@ -170,7 +139,7 @@ class _SectionPageState extends State<SectionPage> {
                                           suffixIcon: IconButton(
                                             color: Colors.white,
                                             onPressed: () {
-                                              sectionIndex = index;
+                                              SectionPage.sectionIndex = index;
                                               editSection(sections[index].id!);
                                               _textController.text = "";
                                             },
