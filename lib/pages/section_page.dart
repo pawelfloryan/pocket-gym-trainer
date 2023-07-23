@@ -38,8 +38,14 @@ class _SectionPageState extends State<SectionPage> {
   @override
   void initState() {
     super.initState();
-    SectionProvider().getData();
+    getData();
     print(sections);
+  }
+
+  void getData() async {
+    sections = (await SectionService().getSection(jwtToken!, decodedUserId));
+    Future.delayed(const Duration(milliseconds: 10))
+        .then((value) => setState(() {}));
   }
 
   Future<void> addSection() async {
