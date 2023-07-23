@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import '../components/auth_button.dart';
 import '../model/auth_result.dart';
 import '../model/register.dart';
 import '../model/user_stats.dart';
@@ -53,6 +54,19 @@ class _RegisterPageState extends State<RegisterPage> {
         focus = false;
       }
     });
+  }
+
+  Future<void> buttonActions() async {
+    setState(() {
+      isElevated = !isElevated;
+    });
+    Future.delayed(const Duration(milliseconds: 5))
+        .then((value) => setState(() {
+              inputErrors();
+            }));
+    if (formKey.currentState!.validate()) {
+      authenticate();
+    }
   }
 
   void createUserStats() async {
@@ -254,59 +268,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                     ),
-                    Container(
-                      //MediaQuery.of(context).size.width
-                      margin: EdgeInsets.only(
-                        left: 0,
-                        top: 50,
-                        right: 0,
-                        bottom: 0,
-                      ),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: GestureDetector(
-                          onTapDown: (details) {
-                            setState(() {
-                              isElevated = !isElevated;
-                            });
-                            Future.delayed(const Duration(milliseconds: 5))
-                                .then((value) => setState(() {
-                                      inputErrors();
-                                    }));
-                            if (formKey.currentState!.validate()) {
-                              authenticate();
-                            }
-                          },
-                          child: AnimatedContainer(
-                            duration: Duration(milliseconds: 200),
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(35),
-                              boxShadow: isElevated
-                                  ? [
-                                      BoxShadow(
-                                          color: Colors.grey[500]!,
-                                          offset: Offset(4, 4),
-                                          blurRadius: 15,
-                                          spreadRadius: 1),
-                                      BoxShadow(
-                                          color: Colors.white,
-                                          offset: Offset(-4, -4),
-                                          blurRadius: 15,
-                                          spreadRadius: 1),
-                                    ]
-                                  : null,
-                            ),
-                            child: Icon(
-                              Icons.arrow_forward,
-                              size: 75,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                    AuthButton(isElevated: isElevated, buttonActions: buttonActions)
                   ],
                 ),
                 Visibility(

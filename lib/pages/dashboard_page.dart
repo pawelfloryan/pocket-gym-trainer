@@ -38,7 +38,7 @@ class _DashboardPageState extends State<DashboardPage> {
           title: currentPage == 0
               ? const Text("Home")
               : currentPage == 1
-                  ? const Text("Exercises")
+                  ? const Text("Sections")
                   : const Text("Statistics"),
           actions: [WorkoutTimer()],
         ),

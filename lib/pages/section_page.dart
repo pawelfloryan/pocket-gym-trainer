@@ -3,6 +3,7 @@ import 'package:PocketGymTrainer/providers/section_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import '../components/new_item_textfield.dart';
 import '../model/section.dart';
 import '../pages/login_page.dart';
 import '../services/section_services.dart';
@@ -169,8 +170,8 @@ class _SectionPageState extends State<SectionPage> {
                                       editing = true;
                                       _textController.text =
                                           sections[index].name!;
-                                      selectedSectionIndex =  index;
-                                    }else{
+                                      selectedSectionIndex = index;
+                                    } else {
                                       editing = false;
                                       _textController.text = "";
                                       selectedSectionIndex = -1;
@@ -181,7 +182,7 @@ class _SectionPageState extends State<SectionPage> {
                                 foregroundColor: Colors.white,
                                 icon: !editing || selectedSectionIndex != index
                                     ? Icons.edit
-                                    : Icons.subdirectory_arrow_left_sharp ,
+                                    : Icons.subdirectory_arrow_left_sharp,
                               ),
                             ],
                           ),
@@ -207,59 +208,17 @@ class _SectionPageState extends State<SectionPage> {
             },
             itemCount: sections.length,
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Container(
-              margin:
-                  const EdgeInsets.only(left: 0, top: 0, right: 10, bottom: 10),
-              child: FloatingActionButton(
-                backgroundColor: Colors.white,
-                onPressed: () {
-                  setState(() {
-                    notClicked = !notClicked;
-                  });
-                },
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
-          Visibility(
-            visible: notClicked,
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: MediaQuery.of(context).size.width - 90,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 3.5),
-                    color: Colors.white),
-                margin: EdgeInsets.only(
-                  left: 0,
-                  right: screenSize.width * 0.15,
-                  top: 0,
-                  bottom: 10,
-                ),
-                child: Container(
-                  margin: const EdgeInsets.only(
-                      left: 7, top: 0, right: 0, bottom: 0),
-                  child: TextField(
-                    controller: _textController,
-                    decoration: InputDecoration(
-                      hintText: 'Name of a new section',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      suffixIcon: IconButton(
-                        color: Colors.black,
-                        onPressed: addSection,
-                        icon: Icon((Icons.done)),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          NewItemTextField(
+            text: "Name of a new section",
+            notClicked: notClicked,
+            textController: _textController,
+            onClicked: () {
+              setState(() {
+                notClicked = !notClicked;
+              });
+            },
+            addElement: addSection,
+          )
         ],
       ),
     );

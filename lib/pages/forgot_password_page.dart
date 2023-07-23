@@ -1,3 +1,4 @@
+import 'package:PocketGymTrainer/components/reset_option.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
@@ -79,25 +80,7 @@ class ForgotPasswordPage extends StatelessWidget {
                       size: 50,
                       color: Colors.black,
                     ),
-                    Column(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 40),
-                          child: Text(
-                            "via sms:",
-                            style: TextStyle(
-                                color: Colors.grey[400], fontSize: 15),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 10, left: 25),
-                          child: const Text(
-                            "••• ••• 782",
-                            style: TextStyle(color: Colors.black, fontSize: 20),
-                          ),
-                        ),
-                      ],
-                    )
+                    RecoverOption(text1: "via sms:", text2: "••• ••• 782")
                   ],
                 ),
               ),
@@ -121,25 +104,7 @@ class ForgotPasswordPage extends StatelessWidget {
                       size: 50,
                       color: Colors.black,
                     ),
-                    Column(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 40, right: 35),
-                          child: Text(
-                            "via email:",
-                            style: TextStyle(
-                                color: Colors.grey[400], fontSize: 15),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 10, left: 25),
-                          child: const Text(
-                            "••••@mail.com",
-                            style: TextStyle(color: Colors.black, fontSize: 20),
-                          ),
-                        ),
-                      ],
-                    )
+                    RecoverOption(text1: "via email:", text2: "••••@mail.com")
                   ],
                 ),
               ),

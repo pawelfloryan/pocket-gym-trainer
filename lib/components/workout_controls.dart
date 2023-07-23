@@ -67,7 +67,8 @@ class _WorkoutControlsState extends State<WorkoutControls> {
   }
 
   void upsertUserEntries() async {
-    userStats = (await UserStatsService().upsertUserStats(decodedUserId, userStatsUpsert))!;
+    userStats = (await UserStatsService()
+        .upsertUserStats(decodedUserId, userStatsUpsert))!;
     getUserEntries();
     newUserStats = userStats;
     newUserStats.entries = userStatsUpsert.entries;
@@ -164,13 +165,15 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                   width: double.infinity,
                   height: 100,
                   child: Container(
-                    decoration: BoxDecoration(boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey[400]!,
-                        spreadRadius: 2,
-                        blurRadius: 15,
-                      )
-                    ]),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey[400]!,
+                          spreadRadius: 2,
+                          blurRadius: 15,
+                        )
+                      ],
+                    ),
                     child: ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll<Color>(

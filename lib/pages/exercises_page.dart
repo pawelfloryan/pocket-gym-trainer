@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:PocketGymTrainer/components/new_item_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -269,59 +270,17 @@ class _ExercisesPageState extends State<ExercisesPage> {
             },
             itemCount: exercises.length,
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Container(
-              margin:
-                  const EdgeInsets.only(left: 0, top: 0, right: 10, bottom: 10),
-              child: FloatingActionButton(
-                backgroundColor: Colors.black,
-                onPressed: () {
-                  setState(() {          
-                    notClicked = !notClicked;
-                  });
-                },
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-          Visibility(
-            visible: notClicked,
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: MediaQuery.of(context).size.width - 90,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 3.5),
-                    color: Colors.white),
-                margin: EdgeInsets.only(
-                  left: 0,
-                  right: screenSize.width * 0.15,
-                  top: 0,
-                  bottom: 10,
-                ),
-                child: Container(
-                  margin:
-                      const EdgeInsets.only(left: 7, top: 0, right: 0, bottom: 0),
-                  child: TextField(
-                    controller: _textController,
-                    decoration: InputDecoration(
-                      hintText: 'Name of a new section',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      suffixIcon: IconButton(
-                        color: Colors.black,
-                        onPressed: addExercise,
-                        icon: Icon((Icons.done)),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          NewItemTextField(
+            text: "Name of a new exercise",
+            notClicked: notClicked,
+            textController: _textController,
+            onClicked: () {
+              setState(() {
+                notClicked = !notClicked;
+              });
+            },
+            addElement: addExercise,
+          )
         ],
       ),
     );

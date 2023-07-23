@@ -1,3 +1,4 @@
+import 'package:PocketGymTrainer/components/auth_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -48,6 +49,23 @@ class _LoginPageState extends State<LoginPage> {
         focus = false;
       }
     });
+  }
+
+  Future<void> buttonActions() async {
+    if (!processing) {
+      setState(() {
+        isElevated = !isElevated;
+      });
+      Future.delayed(const Duration(milliseconds: 5))
+          .then((value) => setState(() {
+                inputErrors();
+              }));
+      if (formKey.currentState!.validate()) {
+        authenticate();
+      }
+    } else if (processing) {
+      null;
+    }
   }
 
   void loginAction() async {
@@ -255,62 +273,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ],
                       ),
-                      Container(
-                        margin: EdgeInsets.only(
-                          left: 0,
-                          top: 50,
-                          right: 0,
-                          bottom: 0,
-                        ),
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: GestureDetector(
-                            onTapDown: (details) {
-                              if (!processing) {
-                                setState(() {
-                                  isElevated = !isElevated;
-                                });
-                                Future.delayed(const Duration(milliseconds: 5))
-                                    .then((value) => setState(() {
-                                          inputErrors();
-                                        }));
-                                if (formKey.currentState!.validate()) {
-                                  authenticate();
-                                }
-                              }else if(processing){
-                                null;
-                              }
-                            },
-                            child: AnimatedContainer(
-                              duration: Duration(milliseconds: 200),
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(35),
-                                boxShadow: isElevated
-                                    ? [
-                                        BoxShadow(
-                                            color: Colors.grey[500]!,
-                                            offset: Offset(4, 4),
-                                            blurRadius: 15,
-                                            spreadRadius: 1),
-                                        BoxShadow(
-                                            color: Colors.white,
-                                            offset: Offset(-4, -4),
-                                            blurRadius: 15,
-                                            spreadRadius: 1),
-                                      ]
-                                    : null,
-                              ),
-                              child: Icon(
-                                Icons.arrow_forward,
-                                size: 75,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      AuthButton(isElevated: isElevated, buttonActions: buttonActions)
                     ],
                   ),
                   Visibility(
