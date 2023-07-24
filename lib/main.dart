@@ -205,6 +205,7 @@ class RootPage extends StatefulWidget {
   const RootPage({super.key});
   static late bool logged = false;
   static late String? token;
+  static late bool workoutStarted = false;
 
   @override
   State<RootPage> createState() => _RootPageState();

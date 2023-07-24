@@ -4,29 +4,34 @@ class Section {
   late String? id;
   late String? name;
   late String? userId;
+  late int? exercisesPerformed;
 
   Section({
     this.id,
     this.name,
     this.userId,
+    this.exercisesPerformed
   });
 
   Map<String, Object?> toJson() => {
         "id": id,
         "name": name,
         "userId": userId,
+        "exercisesPerformed": exercisesPerformed,
       };
 
   static Section fromJsonList(Map<String, dynamic> json) => Section(
         id: json["id"] as String,
         name: json["name"] as String,
         userId: json["userId"] as String,
+        exercisesPerformed: json["exercisesPerformed"] as int,
       );
 
   static Section fromJson(Map<String, dynamic> json) => Section(
         id: json["id"] as String,
         name: json["name"] as String,
         userId: json["userId"] as String,
+        exercisesPerformed: json["exercisesPerformed"] as int,
       );
 }
 

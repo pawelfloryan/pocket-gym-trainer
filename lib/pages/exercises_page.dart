@@ -280,6 +280,8 @@ class _ExercisesPageState extends State<ExercisesPage> {
               });
             },
             addElement: addExercise,
+            backgroundColor: Color.fromARGB(255, 0, 0, 0),
+            iconColor: Color.fromARGB(255, 255, 255, 255),
           )
         ],
       ),

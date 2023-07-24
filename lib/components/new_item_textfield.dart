@@ -6,6 +6,8 @@ class NewItemTextField extends StatelessWidget {
   var textController = TextEditingController();
   final void Function() onClicked;
   final Future<void> Function() addElement;
+  final Color backgroundColor;
+  final Color iconColor;
 
   NewItemTextField({
     required this.text,
@@ -13,6 +15,8 @@ class NewItemTextField extends StatelessWidget {
     required this.textController,
     required this.onClicked,
     required this.addElement,
+    required this.backgroundColor,
+    required this.iconColor
   });
 
   @override
@@ -25,15 +29,15 @@ class NewItemTextField extends StatelessWidget {
           alignment: Alignment.bottomRight,
           child: Container(
             margin:
-                const EdgeInsets.only(left: 0, top: 0, right: 10, bottom: 10),
+                const EdgeInsets.only(right: 10, bottom: 10),
             child: FloatingActionButton(
-              backgroundColor: Colors.black,
+              backgroundColor: backgroundColor,
               onPressed: () {
                 onClicked();
               },
-              child: const Icon(
+              child: Icon(
                 Icons.add,
-                color: Colors.white,
+                color: iconColor,
               ),
             ),
           ),

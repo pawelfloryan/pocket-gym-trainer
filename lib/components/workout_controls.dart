@@ -108,6 +108,7 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                             addWorkout();
                             WorkoutCounter.number.value++;
                             editUserEntries();
+                            RootPage.workoutStarted = false;
                           });
                         },
                         child: ElevatedButton(
@@ -192,6 +193,7 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                         setState(() {
                           WorkoutTimer.startTimer();
                           DashboardPage.workoutStart = true;
+                          RootPage.workoutStarted = true;
                         });
                       }),
                       child: Text(

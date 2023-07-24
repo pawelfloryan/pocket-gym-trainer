@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +16,8 @@ class ExerciseCountChart extends StatefulWidget {
 
 class _ExerciseCountChartState extends State<ExerciseCountChart> {
   List<Section> sections = <Section>[];
+  double sum = 0;
+  double finalValue = 1;
 
   @override
   void initState() {
@@ -28,7 +32,16 @@ class _ExerciseCountChartState extends State<ExerciseCountChart> {
         .then((value) => setState(() {
               sections = data;
             }));
+
+    for (int i = 0; i < sections.length; i++) {
+      sum += sections[i].exercisesPerformed!;
+    }
+    setState(() {
+      finalValue = (sum / sections.length);
+    });
   }
+
+  int? touchedDotCount;
 
   @override
   Widget build(BuildContext context) {
@@ -50,30 +63,82 @@ class _ExerciseCountChartState extends State<ExerciseCountChart> {
                   ),
                 ),
                 Expanded(
-                  child: RadarChart(
-                    RadarChartData(
-                      dataSets: [
-                        RadarDataSet(
-                            dataEntries: sections.map((section) {
-                          return RadarEntry(
-                              value: sections.indexOf(section).toDouble());
-                        }).toList())
-                      ],
-                      radarShape: RadarShape.polygon,
-                      getTitle: (index, angle) {
-                        for (int i = 0; i < sections.length; i++) {
-                          if (index == i) {
-                            return RadarChartTitle(text: sections[i].name!);
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      GestureDetector(
+                        onPanDown: (details) {
+                          double x = details.localPosition.dx;
+                          double y = details.localPosition.dy;
+                          print(y);
+                          double angle = atan2(y, x);
+                          int sectionIndex =
+                              (angle * sections.length / (2 * pi)).round();
+
+                          if (sectionIndex >= 0 &&
+                              sectionIndex < sections.length) {
+                            setState(() {
+                              touchedDotCount =
+                                  sections[sectionIndex].exercisesPerformed;
+                            });
+                          } else {
+                            setState(() {
+                              touchedDotCount = null;
+                            });
                           }
-                        }
-                        return RadarChartTitle(text: "Error");
-                      },
-                      titleTextStyle:
-                          TextStyle(color: Colors.black, fontSize: 15),
-                      titlePositionPercentageOffset: 0.10,
-                    ),
-                    swapAnimationDuration: Duration(milliseconds: 150),
-                    swapAnimationCurve: Curves.linear,
+                        },
+                        child: RadarChart(
+                          RadarChartData(
+                            radarTouchData: RadarTouchData(
+                              enabled: true,
+                            ),
+                            tickCount: 3,
+                            ticksTextStyle: TextStyle(color: Colors.transparent),
+                            dataSets: [
+                              RadarDataSet(
+                                dataEntries: sections.map((section) {
+                                  return RadarEntry(
+                                      value: section.exercisesPerformed!
+                                          .toDouble());
+                                }).toList(),
+                                borderWidth: 3,
+                              )
+                            ],
+                            radarShape: RadarShape.polygon,
+                            getTitle: (index, angle) {
+                              for (int i = 0; i < sections.length; i++) {
+                                if (index == i) {
+                                  return RadarChartTitle(
+                                      text: sections[i].name!);
+                                }
+                              }
+                              return RadarChartTitle(text: "Error");
+                            },
+                            titleTextStyle:
+                                TextStyle(color: Colors.black, fontSize: 15),
+                            titlePositionPercentageOffset: 0.10,
+                          ),
+                          swapAnimationDuration: Duration(milliseconds: 150),
+                          swapAnimationCurve: Curves.linear,
+                        ),
+                      ),
+                      if (touchedDotCount != null)
+                        Positioned(
+                          top: 10,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.blue.withOpacity(0.7),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              "${touchedDotCount!}",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ],

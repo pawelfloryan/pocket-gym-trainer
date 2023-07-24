@@ -1,11 +1,12 @@
-import 'package:PocketGymTrainer/main.dart';
-import 'package:PocketGymTrainer/providers/section_provider.dart';
+import '../main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import '../components/new_item_textfield.dart';
+import '../model/exercise.dart';
 import '../model/section.dart';
 import '../pages/login_page.dart';
+import '../services/exercise_service.dart';
 import '../services/section_services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../components/section.dart';
@@ -21,6 +22,19 @@ class SectionPage extends StatefulWidget {
 }
 
 class _SectionPageState extends State<SectionPage> {
+  List<Exercise> exercises = <Exercise>[];
+  Iterable<Exercise> newExercises = <Exercise>[];
+
+  List<Section> sections = <Section>[];
+  List<Section> newSections = <Section>[];
+  List<Section> newSectionsDelete = <Section>[];
+  Section section = Section();
+  Section sectionCreate = Section();
+  Section sectionDelete = Section();
+  Section sectionUpsert = Section();
+
+  int sectionIndex = SectionPage.sectionIndex;
+
   final _textController = TextEditingController();
   String userPost = '';
   String sectionName = '';
@@ -29,17 +43,18 @@ class _SectionPageState extends State<SectionPage> {
   int selectedSectionIndex = -1;
 
   String sectionId = "";
-
   String? jwtToken = RootPage.token;
 
   late Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken!);
   late String decodedUserId = decodedToken["id"];
 
+  int exercisesLength = 0;
+
   @override
   void initState() {
     super.initState();
     getData();
-    print(sections);
+    getAllExercises();
   }
 
   void getData() async {
@@ -48,12 +63,32 @@ class _SectionPageState extends State<SectionPage> {
         .then((value) => setState(() {}));
   }
 
+  void createData() async {
+    section = (await SectionService().createSection(sectionCreate))!;
+    sections.add(section);
+  }
+
+  void deleteData(String sectionId) async {
+    await SectionService().deleteSection(sectionId, jwtToken!);
+    getData();
+    sectionDelete.id = sectionId;
+    newSectionsDelete = sections;
+    newSectionsDelete.remove(sectionDelete);
+  }
+
+  void upsertData(String sectionId) async {
+    section = (await SectionService().upsertSection(sectionId, sectionUpsert))!;
+    getData();
+    newSections = sections;
+    newSections[sectionIndex].name = sectionUpsert.name;
+  }
+
   Future<void> addSection() async {
     setState(() {
       userPost = _textController.text;
       sectionCreate.name = userPost;
       sectionCreate.userId = decodedUserId;
-      SectionProvider().createData();
+      createData();
       Future.delayed(const Duration(milliseconds: 10))
           .then((value) => setState(() {}));
       notClicked = false;
@@ -64,7 +99,7 @@ class _SectionPageState extends State<SectionPage> {
   void deleteSection(String id) {
     setState(() {
       sectionId = id;
-      SectionProvider().deleteData(sectionId);
+      deleteData(sectionId);
       Future.delayed(const Duration(milliseconds: 10))
           .then((value) => setState(() {}));
       sections = newSectionsDelete;
@@ -78,15 +113,26 @@ class _SectionPageState extends State<SectionPage> {
       sectionUpsert.userId = decodedUserId;
       editing = false;
       sectionId = id;
-      SectionProvider().upsertData(sectionId);
+      upsertData(sectionId);
       Future.delayed(const Duration(milliseconds: 10))
           .then((value) => setState(() {}));
-      SectionProvider().getData();
+      getData();
       Future.delayed(const Duration(milliseconds: 10))
           .then((value) => setState(() {}));
       sections = newSections;
       _textController.text = "";
     });
+  }
+
+  void getAllExercises() async {
+    exercises = (await ExerciseService().getAllExercises(decodedUserId));
+    Future.delayed(const Duration(milliseconds: 10))
+        .then((value) => setState(() {}));
+  }
+
+  exercisesCountDisplay(int index){
+    newExercises = exercises.where((element) => element.sectionId == sections[index].id);
+    return newExercises.length;
   }
 
   @override
@@ -122,9 +168,52 @@ class _SectionPageState extends State<SectionPage> {
                                 context.push('/exercises');
                               },
                               child: !editing || selectedSectionIndex != index
-                                  ? Text(
-                                      sections[index].name!,
-                                      style: const TextStyle(fontSize: 70),
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          flex: 5,
+                                          child: Container(
+                                            margin: EdgeInsets.only(left: 50),
+                                            child: Center(
+                                              child: Text(
+                                                sections[index].name!,
+                                                style: const TextStyle(
+                                                    fontSize: 70),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        RootPage.workoutStarted
+                                            ? Expanded(
+                                                child: Align(
+                                                  alignment: Alignment.topRight,
+                                                  child: Container(
+                                                    margin: EdgeInsets.only(
+                                                        top: 20),
+                                                    child: exercises.any(
+                                                            (element) =>
+                                                                element
+                                                                    .sectionId ==
+                                                                sections[index]
+                                                                    .id)
+                                                        ? Text(
+                                                            "0/${exercisesCountDisplay(index)}",
+                                                            style: TextStyle(
+                                                                fontSize: 17),
+                                                          )
+                                                        : Text("0/0"),
+                                                  ),
+                                                ),
+                                              )
+                                            : Expanded(
+                                                child: Container(
+                                                  margin:
+                                                      EdgeInsets.only(top: 20),
+                                                ),
+                                              )
+                                      ],
                                     )
                                   : Container(
                                       margin: const EdgeInsets.only(
@@ -224,6 +313,8 @@ class _SectionPageState extends State<SectionPage> {
               });
             },
             addElement: addSection,
+            backgroundColor: Color.fromARGB(255, 255, 255, 255),
+            iconColor: Color.fromARGB(255, 0, 0, 0),
           )
         ],
       ),
