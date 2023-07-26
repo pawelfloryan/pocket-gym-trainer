@@ -33,14 +33,13 @@ class _SectionPageState extends State<SectionPage> {
   Section sectionDelete = Section();
   Section sectionUpsert = Section();
 
-  int sectionIndex = SectionPage.sectionIndex;
-
   final _textController = TextEditingController();
   String userPost = '';
   String sectionName = '';
   bool notClicked = false;
   bool editing = false;
   int selectedSectionIndex = -1;
+  int sectionIndex = -1;
 
   String sectionId = "";
   String? jwtToken = RootPage.token;
@@ -64,8 +63,11 @@ class _SectionPageState extends State<SectionPage> {
   }
 
   void createData() async {
+    print(sectionCreate.name);
     section = (await SectionService().createSection(sectionCreate))!;
     sections.add(section);
+    Future.delayed(const Duration(milliseconds: 10))
+        .then((value) => setState(() {}));
   }
 
   void deleteData(String sectionId) async {
@@ -74,6 +76,8 @@ class _SectionPageState extends State<SectionPage> {
     sectionDelete.id = sectionId;
     newSectionsDelete = sections;
     newSectionsDelete.remove(sectionDelete);
+    Future.delayed(const Duration(milliseconds: 10))
+        .then((value) => setState(() {}));
   }
 
   void upsertData(String sectionId) async {
@@ -81,6 +85,8 @@ class _SectionPageState extends State<SectionPage> {
     getData();
     newSections = sections;
     newSections[sectionIndex].name = sectionUpsert.name;
+    Future.delayed(const Duration(milliseconds: 10))
+        .then((value) => setState(() {}));
   }
 
   Future<void> addSection() async {
@@ -88,6 +94,7 @@ class _SectionPageState extends State<SectionPage> {
       userPost = _textController.text;
       sectionCreate.name = userPost;
       sectionCreate.userId = decodedUserId;
+      sectionCreate.exercisesPerformed = 0;
       createData();
       Future.delayed(const Duration(milliseconds: 10))
           .then((value) => setState(() {}));
@@ -100,8 +107,6 @@ class _SectionPageState extends State<SectionPage> {
     setState(() {
       sectionId = id;
       deleteData(sectionId);
-      Future.delayed(const Duration(milliseconds: 10))
-          .then((value) => setState(() {}));
       sections = newSectionsDelete;
     });
   }
@@ -114,11 +119,7 @@ class _SectionPageState extends State<SectionPage> {
       editing = false;
       sectionId = id;
       upsertData(sectionId);
-      Future.delayed(const Duration(milliseconds: 10))
-          .then((value) => setState(() {}));
       getData();
-      Future.delayed(const Duration(milliseconds: 10))
-          .then((value) => setState(() {}));
       sections = newSections;
       _textController.text = "";
     });
@@ -235,7 +236,7 @@ class _SectionPageState extends State<SectionPage> {
                                           suffixIcon: IconButton(
                                             color: Colors.white,
                                             onPressed: () {
-                                              SectionPage.sectionIndex = index;
+                                              sectionIndex = index;
                                               editSection(sections[index].id!);
                                               _textController.text = "";
                                             },

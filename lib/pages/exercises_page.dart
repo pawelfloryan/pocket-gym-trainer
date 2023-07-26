@@ -157,44 +157,51 @@ class _ExercisesPageState extends State<ExercisesPage> {
                         ),
                         child: Material(
                           elevation: 6,
-                          color: Colors.grey[600],
                           child: Container(
-                            margin: const EdgeInsets.only(
-                                left: 0, right: 0, top: 5, bottom: 40),
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                              colors: [
+                                Colors.black,
+                                Colors.white,
+                              ],
+                            )),
                             child: Row(
                               children: [
                                 Container(
                                   margin: const EdgeInsets.only(
-                                      left: 20, right: 0, top: 0, bottom: 0),
-                                  width: 140,
-                                  height: 115,
+                                    left: 20,
+                                  ),
+                                  width: 150,
+                                  height: 135,
                                   //Image button
                                   child: image != null
                                       ? Image.file(image!)
                                       : ElevatedButton(
                                           style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.grey),
+                                            backgroundColor: Colors.grey[400],
+                                          ),
                                           onPressed: () {
                                             pickImage();
                                           },
                                           child: const Tooltip(
                                             message: "Upload your photos here!",
                                             child: Icon(
-                                              Icons
-                                                  .add_photo_alternate_outlined,
+                                              Icons.add_photo_alternate_outlined,
                                               size: 70,
                                             ),
                                           ),
                                         ),
                                 ),
                                 Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Container(
                                       width: 140,
                                       height: 70,
                                       margin: const EdgeInsets.only(
                                         left: 30,
-                                        right: 0,
                                         top: 18,
                                         bottom: 20,
                                       ),
@@ -244,14 +251,15 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                                     ),
                                     ),
                                     Container(
-                                      width: 110,
+                                      margin: EdgeInsets.only(left: 30),
+                                      width: 140,
                                       height: 40,
                                       child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.black),
                                         onPressed: (() {}),
                                         child: Text(
-                                          "Done!",
+                                          "Complete",
                                           style: const TextStyle(fontSize: 25),
                                         ),
                                       ),

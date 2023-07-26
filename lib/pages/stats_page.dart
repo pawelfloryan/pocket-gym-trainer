@@ -12,7 +12,7 @@ List<Widget> charts = const [
 ];
 
 List<String> options = const [
-  "Training split %",
+  "Training split",
   "Average workout time",
   "Daily workouts"
 ];

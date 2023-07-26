@@ -55,7 +55,7 @@ class _ExerciseCountChartState extends State<ExerciseCountChart> {
                     bottom: 30,
                   ),
                   child: const Text(
-                    "Exercise performance",
+                    "Training split",
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.w800,
