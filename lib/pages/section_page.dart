@@ -1,3 +1,5 @@
+import 'package:auto_size_text/auto_size_text.dart';
+
 import '../main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -83,8 +85,6 @@ class _SectionPageState extends State<SectionPage> {
   void upsertData(String sectionId) async {
     section = (await SectionService().upsertSection(sectionId, sectionUpsert))!;
     getData();
-    newSections = sections;
-    newSections[sectionIndex].name = sectionUpsert.name;
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
   }
@@ -111,11 +111,12 @@ class _SectionPageState extends State<SectionPage> {
     });
   }
 
-  void editSection(String id) async {
+  void editSection(String id, int index) async {
     setState(() {
       userPost = _textController.text;
       sectionUpsert.name = userPost;
       sectionUpsert.userId = decodedUserId;
+      sectionUpsert.exercisesPerformed = sections[index].exercisesPerformed;
       editing = false;
       sectionId = id;
       upsertData(sectionId);
@@ -131,8 +132,9 @@ class _SectionPageState extends State<SectionPage> {
         .then((value) => setState(() {}));
   }
 
-  exercisesCountDisplay(int index){
-    newExercises = exercises.where((element) => element.sectionId == sections[index].id);
+  exercisesCountDisplay(int index) {
+    newExercises =
+        exercises.where((element) => element.sectionId == sections[index].id);
     return newExercises.length;
   }
 
@@ -151,7 +153,10 @@ class _SectionPageState extends State<SectionPage> {
                   children: <Widget>[
                     Container(
                       margin: const EdgeInsets.only(
-                          left: 20, top: 10, right: 20, bottom: 0),
+                        left: 20,
+                        top: 10,
+                        right: 20,
+                      ),
                       child: SizedBox(
                         width: double.infinity,
                         height: 110,
@@ -174,14 +179,17 @@ class _SectionPageState extends State<SectionPage> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Expanded(
-                                          flex: 5,
+                                          flex: 6,
                                           child: Container(
                                             margin: EdgeInsets.only(left: 50),
                                             child: Center(
-                                              child: Text(
+                                              child: AutoSizeText(
                                                 sections[index].name!,
                                                 style: const TextStyle(
-                                                    fontSize: 70),
+                                                  fontSize: 70,
+                                                ),
+                                                minFontSize: 40,
+                                                maxLines: 1,
                                               ),
                                             ),
                                           ),
@@ -237,7 +245,8 @@ class _SectionPageState extends State<SectionPage> {
                                             color: Colors.white,
                                             onPressed: () {
                                               sectionIndex = index;
-                                              editSection(sections[index].id!);
+                                              editSection(sections[index].id!,
+                                                  sectionIndex);
                                               _textController.text = "";
                                             },
                                             icon: Icon(

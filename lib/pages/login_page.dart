@@ -167,16 +167,14 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: const EdgeInsets.only(
-                        left: 0, top: 20, right: 0, bottom: 25),
+                    margin: const EdgeInsets.only(top: 20, bottom: 25),
                     child: Text(
                       "Welcome back!",
                       style: TextStyle(fontSize: 40, color: Color(0xFF363f93)),
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(
-                        left: 0, top: 0, right: 0, bottom: 12),
+                    margin: const EdgeInsets.only(bottom: 12),
                     child: TextFormField(
                       controller: _emailController,
                       decoration: InputDecoration(
@@ -246,8 +244,7 @@ class _LoginPageState extends State<LoginPage> {
                       Column(
                         children: [
                           Container(
-                            margin: const EdgeInsets.only(
-                                left: 0, top: 50, right: 40, bottom: 0),
+                            margin: const EdgeInsets.only(top: 50, right: 40),
                             child: GestureDetector(
                               onTap: () {
                                 context.go('/register');
@@ -259,8 +256,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           Container(
-                            margin: const EdgeInsets.only(
-                                left: 0, top: 30, right: 72, bottom: 0),
+                            margin: const EdgeInsets.only(top: 30, right: 72),
                             child: GestureDetector(
                               onTap: () {
                                 context.go('/forgotPassword');
@@ -273,7 +269,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ],
                       ),
-                      AuthButton(isElevated: isElevated, buttonActions: buttonActions)
+                      AuthButton(
+                          isElevated: isElevated, buttonActions: buttonActions)
                     ],
                   ),
                   Visibility(

@@ -52,14 +52,12 @@ class NewItemTextField extends StatelessWidget {
                   border: Border.all(color: Colors.black, width: 3.5),
                   color: Colors.white),
               margin: EdgeInsets.only(
-                left: 0,
                 right: screenSize.width * 0.15,
-                top: 0,
                 bottom: 10,
               ),
               child: Container(
                 margin:
-                    const EdgeInsets.only(left: 7, top: 0, right: 0, bottom: 0),
+                    const EdgeInsets.only(left: 7),
                 child: TextField(
                   controller: textController,
                   decoration: InputDecoration(

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:PocketGymTrainer/components/new_item_textfield.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -188,7 +189,8 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                           child: const Tooltip(
                                             message: "Upload your photos here!",
                                             child: Icon(
-                                              Icons.add_photo_alternate_outlined,
+                                              Icons
+                                                  .add_photo_alternate_outlined,
                                               size: 70,
                                             ),
                                           ),
@@ -206,49 +208,15 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                         bottom: 20,
                                       ),
                                       padding: EdgeInsets.only(left: 10),
-                                      //TODO Figure out how to add scrollbars if necessary
-                                      child: exercises[index].name!.length > 15
-                                          ? Text(
-                                              exercises[index].name!,
-                                              style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 30,
-                                                  fontFamily: "Times New Roman",
-                                                  fontWeight: FontWeight.w600),
-                                            )
-                                          : exercises[index].name!.length > 6
-                                              ? Text(
-                                                  exercises[index].name!,
-                                                  style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 30,
-                                                      fontFamily:
-                                                          "Times New Roman",
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                )
-                                              : exercises[index].name!.length >
-                                                      4
-                                                  ? Text(
-                                                      exercises[index].name!,
-                                                      style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 35,
-                                                          fontFamily:
-                                                              "Times New Roman",
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    )
-                                                  : Text(
-                                                      exercises[index].name!,
-                                                      style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 50,
-                                                          fontFamily:
-                                                              "Times New Roman",
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ),
+                                      child: AutoSizeText(
+                                        exercises[index].name!,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        minFontSize: 20,
+                                      ),
                                     ),
                                     Container(
                                       margin: EdgeInsets.only(left: 30),

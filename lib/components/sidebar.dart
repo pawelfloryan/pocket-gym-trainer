@@ -87,7 +87,7 @@ class Sidebar extends StatelessWidget {
         ],
         theme: const SidebarXTheme(
           itemTextPadding: const EdgeInsets.all(10.0),
-          itemMargin: EdgeInsets.only(left: 10, top: 0, right: 0, bottom: 0),
+          itemMargin: EdgeInsets.only(left: 10),
           decoration: BoxDecoration(
             color: Colors.black,
           ),
@@ -95,7 +95,7 @@ class Sidebar extends StatelessWidget {
           selectedIconTheme: IconThemeData(color: Colors.white),
           selectedTextStyle: TextStyle(color: Colors.white),
           selectedItemTextPadding:
-              EdgeInsets.only(left: 5, top: 0, right: 0, bottom: 0),
+              EdgeInsets.only(left: 5),
         ),
         extendedTheme: const SidebarXTheme(
           width: 175,

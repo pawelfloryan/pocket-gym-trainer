@@ -164,16 +164,14 @@ class _RegisterPageState extends State<RegisterPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  margin: const EdgeInsets.only(
-                      left: 0, top: 20, right: 0, bottom: 25),
+                  margin: const EdgeInsets.only(top: 20, bottom: 25),
                   child: Text(
                     "Welcome to PGT!",
                     style: TextStyle(fontSize: 40, color: Color(0xFF363f93)),
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(
-                      left: 0, top: 0, right: 0, bottom: 12),
+                  margin: const EdgeInsets.only(bottom: 12),
                   child: TextFormField(
                     controller: _nameController,
                     decoration:
@@ -194,8 +192,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(
-                      left: 0, top: 0, right: 0, bottom: 12),
+                  margin: const EdgeInsets.only(bottom: 12),
                   child: TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(labelText: "Enter your email"),
@@ -256,8 +253,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(
-                          left: 0, top: 0, right: 40, bottom: 0),
+                      margin: const EdgeInsets.only(right: 40),
                       child: GestureDetector(
                         onTap: () {
                           context.go('/login');
