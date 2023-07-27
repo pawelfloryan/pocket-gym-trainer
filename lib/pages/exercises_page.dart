@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
 import '../model/exercise.dart';
 import '../pages/section_page.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ExercisesPage extends StatefulWidget {
   const ExercisesPage({super.key});
+  static late List<int> exerciseId;
 
   @override
   State<ExercisesPage> createState() => _ExercisesPageState();
@@ -24,6 +26,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
   String userPost = '';
   bool notClicked = false;
   bool weightNotClicked = true;
+  bool complete = false;
   String exerciseUserPost = '';
   String weightUserPost = '';
   File? image;
@@ -46,6 +49,8 @@ class _ExercisesPageState extends State<ExercisesPage> {
   late Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken!);
   late String decodedUserId = decodedToken["id"];
 
+  late final List<bool?> prefsComplete;
+
   Future pickImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -66,6 +71,18 @@ class _ExercisesPageState extends State<ExercisesPage> {
   void initState() {
     super.initState();
     getData(sectionId);
+    //getPrefs(ExercisesPage.exerciseId);
+  }
+
+  Future<void> setPrefs(int index) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('complete${index}', true);
+  }
+
+  //TODO Figure out how to make prefs work
+  Future<void> getPrefs(int index) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefsComplete.add(prefs.getBool('complete${index}'));
   }
 
   void getData(sectionId) async {
@@ -172,7 +189,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
                               children: [
                                 Container(
                                   margin: const EdgeInsets.only(
-                                    left: 20,
+                                    left: 15,
                                   ),
                                   width: 150,
                                   height: 135,
@@ -200,14 +217,14 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Container(
-                                      width: 140,
+                                      width: 130,
                                       height: 70,
                                       margin: const EdgeInsets.only(
-                                        left: 30,
+                                        left: 20,
                                         top: 18,
                                         bottom: 20,
                                       ),
-                                      padding: EdgeInsets.only(left: 10),
+                                      padding: EdgeInsets.only(left: 15),
                                       child: AutoSizeText(
                                         exercises[index].name!,
                                         style: const TextStyle(
@@ -218,22 +235,65 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                         minFontSize: 20,
                                       ),
                                     ),
-                                    Container(
-                                      margin: EdgeInsets.only(left: 30),
-                                      width: 140,
-                                      height: 40,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.black),
-                                        onPressed: (() {}),
-                                        child: Text(
-                                          "Complete",
-                                          style: const TextStyle(fontSize: 25),
-                                        ),
-                                      ),
-                                    ),
+                                    complete &&
+                                            RootPage.workoutStarted &&
+                                            prefsComplete.any(
+                                                (element) => element == index)
+                                        ? Container(
+                                            margin: EdgeInsets.only(left: 30),
+                                            width: 140,
+                                            height: 40,
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Colors.black),
+                                              onPressed: (() {
+                                                complete = false;
+                                              }),
+                                              child: Text(
+                                                "Go back",
+                                                style: const TextStyle(
+                                                    fontSize: 25),
+                                              ),
+                                            ),
+                                          )
+                                        : Container(
+                                            margin: EdgeInsets.only(left: 30),
+                                            width: 140,
+                                            height: 40,
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Colors.black),
+                                              onPressed: (() {
+                                                ExercisesPage
+                                                    .exerciseId[index] = index;
+                                                complete = true;
+                                                setPrefs(ExercisesPage
+                                                    .exerciseId[index]);
+                                              }),
+                                              child: Text(
+                                                "Complete",
+                                                style: const TextStyle(
+                                                    fontSize: 25),
+                                              ),
+                                            ),
+                                          ),
                                   ],
                                 ),
+                                complete && RootPage.workoutStarted
+                                    ? Container(
+                                        margin: EdgeInsets.only(top: 5),
+                                        child: Align(
+                                          alignment: Alignment.topCenter,
+                                          child: Icon(
+                                            Icons.done,
+                                            color: Colors.green[600],
+                                            size: 40,
+                                          ),
+                                        ),
+                                      )
+                                    : Container()
                               ],
                             ),
                           ),
