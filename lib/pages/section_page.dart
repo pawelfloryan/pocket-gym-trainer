@@ -21,7 +21,8 @@ class SectionPage extends StatefulWidget {
   static late var sectionName;
   static late int sectionIndex = -1;
   static late List<Exercise> allExercises = <Exercise>[];
-  static final GlobalKey<_SectionPageState> sectionPageKey = GlobalKey<_SectionPageState>();
+  static final GlobalKey<_SectionPageState> sectionPageKey =
+      GlobalKey<_SectionPageState>();
 
   static _SectionPageState? of(BuildContext context) {
     return context.findAncestorStateOfType<_SectionPageState>();
@@ -68,75 +69,26 @@ class _SectionPageState extends State<SectionPage> {
     super.initState();
     getData();
     getAllExercises();
-    deletePrefs();
-    getPrefs();
-    enterPrefs();
   }
 
-  //Fills prefComplete with temporary data to be replaced by the completed exercises indexes
-  Future<void> enterPrefs() async {
+  int countedExercises(String sectionId) {
+      List<Exercise> exercisesCounted =
+          exercises.where((element) => element.sectionId == sectionId).toList();
+          print(exercisesCounted);
+    return exercisesCounted.length;
+  }
+
+  void prefsSet() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? tempFilled = prefs.getBool('tempFilled');
+    List<String>? allCompleted = prefs.getStringList('completed');
+    if (allCompleted != null)
+      await prefs.setStringList('allCompleted', allCompleted);
 
-      if (!enterPrefsCalled) {
-        enterPrefsCalled = true;
-        enterPrefsFuture = Future.delayed(const Duration(seconds: 1))
-            .then((value) => setState(() {
-                  for (int i = 0; i < exercises.length; i++) {
-                    prefsComplete.add("temp");
-                  }
-                }));
-      }
-      tempFilled = true;
-      await prefs.setBool('tempFilled', true);
-    print(prefsComplete);
-    return enterPrefsFuture;
-  }
-
-  //Sets both lists index of the completed exercise
-  Future<void> setPrefs(int index) async {
-    await enterPrefs();
-    setState(() {
-      prefsComplete[index] = exercises[index].id!;
-    });
-  }
-
-  //Gets prefs saved in a pref list to know which exercises are already completed
-  Future<void> getPrefs() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? strList = prefs.getStringList('complete');
-
-    setState(() {
-      prefsComplete = strList!;
-    });
-    print(prefsComplete);
-  }
-
-  //All completed exercises are saved into a list of prefs
-  Future<void> leavePrefs() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('complete', prefsComplete);
-  }
-
-  //Deletes prefs if a workout is not active
-  Future<void> deletePrefs() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (WorkoutControls.workoutDone) {
-      await prefs.remove('complete');
-      Future.delayed(const Duration(milliseconds: 100))
-          .then((value) => setState(() {
-                WorkoutControls.workoutDone = false;
-              }));
-    }
-  }
-
-  void prefsSet() async{
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(!RootPage.filledOnce){
+    if (!RootPage.filledOnce) {
       await prefs.setBool('tempFilled', false);
       RootPage.filledOnce = true;
     }
-    if(WorkoutControls.workoutDone){
+    if (WorkoutControls.workoutDone) {
       await prefs.setBool('tempFilled', false);
       RootPage.filledOnce = false;
     }

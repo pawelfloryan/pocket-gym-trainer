@@ -83,26 +83,28 @@ class _ExercisesPageState extends State<ExercisesPage> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? tempFilled = prefs.getBool('tempFilled');
 
-      if (!enterPrefsCalled) {
-        enterPrefsCalled = true;
-        enterPrefsFuture = Future.delayed(const Duration(seconds: 1))
-            .then((value) => setState(() {
-                  for (int i = 0; i < exercises.length; i++) {
-                    prefsComplete.add("temp");
-                  }
-                }));
-      }
-      tempFilled = true;
-      await prefs.setBool('tempFilled', true);
+    if (!enterPrefsCalled) {
+      enterPrefsCalled = true;
+      enterPrefsFuture = Future.delayed(const Duration(seconds: 1))
+          .then((value) => setState(() {
+                for (int i = 0; i < SectionPage.allExercises.length; i++) {
+                  prefsComplete.add("temp");
+                }
+              }));
+    }
+    tempFilled = true;
+    await prefs.setBool('tempFilled', true);
     print(prefsComplete);
     return enterPrefsFuture;
   }
 
-  //Sets both lists index of the completed exercise
+  //Sets list index of the completed exercise
   Future<void> setPrefs(int index) async {
     await enterPrefs();
     setState(() {
-      prefsComplete[index] = exercises[index].id!;
+      prefsComplete[index +
+          SectionPage.sectionPageKey.currentState!
+              .countedExercises(sectionId)] = exercises[index].id!;
     });
   }
 
@@ -287,7 +289,8 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                       ),
                                     ),
                                     prefsComplete.any((element) =>
-                                                element == exercises[index].id) &&
+                                                element ==
+                                                exercises[index].id) &&
                                             RootPage.workoutStarted == false
                                         ? Container(
                                             margin: EdgeInsets.only(left: 30),
@@ -355,8 +358,8 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                               ),
                                   ],
                                 ),
-                                prefsComplete.any(
-                                            (element) => element == exercises[index].id!) &&
+                                prefsComplete.any((element) =>
+                                            element == exercises[index].id!) &&
                                         RootPage.workoutStarted == false
                                     ? Container(
                                         margin: EdgeInsets.only(top: 5),
