@@ -2,6 +2,7 @@ import 'package:PocketGymTrainer/model/user_stats.dart';
 import 'package:PocketGymTrainer/services/user_stats_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 import '../main.dart';
@@ -50,7 +51,9 @@ class _WorkoutCounterState extends State<WorkoutCounter> {
         width: double.infinity,
         height: 180,
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            context.push('/settings');
+          },
           child: ValueListenableBuilder<int>(
             valueListenable: WorkoutCounter.number,
             builder: (context, value, child) {

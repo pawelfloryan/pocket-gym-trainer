@@ -18,7 +18,7 @@ import '../services/workout_service.dart';
 
 class WorkoutControls extends StatefulWidget {
   const WorkoutControls({super.key});
-
+  static late bool workoutDone = false;
   @override
   State<WorkoutControls> createState() => _WorkoutControlsState();
 }
@@ -109,6 +109,8 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                             WorkoutCounter.number.value++;
                             editUserEntries();
                             RootPage.workoutStarted = false;
+                            WorkoutControls.workoutDone = true;
+                            RootPage.filledOnce = false;
                           });
                         },
                         child: ElevatedButton(
@@ -127,6 +129,7 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                             ),
                           ),
                           onPressed: (() {
+                            //Actions performed when workout is finished are higher
                             setState(() {
                               toolTip = true;
                               Future.delayed(const Duration(milliseconds: 1500))

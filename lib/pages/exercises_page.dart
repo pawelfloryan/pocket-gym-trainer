@@ -1,5 +1,7 @@
 import 'dart:io';
-import 'package:PocketGymTrainer/components/new_item_textfield.dart';
+import '../components/new_item_textfield.dart';
+import '../components/workout_controls.dart';
+import '../pages/dashboard_page.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,7 +17,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ExercisesPage extends StatefulWidget {
   const ExercisesPage({super.key});
-  static late List<int> exerciseId;
 
   @override
   State<ExercisesPage> createState() => _ExercisesPageState();
@@ -25,8 +26,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
   final _textController = TextEditingController();
   String userPost = '';
   bool notClicked = false;
-  bool weightNotClicked = true;
-  bool complete = false;
+  bool enterPrefsCalled = false;
   String exerciseUserPost = '';
   String weightUserPost = '';
   File? image;
@@ -49,7 +49,9 @@ class _ExercisesPageState extends State<ExercisesPage> {
   late Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken!);
   late String decodedUserId = decodedToken["id"];
 
-  late final List<bool?> prefsComplete;
+  late List<String> prefsComplete = <String>[];
+
+  Future<void>? enterPrefsFuture;
 
   Future pickImage() async {
     try {
@@ -71,27 +73,76 @@ class _ExercisesPageState extends State<ExercisesPage> {
   void initState() {
     super.initState();
     getData(sectionId);
-    //getPrefs(ExercisesPage.exerciseId);
+    deletePrefs();
+    getPrefs();
+    enterPrefs();
   }
 
+  //Fills prefComplete with temporary data to be replaced by the completed exercises indexes
+  Future<void> enterPrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? tempFilled = prefs.getBool('tempFilled');
+
+      if (!enterPrefsCalled) {
+        enterPrefsCalled = true;
+        enterPrefsFuture = Future.delayed(const Duration(seconds: 1))
+            .then((value) => setState(() {
+                  for (int i = 0; i < exercises.length; i++) {
+                    prefsComplete.add("temp");
+                  }
+                }));
+      }
+      tempFilled = true;
+      await prefs.setBool('tempFilled', true);
+    print(prefsComplete);
+    return enterPrefsFuture;
+  }
+
+  //Sets both lists index of the completed exercise
   Future<void> setPrefs(int index) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('complete${index}', true);
+    await enterPrefs();
+    setState(() {
+      prefsComplete[index] = exercises[index].id!;
+    });
   }
 
-  //TODO Figure out how to make prefs work
-  Future<void> getPrefs(int index) async {
+  //Gets prefs saved in a pref list to know which exercises are already completed
+  Future<void> getPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefsComplete.add(prefs.getBool('complete${index}'));
+    List<String>? strList = prefs.getStringList('complete');
+
+    setState(() {
+      prefsComplete = strList!;
+    });
+    print(prefsComplete);
   }
 
-  void getData(sectionId) async {
+  //All completed exercises are saved into a list of prefs
+  Future<void> leavePrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('complete', prefsComplete);
+  }
+
+  //Deletes prefs if a workout is not active
+  Future<void> deletePrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (WorkoutControls.workoutDone) {
+      await prefs.remove('complete');
+      Future.delayed(const Duration(milliseconds: 100))
+          .then((value) => setState(() {
+                WorkoutControls.workoutDone = false;
+              }));
+    }
+  }
+
+  Future<void> getData(sectionId) async {
     exercises = (await ExerciseService().getExercise(sectionId, decodedUserId));
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
   }
 
   void createData() async {
+    prefsComplete.add("temp");
     exercise = (await ExerciseService().createExercise(exerciseCreate))!;
     exercises.add(exercise);
     Future.delayed(const Duration(milliseconds: 10))
@@ -133,8 +184,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -142,8 +191,8 @@ class _ExercisesPageState extends State<ExercisesPage> {
         automaticallyImplyLeading: false,
         leading: IconButton(
             onPressed: () {
-              //context.go('/sections');
               context.pop();
+              leavePrefs();
             },
             icon: const Icon(Icons.arrow_back_ios)),
       ),
@@ -165,8 +214,10 @@ class _ExercisesPageState extends State<ExercisesPage> {
                           motion: ScrollMotion(),
                           children: [
                             SlidableAction(
-                              onPressed: (context) =>
-                                  deleteExercise(exercises[index].id!),
+                              onPressed: (context) {
+                                deleteExercise(exercises[index].id!);
+                                prefsComplete.removeAt(index);
+                              },
                               backgroundColor: Colors.red,
                               foregroundColor: Colors.white,
                               icon: Icons.delete_sharp,
@@ -235,10 +286,9 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                         minFontSize: 20,
                                       ),
                                     ),
-                                    complete &&
-                                            RootPage.workoutStarted &&
-                                            prefsComplete.any(
-                                                (element) => element == index)
+                                    prefsComplete.any((element) =>
+                                                element == exercises[index].id) &&
+                                            RootPage.workoutStarted == false
                                         ? Container(
                                             margin: EdgeInsets.only(left: 30),
                                             width: 140,
@@ -248,7 +298,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                                   backgroundColor:
                                                       Colors.black),
                                               onPressed: (() {
-                                                complete = false;
+                                                print(index);
                                               }),
                                               child: Text(
                                                 "Go back",
@@ -257,31 +307,57 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                               ),
                                             ),
                                           )
-                                        : Container(
-                                            margin: EdgeInsets.only(left: 30),
-                                            width: 140,
-                                            height: 40,
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      Colors.black),
-                                              onPressed: (() {
-                                                ExercisesPage
-                                                    .exerciseId[index] = index;
-                                                complete = true;
-                                                setPrefs(ExercisesPage
-                                                    .exerciseId[index]);
-                                              }),
-                                              child: Text(
-                                                "Complete",
-                                                style: const TextStyle(
-                                                    fontSize: 25),
+                                        : RootPage.workoutStarted == false
+                                            ? Container(
+                                                margin:
+                                                    EdgeInsets.only(left: 30),
+                                                width: 140,
+                                                height: 40,
+                                                child: ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                          backgroundColor:
+                                                              Colors.black),
+                                                  onPressed: (() {
+                                                    setPrefs(index);
+                                                    print(prefsComplete);
+                                                  }),
+                                                  child: Text(
+                                                    "Complete",
+                                                    style: const TextStyle(
+                                                        fontSize: 25),
+                                                  ),
+                                                ),
+                                              )
+                                            : Container(
+                                                margin:
+                                                    EdgeInsets.only(left: 30),
+                                                width: 140,
+                                                height: 40,
+                                                child: ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        Colors.black,
+                                                  ),
+                                                  onPressed: (() {
+                                                    context.pop();
+                                                    DashboardPage.currentPage =
+                                                        0;
+                                                  }),
+                                                  child: Text(
+                                                    "Start a workout",
+                                                    style: const TextStyle(
+                                                      fontSize: 15,
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
                                   ],
                                 ),
-                                complete && RootPage.workoutStarted
+                                prefsComplete.any(
+                                            (element) => element == exercises[index].id!) &&
+                                        RootPage.workoutStarted == false
                                     ? Container(
                                         margin: EdgeInsets.only(top: 5),
                                         child: Align(

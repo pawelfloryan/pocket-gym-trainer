@@ -1,4 +1,6 @@
+import 'package:PocketGymTrainer/components/workout_controls.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,12 @@ class SectionPage extends StatefulWidget {
   static late var sectionKey;
   static late var sectionName;
   static late int sectionIndex = -1;
+  static late List<Exercise> allExercises = <Exercise>[];
+  static final GlobalKey<_SectionPageState> sectionPageKey = GlobalKey<_SectionPageState>();
+
+  static _SectionPageState? of(BuildContext context) {
+    return context.findAncestorStateOfType<_SectionPageState>();
+  }
 
   @override
   State<SectionPage> createState() => _SectionPageState();
@@ -49,6 +57,10 @@ class _SectionPageState extends State<SectionPage> {
   late Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken!);
   late String decodedUserId = decodedToken["id"];
 
+  late List<String> prefsComplete = <String>[];
+
+  Future<void>? enterPrefsFuture;
+  bool enterPrefsCalled = false;
   int exercisesLength = 0;
 
   @override
@@ -56,6 +68,78 @@ class _SectionPageState extends State<SectionPage> {
     super.initState();
     getData();
     getAllExercises();
+    deletePrefs();
+    getPrefs();
+    enterPrefs();
+  }
+
+  //Fills prefComplete with temporary data to be replaced by the completed exercises indexes
+  Future<void> enterPrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? tempFilled = prefs.getBool('tempFilled');
+
+      if (!enterPrefsCalled) {
+        enterPrefsCalled = true;
+        enterPrefsFuture = Future.delayed(const Duration(seconds: 1))
+            .then((value) => setState(() {
+                  for (int i = 0; i < exercises.length; i++) {
+                    prefsComplete.add("temp");
+                  }
+                }));
+      }
+      tempFilled = true;
+      await prefs.setBool('tempFilled', true);
+    print(prefsComplete);
+    return enterPrefsFuture;
+  }
+
+  //Sets both lists index of the completed exercise
+  Future<void> setPrefs(int index) async {
+    await enterPrefs();
+    setState(() {
+      prefsComplete[index] = exercises[index].id!;
+    });
+  }
+
+  //Gets prefs saved in a pref list to know which exercises are already completed
+  Future<void> getPrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? strList = prefs.getStringList('complete');
+
+    setState(() {
+      prefsComplete = strList!;
+    });
+    print(prefsComplete);
+  }
+
+  //All completed exercises are saved into a list of prefs
+  Future<void> leavePrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('complete', prefsComplete);
+  }
+
+  //Deletes prefs if a workout is not active
+  Future<void> deletePrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (WorkoutControls.workoutDone) {
+      await prefs.remove('complete');
+      Future.delayed(const Duration(milliseconds: 100))
+          .then((value) => setState(() {
+                WorkoutControls.workoutDone = false;
+              }));
+    }
+  }
+
+  void prefsSet() async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if(!RootPage.filledOnce){
+      await prefs.setBool('tempFilled', false);
+      RootPage.filledOnce = true;
+    }
+    if(WorkoutControls.workoutDone){
+      await prefs.setBool('tempFilled', false);
+      RootPage.filledOnce = false;
+    }
   }
 
   void getData() async {
@@ -128,6 +212,7 @@ class _SectionPageState extends State<SectionPage> {
 
   void getAllExercises() async {
     exercises = (await ExerciseService().getAllExercises(decodedUserId));
+    SectionPage.allExercises = exercises;
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
   }
@@ -171,6 +256,7 @@ class _SectionPageState extends State<SectionPage> {
                                 SectionPage.sectionName = sections[index].name;
                                 editing = false;
                                 selectedSectionIndex = -1;
+                                prefsSet();
                                 context.push('/exercises');
                               },
                               child: !editing || selectedSectionIndex != index

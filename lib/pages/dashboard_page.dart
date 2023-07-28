@@ -9,13 +9,13 @@ import '../components/sidebar.dart';
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
   static late bool workoutStart = false;
+  static int currentPage = 0;
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  int currentPage = 0;
   List<Widget> pages = const [HomePage(), SectionPage(), StatsPage()];
   final _key = GlobalKey<ScaffoldState>();
   void showSidebar() {
@@ -35,15 +35,15 @@ class _DashboardPageState extends State<DashboardPage> {
             },
             icon: Icon(Icons.menu),
           ),
-          title: currentPage == 0
+          title: DashboardPage.currentPage == 0
               ? const Text("Home")
-              : currentPage == 1
+              : DashboardPage.currentPage == 1
                   ? const Text("Sections")
                   : const Text("Statistics"),
           actions: [WorkoutTimer()],
         ),
         key: _key,
-        body: pages[currentPage],
+        body: pages[DashboardPage.currentPage],
         bottomNavigationBar: NavigationBar(
           destinations: const [
             NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
@@ -54,10 +54,10 @@ class _DashboardPageState extends State<DashboardPage> {
           ],
           onDestinationSelected: (int index) {
             setState(() {
-              currentPage = index;
+              DashboardPage.currentPage = index;
             });
           },
-          selectedIndex: currentPage,
+          selectedIndex: DashboardPage.currentPage,
         ),
         drawer: Sidebar());
   }
