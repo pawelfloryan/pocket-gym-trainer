@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import '../components/new_item_textfield.dart';
 import '../components/workout_controls.dart';
@@ -51,7 +52,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
 
   late List<String> prefsComplete = <String>[];
 
-  Future<void>? enterPrefsFuture;
+  late Completer<void> enterPrefsCompleter;
 
   Future pickImage() async {
     try {
@@ -75,32 +76,17 @@ class _ExercisesPageState extends State<ExercisesPage> {
     getData(sectionId);
     deletePrefs();
     getPrefs();
-    enterPrefs();
-  }
-
-  //Fills prefComplete with temporary data to be replaced by the completed exercises indexes
-  Future<void> enterPrefs() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? tempFilled = prefs.getBool('tempFilled');
-
-    if (!enterPrefsCalled) {
-      enterPrefsCalled = true;
-      enterPrefsFuture = Future.delayed(const Duration(seconds: 1))
-          .then((value) => setState(() {
-                for (int i = 0; i < SectionPage.allExercises.length; i++) {
-                  prefsComplete.add("temp");
-                }
-              }));
-    }
-    tempFilled = true;
-    await prefs.setBool('tempFilled', true);
-    print(prefsComplete);
-    return enterPrefsFuture;
   }
 
   //Sets list index of the completed exercise
   Future<void> setPrefs(int index) async {
-    await enterPrefs();
+    if (prefsComplete.isEmpty) {
+          setState(() {
+            for (int i = 0; i < SectionPage.allExercises.length; i++) {
+              prefsComplete.add("temp");
+            }
+          });
+        }
     setState(() {
       prefsComplete[index + SectionPage.exercisesCountedLength] =
           exercises[index].id!;
@@ -115,6 +101,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
     setState(() {
       prefsComplete = strList!;
     });
+    print(prefsComplete);
   }
 
   //All completed exercises are saved into a list of prefs
@@ -142,7 +129,9 @@ class _ExercisesPageState extends State<ExercisesPage> {
   }
 
   void createData() async {
-    prefsComplete.add("temp");
+    int lastIndex = exercises.length + SectionPage.exercisesCountedLength;
+    print(lastIndex);
+    prefsComplete.insert(lastIndex, "temp");
     exercise = (await ExerciseService().createExercise(exerciseCreate))!;
     exercises.add(exercise);
     Future.delayed(const Duration(milliseconds: 10))
@@ -216,7 +205,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
                             SlidableAction(
                               onPressed: (context) {
                                 deleteExercise(exercises[index].id!);
-                                prefsComplete.removeAt(index);
+                                prefsComplete.removeAt(index + SectionPage.exercisesCountedLength);
                               },
                               backgroundColor: Colors.red,
                               foregroundColor: Colors.white,

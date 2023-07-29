@@ -207,6 +207,7 @@ class RootPage extends StatefulWidget {
   static late String? token;
   static late bool workoutStarted = false;
   static late bool filledOnce = false;
+  static late List<String> sectionIdList;
 
   @override
   State<RootPage> createState() => _RootPageState();

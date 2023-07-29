@@ -21,6 +21,7 @@ class SectionPage extends StatefulWidget {
   static late var sectionName;
   static late int sectionIndex = -1;
   static late int exercisesCountedLength = -1;
+  static late List<Exercise> certainExercises = <Exercise>[];
   static late List<Exercise> allExercises = <Exercise>[];
   static final GlobalKey<_SectionPageState> sectionPageKey =
       GlobalKey<_SectionPageState>();
@@ -35,12 +36,14 @@ class SectionPage extends StatefulWidget {
 
 class _SectionPageState extends State<SectionPage> {
   List<Exercise> exercises = <Exercise>[];
-  Iterable<Exercise> newExercises = <Exercise>[];
+  List<Exercise> newExercises = <Exercise>[];
   List<Exercise> exercisesCounted = <Exercise>[];
+  List<Exercise> certainExercises = <Exercise>[];
 
   List<Section> sections = <Section>[];
   List<Section> newSections = <Section>[];
   List<Section> newSectionsDelete = <Section>[];
+  List<Section> certainSections = <Section>[];
   Section section = Section();
   Section sectionCreate = Section();
   Section sectionDelete = Section();
@@ -71,31 +74,43 @@ class _SectionPageState extends State<SectionPage> {
     super.initState();
     getData();
     getAllExercises();
+    exercisesCompleted();
   }
 
   void countedExercises(int index) {
     if (index > 0) {
-      exercisesCounted = exercises
-          .where((element) => element.sectionId == sections[index - 1].id)
-          .toList();
+      exercisesCounted = exercises.where((element) {
+        int sectionIndex =
+            sections.indexWhere((section) => section.id == element.sectionId);
+        return sectionIndex >= 0 && sectionIndex < index;
+      }).toList();
+      SectionPage.exercisesCountedLength = exercisesCounted.length;
+    } else {
+      SectionPage.exercisesCountedLength = 0;
     }
-    SectionPage.exercisesCountedLength = exercisesCounted.length;
   }
 
-  void prefsSet() async {
+  void exercisesCompleted() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? allCompleted = prefs.getStringList('completed');
-    if (allCompleted != null)
-      await prefs.setStringList('allCompleted', allCompleted);
+    List<String>? strList = prefs.getStringList('complete') ?? [];
 
-    if (!RootPage.filledOnce) {
-      await prefs.setBool('tempFilled', false);
-      RootPage.filledOnce = true;
-    }
-    if (WorkoutControls.workoutDone) {
-      await prefs.setBool('tempFilled', false);
-      RootPage.filledOnce = false;
-    }
+    setState(() {
+      prefsComplete = strList;
+    });
+    print(prefsComplete);
+
+    certainExercises = exercises.where((element) {
+      return strList.contains(element.sectionId);
+    }).toList();
+
+    print(certainExercises);
+
+    certainSections = sections.where((section) {
+      return certainExercises
+          .any((exercise) => section.id == exercise.sectionId);
+    }).toList();
+    print(certainSections);
+    SectionPage.certainExercises = certainExercises;
   }
 
   void getData() async {
@@ -110,6 +125,7 @@ class _SectionPageState extends State<SectionPage> {
     sections.add(section);
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
+    //countedExercises(sections.length-1);
   }
 
   void deleteData(String sectionId) async {
@@ -174,8 +190,9 @@ class _SectionPageState extends State<SectionPage> {
   }
 
   exercisesCountDisplay(int index) {
-    newExercises =
-        exercises.where((element) => element.sectionId == sections[index].id);
+    newExercises = exercises
+        .where((element) => element.sectionId == sections[index].id)
+        .toList();
     return newExercises.length;
   }
 
@@ -213,8 +230,8 @@ class _SectionPageState extends State<SectionPage> {
                                 SectionPage.sectionIndex = index;
                                 editing = false;
                                 selectedSectionIndex = -1;
-                                prefsSet();
                                 countedExercises(index);
+                                exercisesCompleted();
                                 context.push('/exercises');
                               },
                               child: !editing || selectedSectionIndex != index
@@ -245,16 +262,24 @@ class _SectionPageState extends State<SectionPage> {
                                                   child: Container(
                                                     margin: EdgeInsets.only(
                                                         top: 20),
-                                                    child: exercises.any(
-                                                            (element) =>
+                                                    child: exercises.any((element) =>
                                                                 element
                                                                     .sectionId ==
                                                                 sections[index]
-                                                                    .id)
+                                                                    .id) &&
+                                                            SectionPage
+                                                                .certainExercises
+                                                                .any((element) =>
+                                                                    element
+                                                                        .sectionId ==
+                                                                    sections[
+                                                                            index]
+                                                                        .id)
                                                         ? Text(
-                                                            "0/${exercisesCountDisplay(index)}",
+                                                            "${SectionPage.certainExercises.length}/${exercisesCountDisplay(index)}",
                                                             style: TextStyle(
-                                                                fontSize: 17),
+                                                              fontSize: 17,
+                                                            ),
                                                           )
                                                         : Text("0/0"),
                                                   ),
