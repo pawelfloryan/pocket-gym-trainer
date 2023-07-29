@@ -20,6 +20,7 @@ class SectionPage extends StatefulWidget {
   static late var sectionKey;
   static late var sectionName;
   static late int sectionIndex = -1;
+  static late int exercisesCountedLength = -1;
   static late List<Exercise> allExercises = <Exercise>[];
   static final GlobalKey<_SectionPageState> sectionPageKey =
       GlobalKey<_SectionPageState>();
@@ -35,6 +36,7 @@ class SectionPage extends StatefulWidget {
 class _SectionPageState extends State<SectionPage> {
   List<Exercise> exercises = <Exercise>[];
   Iterable<Exercise> newExercises = <Exercise>[];
+  List<Exercise> exercisesCounted = <Exercise>[];
 
   List<Section> sections = <Section>[];
   List<Section> newSections = <Section>[];
@@ -71,11 +73,13 @@ class _SectionPageState extends State<SectionPage> {
     getAllExercises();
   }
 
-  int countedExercises(String sectionId) {
-      List<Exercise> exercisesCounted =
-          exercises.where((element) => element.sectionId == sectionId).toList();
-          print(exercisesCounted);
-    return exercisesCounted.length;
+  void countedExercises(int index) {
+    if (index > 0) {
+      exercisesCounted = exercises
+          .where((element) => element.sectionId == sections[index - 1].id)
+          .toList();
+    }
+    SectionPage.exercisesCountedLength = exercisesCounted.length;
   }
 
   void prefsSet() async {
@@ -206,9 +210,11 @@ class _SectionPageState extends State<SectionPage> {
                               onPressed: () {
                                 SectionPage.sectionKey = sections[index].id;
                                 SectionPage.sectionName = sections[index].name;
+                                SectionPage.sectionIndex = index;
                                 editing = false;
                                 selectedSectionIndex = -1;
                                 prefsSet();
+                                countedExercises(index);
                                 context.push('/exercises');
                               },
                               child: !editing || selectedSectionIndex != index

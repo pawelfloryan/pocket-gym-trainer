@@ -102,9 +102,8 @@ class _ExercisesPageState extends State<ExercisesPage> {
   Future<void> setPrefs(int index) async {
     await enterPrefs();
     setState(() {
-      prefsComplete[index +
-          SectionPage.sectionPageKey.currentState!
-              .countedExercises(sectionId)] = exercises[index].id!;
+      prefsComplete[index + SectionPage.exercisesCountedLength] =
+          exercises[index].id!;
     });
   }
 
@@ -116,7 +115,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
     setState(() {
       prefsComplete = strList!;
     });
-    print(prefsComplete);
   }
 
   //All completed exercises are saved into a list of prefs
@@ -323,7 +321,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                                               Colors.black),
                                                   onPressed: (() {
                                                     setPrefs(index);
-                                                    print(prefsComplete);
                                                   }),
                                                   child: Text(
                                                     "Complete",
