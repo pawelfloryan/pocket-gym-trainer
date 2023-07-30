@@ -64,10 +64,20 @@ class ExerciseService {
     }
   }
 
-  Future<List<Exercise>?> deleteExercise(String id) async {
+  Future<List<Exercise>?> deleteExerciseSingle(String id) async {
     try {
       var url = Uri.parse(
-          ApiConstants.baseUrl + ApiConstants.exerciseEndpoint + "/${id}");
+          ApiConstants.baseUrl + ApiConstants.exerciseSingleEndpoint + "/${id}");
+      var response = await http.delete(url);
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<List<Exercise>?> deleteExerciseList(String id) async {
+    try {
+      var url = Uri.parse(
+          ApiConstants.baseUrl + ApiConstants.exerciseListEndpoint + "/${id}");
       var response = await http.delete(url);
     } catch (e) {
       log(e.toString());

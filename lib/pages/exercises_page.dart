@@ -74,19 +74,18 @@ class _ExercisesPageState extends State<ExercisesPage> {
   void initState() {
     super.initState();
     getData(sectionId);
-    deletePrefs();
     getPrefs();
   }
 
   //Sets list index of the completed exercise
   Future<void> setPrefs(int index) async {
     if (prefsComplete.isEmpty) {
-          setState(() {
-            for (int i = 0; i < SectionPage.allExercises.length; i++) {
-              prefsComplete.add("temp");
-            }
-          });
+      setState(() {
+        for (int i = 0; i < SectionPage.allExercises.length; i++) {
+          prefsComplete.add("temp");
         }
+      });
+    }
     setState(() {
       prefsComplete[index + SectionPage.exercisesCountedLength] =
           exercises[index].id!;
@@ -110,18 +109,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
     await prefs.setStringList('complete', prefsComplete);
   }
 
-  //Deletes prefs if a workout is not active
-  Future<void> deletePrefs() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (WorkoutControls.workoutDone) {
-      await prefs.remove('complete');
-      Future.delayed(const Duration(milliseconds: 100))
-          .then((value) => setState(() {
-                WorkoutControls.workoutDone = false;
-              }));
-    }
-  }
-
   Future<void> getData(sectionId) async {
     exercises = (await ExerciseService().getExercise(sectionId, decodedUserId));
     Future.delayed(const Duration(milliseconds: 10))
@@ -131,7 +118,16 @@ class _ExercisesPageState extends State<ExercisesPage> {
   void createData() async {
     int lastIndex = exercises.length + SectionPage.exercisesCountedLength;
     print(lastIndex);
-    prefsComplete.insert(lastIndex, "temp");
+    if (!RootPage.workoutStarted) {
+      if (prefsComplete.isEmpty) {
+        setState(() {
+          for (int i = 0; i < SectionPage.allExercises.length; i++) {
+            prefsComplete.add("temp");
+          }
+        });
+      }
+      prefsComplete.insert(lastIndex, "temp");
+    }
     exercise = (await ExerciseService().createExercise(exerciseCreate))!;
     exercises.add(exercise);
     Future.delayed(const Duration(milliseconds: 10))
@@ -139,7 +135,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
   }
 
   void deleteData(String exerciseId) async {
-    await ExerciseService().deleteExercise(exerciseId);
+    await ExerciseService().deleteExerciseSingle(exerciseId);
     getData(sectionId);
     exerciseDelete.id = exerciseId;
     newExercisesDelete = exercises;
@@ -205,7 +201,8 @@ class _ExercisesPageState extends State<ExercisesPage> {
                             SlidableAction(
                               onPressed: (context) {
                                 deleteExercise(exercises[index].id!);
-                                prefsComplete.removeAt(index + SectionPage.exercisesCountedLength);
+                                prefsComplete.removeAt(
+                                    index + SectionPage.exercisesCountedLength);
                               },
                               backgroundColor: Colors.red,
                               foregroundColor: Colors.white,
@@ -310,6 +307,9 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                                               Colors.black),
                                                   onPressed: (() {
                                                     setPrefs(index);
+                                                    print(index +
+                                                        SectionPage
+                                                            .exercisesCountedLength);
                                                   }),
                                                   child: Text(
                                                     "Complete",

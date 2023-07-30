@@ -37,6 +37,7 @@ class SectionPage extends StatefulWidget {
 class _SectionPageState extends State<SectionPage> {
   List<Exercise> exercises = <Exercise>[];
   List<Exercise> newExercises = <Exercise>[];
+  List<Exercise> exercisesDelete = <Exercise>[];
   List<Exercise> exercisesCounted = <Exercise>[];
   List<Exercise> certainExercises = <Exercise>[];
 
@@ -73,8 +74,21 @@ class _SectionPageState extends State<SectionPage> {
   void initState() {
     super.initState();
     getData();
+    deletePrefs();
     getAllExercises();
     exercisesCompleted();
+  }
+
+  //Deletes prefs if a workout is not active
+  Future<void> deletePrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (WorkoutControls.workoutDone) {
+      await prefs.remove('complete');
+      Future.delayed(const Duration(milliseconds: 100))
+          .then((value) => setState(() {
+                WorkoutControls.workoutDone = false;
+              }));
+    }
   }
 
   void countedExercises(int index) {
@@ -93,6 +107,7 @@ class _SectionPageState extends State<SectionPage> {
   void exercisesCompleted() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? strList = prefs.getStringList('complete') ?? [];
+    //It adds into the list but prefs reset only when i enter the exercises
 
     setState(() {
       prefsComplete = strList;
@@ -131,6 +146,7 @@ class _SectionPageState extends State<SectionPage> {
   void deleteData(String sectionId) async {
     await SectionService().deleteSection(sectionId, jwtToken!);
     getData();
+    deleteExercise(sectionId);
     sectionDelete.id = sectionId;
     newSectionsDelete = sections;
     newSectionsDelete.remove(sectionDelete);
@@ -159,6 +175,12 @@ class _SectionPageState extends State<SectionPage> {
     });
   }
 
+  void deleteExercise(String sectionId) async {
+    await ExerciseService().deleteExerciseList(sectionId);
+    Future.delayed(const Duration(milliseconds: 10))
+        .then((value) => setState(() {}));
+  }
+
   void deleteSection(String id) {
     setState(() {
       sectionId = id;
@@ -184,7 +206,9 @@ class _SectionPageState extends State<SectionPage> {
 
   void getAllExercises() async {
     exercises = (await ExerciseService().getAllExercises(decodedUserId));
-    SectionPage.allExercises = exercises;
+    setState(() {
+      SectionPage.allExercises = exercises;
+    });
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
   }
@@ -262,21 +286,24 @@ class _SectionPageState extends State<SectionPage> {
                                                   child: Container(
                                                     margin: EdgeInsets.only(
                                                         top: 20),
-                                                    child: exercises.any((element) =>
+                                                    child: exercises.any(
+                                                            (element) =>
                                                                 element
                                                                     .sectionId ==
                                                                 sections[index]
-                                                                    .id) &&
-                                                            SectionPage
-                                                                .certainExercises
-                                                                .any((element) =>
-                                                                    element
-                                                                        .sectionId ==
-                                                                    sections[
-                                                                            index]
-                                                                        .id)
+                                                                    .id)
+                                                        //        &&
+                                                        //SectionPage
+                                                        //    .certainExercises
+                                                        //    .any((element) =>
+                                                        //        element
+                                                        //            .sectionId ==
+                                                        //        sections[
+                                                        //                index]
+                                                        //            .id)
                                                         ? Text(
-                                                            "${SectionPage.certainExercises.length}/${exercisesCountDisplay(index)}",
+                                                            //"${SectionPage.certainExercises.length}/${exercisesCountDisplay(index)}",
+                                                            "${exercisesCountDisplay(index)}",
                                                             style: TextStyle(
                                                               fontSize: 17,
                                                             ),

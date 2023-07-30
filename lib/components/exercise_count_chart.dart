@@ -45,7 +45,7 @@ class _ExerciseCountChartState extends State<ExerciseCountChart> {
 
   @override
   Widget build(BuildContext context) {
-    return sections.isNotEmpty
+    return sections.length > 2
         ? Container(
             child: Column(
               children: [
