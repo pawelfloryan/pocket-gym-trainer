@@ -7,7 +7,7 @@ import '../components/exercise_time_chart.dart';
 
 List<Widget> charts = const [
   ExerciseCountChart(),
-  ExerciseDaysChart(),
+  //ExerciseDaysChart(),
   ExerciseTimeChart()
 ];
 
@@ -19,11 +19,11 @@ List<String> options = const [
 
 List<DropdownMenuItem<String>> get dropdownItems {
   List<DropdownMenuItem<String>> menuItems = [
-    DropdownMenuItem(child: Text("Last workout"), value: "Last workout"),
-    DropdownMenuItem(child: Text("Last week"), value: "Last week"),
+    //DropdownMenuItem(child: Text("Last workout"), value: "Last workout"),
+    //DropdownMenuItem(child: Text("Last week"), value: "Last week"),
     DropdownMenuItem(child: Text("Last month"), value: "Last month"),
-    DropdownMenuItem(
-        child: Text("Since {AccountDate}"), value: "Since {AccountDate}"),
+    //DropdownMenuItem(
+    //    child: Text("Since {AccountDate}"), value: "Since {AccountDate}"),
   ];
   return menuItems;
 }
@@ -68,7 +68,7 @@ class StatsPage extends StatelessWidget {
                   color: Colors.black,
                 ),
                 items: dropdownItems,
-                value: "Last workout",
+                value: "Last month",
                 onChanged: (String? value) {},
               ),
             ),

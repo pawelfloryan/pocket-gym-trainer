@@ -65,7 +65,6 @@ class _WorkoutTimerState extends State<WorkoutTimer> {
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      //visible: DashboardPage.workoutStart,
       visible: true,
       child: Container(
         margin: EdgeInsets.only(right: 20, top: 17),

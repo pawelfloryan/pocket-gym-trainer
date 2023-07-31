@@ -124,7 +124,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       ],
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 30),
+                      margin: EdgeInsets.only(
+                        left: WorkoutCounter.number.value < 100 ? 30 : 20,
+                      ),
                       child: Row(
                         children: [
                           Container(
@@ -132,10 +134,10 @@ class _SettingsPageState extends State<SettingsPage> {
                             child: Text(
                               "${WorkoutCounter.number.value}",
                               style: WorkoutCounter.number.value < 100
-                                  ? const TextStyle(fontSize: 50)
+                                  ? const TextStyle(fontSize: 45)
                                   : WorkoutCounter.number.value < 1000
-                                      ? const TextStyle(fontSize: 45)
-                                      : const TextStyle(fontSize: 35),
+                                      ? const TextStyle(fontSize: 35)
+                                      : const TextStyle(fontSize: 30),
                             ),
                           ),
                           Container(

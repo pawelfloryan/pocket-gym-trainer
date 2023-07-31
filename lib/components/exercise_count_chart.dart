@@ -93,7 +93,8 @@ class _ExerciseCountChartState extends State<ExerciseCountChart> {
                               enabled: true,
                             ),
                             tickCount: 3,
-                            ticksTextStyle: TextStyle(color: Colors.transparent),
+                            ticksTextStyle:
+                                TextStyle(color: Colors.transparent),
                             dataSets: [
                               RadarDataSet(
                                 dataEntries: sections.map((section) {
@@ -144,6 +145,40 @@ class _ExerciseCountChartState extends State<ExerciseCountChart> {
               ],
             ),
           )
-        : CircularProgressIndicator();
+        : Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(
+                  top: 15,
+                ),
+                child: const Text(
+                  "Training split",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(
+                  top: 15,
+                ),
+                child: const Text(
+                  "This chart needs at least\nthree sections created",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(
+                  top: 80,
+                ),
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          );
   }
 }

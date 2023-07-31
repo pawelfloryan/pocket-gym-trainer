@@ -18,6 +18,16 @@ class AboutPage extends StatelessWidget {
             },
             icon: const Icon(Icons.arrow_back_ios)),
       ),
+      body: Center(
+        heightFactor: 4.0,
+        child: Text(
+          "Coming soon",
+          style: TextStyle(
+            fontSize: 50,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ),
     );
   }
 }

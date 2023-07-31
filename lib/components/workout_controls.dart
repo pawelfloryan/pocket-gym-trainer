@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 
 import '../components/workout_counter.dart';
@@ -19,11 +20,14 @@ import '../services/workout_service.dart';
 class WorkoutControls extends StatefulWidget {
   const WorkoutControls({super.key});
   static late bool workoutDone = false;
+  static late DateTime? lastWorkoutDate;
   @override
   State<WorkoutControls> createState() => _WorkoutControlsState();
 }
 
 class _WorkoutControlsState extends State<WorkoutControls> {
+  List<Workout> workouts = <Workout>[];
+
   Workout workout = Workout();
   Workout workoutCreate = Workout();
 
@@ -31,8 +35,8 @@ class _WorkoutControlsState extends State<WorkoutControls> {
   UserStats newUserStats = UserStats();
   UserStats userStatsUpsert = UserStats();
 
+  //TODO Stop reapeating this code, only use it's variables when it completes once
   String? jwtToken = RootPage.token;
-
   late Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken!);
   late String decodedUserId = decodedToken["id"];
 
@@ -40,8 +44,25 @@ class _WorkoutControlsState extends State<WorkoutControls> {
   String formattedDate = "";
   bool toolTip = false;
 
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
   void createData() async {
     await WorkoutService().createWorkout(workoutCreate);
+  }
+
+  void getData() async {
+    workouts = (await WorkoutService().getWorkout(jwtToken!, decodedUserId));
+    setState(() {
+      WorkoutControls.lastWorkoutDate = workouts
+          .map((workout) => DateTime.parse(workout.workoutDate!))
+          .reduce((currentMax, date) =>
+              date.isAfter(currentMax) ? date : currentMax);
+    });
+    print(WorkoutControls.lastWorkoutDate);
   }
 
   Future<void> addWorkout() async {
@@ -87,24 +108,24 @@ class _WorkoutControlsState extends State<WorkoutControls> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Container(
+      margin: EdgeInsets.only(left: 60, right: 60),
       child: Column(
         children: [
-          DashboardPage.workoutStart
+          RootPage.workoutStarted
               ? Column(
                   children: [
                     Container(
+                      margin: EdgeInsets.only(bottom: toolTip ? 0 : 25),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100),
                       ),
-                      margin: EdgeInsets.only(left: 60, right: 60),
                       width: double.infinity,
                       height: 100,
                       child: GestureDetector(
                         onDoubleTap: () {
                           setState(() {
                             WorkoutTimer.stopTimer();
-                            DashboardPage.workoutStart = false;
                             addWorkout();
                             WorkoutCounter.number.value++;
                             editUserEntries();
@@ -149,7 +170,7 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                     Visibility(
                       visible: toolTip,
                       child: Container(
-                        margin: EdgeInsets.only(top: 7),
+                        margin: EdgeInsets.only(top: 7, bottom: 7),
                         child: Text(
                           "To end your workout double-click",
                           style: TextStyle(
@@ -165,7 +186,6 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                   ),
-                  margin: EdgeInsets.only(left: 60, right: 60),
                   width: double.infinity,
                   height: 100,
                   child: Container(
@@ -195,7 +215,6 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                       onPressed: (() {
                         setState(() {
                           WorkoutTimer.startTimer();
-                          DashboardPage.workoutStart = true;
                           RootPage.workoutStarted = true;
                         });
                       }),
@@ -206,36 +225,80 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                     ),
                   ),
                 ),
-          DashboardPage.workoutStart
-              ? Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  margin: EdgeInsets.only(left: 60, right: 60, top: 23),
-                  width: double.infinity,
-                  height: 100,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(
-                        MyApp.theme == 0
-                            ? Colors.grey[200]!
-                            : Colors.grey[400]!,
+          RootPage.workoutStarted
+              ? Column(
+                  children: [
+                    Slidable(
+                      startActionPane: ActionPane(
+                        extentRatio: 0.2,
+                        motion: ScrollMotion(),
+                        children: [
+                          SlidableAction(
+                            onPressed: (context) {
+                              setState(() {
+                                RootPage.cancelToolTip = false;
+                                RootPage.workoutStarted = false;
+                                WorkoutTimer.stopTimer();
+                              });
+                            },
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            icon: Icons.cancel_rounded,
+                          ),
+                        ],
                       ),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                          side: BorderSide(color: Colors.black, width: 3),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        width: double.infinity,
+                        height: 100,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStatePropertyAll<Color>(
+                              MyApp.theme == 0
+                                  ? Colors.grey[200]!
+                                  : Colors.grey[400]!,
+                            ),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.horizontal(),
+                                side: BorderSide(color: Colors.black, width: 3),
+                              ),
+                            ),
+                          ),
+                          onPressed: (() {
+                            WorkoutTimer.pauseTimer();
+                            setState(() {
+                              RootPage.cancelToolTip = !RootPage.cancelToolTip;
+                              print(RootPage.cancelToolTip);
+                            });
+                          }),
+                          child: Text(
+                            "PAUSE",
+                            style:
+                                TextStyle(color: Colors.black87, fontSize: 50),
+                          ),
                         ),
                       ),
                     ),
-                    onPressed: (() {
-                      WorkoutTimer.pauseTimer();
-                    }),
-                    child: Text(
-                      "PAUSE",
-                      style: TextStyle(color: Colors.black87, fontSize: 50),
+                    Visibility(
+                      visible: RootPage.cancelToolTip,
+                      child: Container(
+                        margin: EdgeInsets.only(top: 7),
+                        child: Text(
+                          "To cancel your workout slide the pause button",
+                          style: TextStyle(
+                            color: Colors.grey[800],
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 )
               : Container(
                   decoration: BoxDecoration(
@@ -246,7 +309,7 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                           blurRadius: 15)
                     ],
                   ),
-                  margin: EdgeInsets.only(left: 60, right: 60, top: 30),
+                  margin: EdgeInsets.only(top: 30),
                   width: double.infinity,
                   height: 120,
                   child: ElevatedButton(
@@ -266,14 +329,14 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                                 TextStyle(color: Colors.black87, fontSize: 30),
                           ),
                         ),
-                        workoutDate == null
+                        WorkoutControls.lastWorkoutDate == null
                             ? Text(
                                 "No workouts",
                                 style: TextStyle(
                                     color: Colors.black87, fontSize: 30),
                               )
                             : Text(
-                                "${workoutDate.day}.${workoutDate.month}.${workoutDate.year}",
+                                "${WorkoutControls.lastWorkoutDate!.day}.${WorkoutControls.lastWorkoutDate!.month}.${WorkoutControls.lastWorkoutDate!.year}",
                                 style: TextStyle(
                                     color: Colors.black87, fontSize: 30),
                               ),
