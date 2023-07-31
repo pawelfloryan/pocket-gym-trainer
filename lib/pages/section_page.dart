@@ -19,6 +19,7 @@ class SectionPage extends StatefulWidget {
   const SectionPage({super.key});
   static late var sectionKey;
   static late var sectionName;
+  static late var exercisesPerformed;
   static late int sectionIndex = -1;
   static late int exercisesCountedLength = -1;
   static late List<Exercise> certainExercises = <Exercise>[];
@@ -251,6 +252,7 @@ class _SectionPageState extends State<SectionPage> {
                               onPressed: () {
                                 SectionPage.sectionKey = sections[index].id;
                                 SectionPage.sectionName = sections[index].name;
+                                SectionPage.exercisesPerformed = sections[index].exercisesPerformed;
                                 SectionPage.sectionIndex = index;
                                 editing = false;
                                 selectedSectionIndex = -1;

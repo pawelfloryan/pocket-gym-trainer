@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import '../components/new_item_textfield.dart';
 import '../components/workout_controls.dart';
+import '../model/section.dart';
 import '../pages/dashboard_page.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,8 @@ import '../model/exercise.dart';
 import '../pages/section_page.dart';
 import '../services/exercise_service.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+
+import '../services/section_services.dart';
 
 class ExercisesPage extends StatefulWidget {
   const ExercisesPage({super.key});
@@ -37,9 +40,13 @@ class _ExercisesPageState extends State<ExercisesPage> {
   List<Exercise> exercises = <Exercise>[];
   List<Exercise> newExercises = <Exercise>[];
   List<Exercise> newExercisesDelete = <Exercise>[];
+  List<Section> sections = <Section>[];
+  
   Exercise exerciseCreate = Exercise();
   Exercise exercise = Exercise();
   Exercise exerciseDelete = Exercise();
+  Section section = Section();
+  Section sectionUpsert = Section();
   String exerciseId = "";
 
   String sectionId = SectionPage.sectionKey;
@@ -89,6 +96,10 @@ class _ExercisesPageState extends State<ExercisesPage> {
     setState(() {
       prefsComplete[index + SectionPage.exercisesCountedLength] =
           exercises[index].id!;
+      SectionPage.exercisesPerformed++;
+      print(SectionPage.exercisesPerformed);
+      print("object");
+      editSection();
     });
   }
 
@@ -142,6 +153,20 @@ class _ExercisesPageState extends State<ExercisesPage> {
     newExercisesDelete.remove(exerciseDelete);
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
+  }
+
+  void updateExercisesPerformed() async {
+    await SectionService().upsertSection(sectionId, sectionUpsert);
+    Future.delayed(const Duration(milliseconds: 10))
+        .then((value) => setState(() {}));
+  }
+
+  void editSection(){
+    sectionUpsert.id = sectionId;
+    sectionUpsert.name = sectionName;
+    sectionUpsert.userId = decodedUserId;
+    sectionUpsert.exercisesPerformed = SectionPage.exercisesPerformed;
+    updateExercisesPerformed();
   }
 
   Future<void> addExercise() async {
@@ -310,6 +335,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                                     print(index +
                                                         SectionPage
                                                             .exercisesCountedLength);
+                                                    
                                                   }),
                                                   child: Text(
                                                     "Complete",

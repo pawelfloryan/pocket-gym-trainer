@@ -201,30 +201,30 @@ class _LoginPageState extends State<LoginPage> {
                             }
                           },
                         ),
-                        AutoCompleteTextField<String>(
-                          controller: _emailController,
-                          key: autoCompleteKey,
-                          decoration: InputDecoration.collapsed(hintText: ''),
-                          itemBuilder: (context, item) {
-                            return ListTile(
-                              title: Text(item),
-                            );
-                          },
-                          itemFilter: (item, query) {
-                            // Filter the items based on the query (text input).
-                            return item
-                                .toLowerCase()
-                                .startsWith(query.toLowerCase());
-                          },
-                          itemSorter: (a, b) {
-                            // Sort the items (optional). You can change the sorting logic if needed.
-                            return a.compareTo(b);
-                          },
-                          itemSubmitted: (data) {},
-                          suggestions: autoCompleteList,
-                          clearOnSubmit: true,
-                          suggestionsAmount: 3,
-                        ),
+                        //AutoCompleteTextField<String>(
+                        //  controller: _emailController,
+                        //  key: autoCompleteKey,
+                        //  decoration: InputDecoration.collapsed(hintText: ''),
+                        //  itemBuilder: (context, item) {
+                        //    return ListTile(
+                        //      title: Text(item),
+                        //    );
+                        //  },
+                        //  itemFilter: (item, query) {
+                        //    // Filter the items based on the query (text input).
+                        //    return item
+                        //        .toLowerCase()
+                        //        .startsWith(query.toLowerCase());
+                        //  },
+                        //  itemSorter: (a, b) {
+                        //    // Sort the items (optional). You can change the sorting logic if needed.
+                        //    return a.compareTo(b);
+                        //  },
+                        //  itemSubmitted: (data) {},
+                        //  suggestions: autoCompleteList,
+                        //  clearOnSubmit: true,
+                        //  suggestionsAmount: 3,
+                        //),
                       ],
                     ),
                   ),

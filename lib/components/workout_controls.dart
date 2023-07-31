@@ -20,7 +20,7 @@ import '../services/workout_service.dart';
 class WorkoutControls extends StatefulWidget {
   const WorkoutControls({super.key});
   static late bool workoutDone = false;
-  static late DateTime? lastWorkoutDate;
+  static late DateTime? lastWorkoutDate = DateTime.now();
   @override
   State<WorkoutControls> createState() => _WorkoutControlsState();
 }
@@ -71,6 +71,7 @@ class _WorkoutControlsState extends State<WorkoutControls> {
       workoutCreate.time = WorkoutTimer.finishedTime;
       workoutCreate.workoutDate = formattedDate;
       workoutCreate.userId = decodedUserId;
+      WorkoutControls.lastWorkoutDate = workoutDate;
       createData();
     });
   }
