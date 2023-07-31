@@ -2,6 +2,7 @@ import 'package:PocketGymTrainer/components/auth_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import '../model/auth_result.dart';
 import '../model/login.dart';
 import '../services/auth_service.dart';
@@ -16,10 +17,13 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
+  final GlobalKey<AutoCompleteTextFieldState<String>> autoCompleteKey =
+      GlobalKey();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   Login login = Login();
   AuthResult authResult = AuthResult();
+  List<String> autoCompleteList = ["aaa", "bbb"];
 
   String errorText = "";
 
@@ -174,27 +178,54 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    child: TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: "Enter your email",
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty ||
-                            !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}')
-                                .hasMatch(value!)) {
-                          setState(() {
-                            badEmail = true;
-                          });
-                          return "Enter correct email";
-                        } else {
-                          setState(() {
-                            badEmail = false;
-                          });
-                          return null;
-                        }
-                      },
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            labelText: "Enter your email",
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty ||
+                                !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}')
+                                    .hasMatch(value!)) {
+                              setState(() {
+                                badEmail = true;
+                              });
+                              return "Enter correct email";
+                            } else {
+                              setState(() {
+                                badEmail = false;
+                              });
+                              return null;
+                            }
+                          },
+                        ),
+                        AutoCompleteTextField<String>(
+                          controller: _emailController,
+                          key: autoCompleteKey,
+                          decoration: InputDecoration.collapsed(hintText: ''),
+                          itemBuilder: (context, item) {
+                            return ListTile(
+                              title: Text(item),
+                            );
+                          },
+                          itemFilter: (item, query) {
+                            // Filter the items based on the query (text input).
+                            return item
+                                .toLowerCase()
+                                .startsWith(query.toLowerCase());
+                          },
+                          itemSorter: (a, b) {
+                            // Sort the items (optional). You can change the sorting logic if needed.
+                            return a.compareTo(b);
+                          },
+                          itemSubmitted: (data) {},
+                          suggestions: autoCompleteList,
+                          clearOnSubmit: true,
+                          suggestionsAmount: 3,
+                        ),
+                      ],
                     ),
                   ),
                   TextFormField(
@@ -270,7 +301,9 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                       AuthButton(
-                          isElevated: isElevated, buttonActions: buttonActions)
+                        isElevated: isElevated,
+                        buttonActions: buttonActions,
+                      )
                     ],
                   ),
                   Visibility(
