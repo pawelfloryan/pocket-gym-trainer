@@ -137,8 +137,33 @@ class _SectionPageState extends State<SectionPage> {
 
   void createData() async {
     print(sectionCreate.name);
-    section = (await SectionService().createSection(sectionCreate))!;
-    sections.add(section);
+    section = (await SectionService().createSection(sectionCreate));
+    if (section.id == null) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          actions: [
+            TextButton(
+              onPressed: () {
+                context.pop();
+              },
+              child: Container(
+                padding: EdgeInsets.only(right: 10, bottom: 10),
+                child: Text(
+                  "Close",
+                  style: TextStyle(fontSize: 17),
+                ),
+              ),
+            )
+          ],
+          title: const Text("Too many sections"),
+          content: const Text("Max amount is 10"),
+          contentPadding: const EdgeInsets.all(25.0),
+        ),
+      );
+    } else {
+      sections.add(section);
+    }
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
     //countedExercises(sections.length-1);
@@ -252,12 +277,14 @@ class _SectionPageState extends State<SectionPage> {
                               onPressed: () {
                                 SectionPage.sectionKey = sections[index].id;
                                 SectionPage.sectionName = sections[index].name;
-                                SectionPage.exercisesPerformed = sections[index].exercisesPerformed;
+                                SectionPage.exercisesPerformed =
+                                    sections[index].exercisesPerformed;
                                 SectionPage.sectionIndex = index;
                                 editing = false;
                                 selectedSectionIndex = -1;
                                 countedExercises(index);
                                 exercisesCompleted();
+                                notClicked = false;
                                 context.push('/exercises');
                               },
                               child: !editing || selectedSectionIndex != index

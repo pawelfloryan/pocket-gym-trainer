@@ -8,23 +8,22 @@ import '../model/section.dart';
 import '../services/auth_service.dart';
 
 class SectionService {
-  Future<Section?> createSection(Section section) async {
-    try {
-      var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.sectionEndpoint);
-      var sectionJson = section.toJson();
-      var response = await http.post(url,
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: json.encode(sectionJson));
+  Future<Section> createSection(Section section) async {
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.sectionEndpoint);
+    var sectionJson = section.toJson();
+    var response = await http.post(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(sectionJson));
 
-      if (response.statusCode == 201) {
-        Map<String, dynamic> jsonMap = json.decode(response.body);
-        Section section = Section.fromJson(jsonMap);
-        return section;
-      }
-    } catch (e) {
-      log(e.toString());
+    if (response.statusCode == 201) {
+      Map<String, dynamic> jsonMap = json.decode(response.body);
+      Section section = Section.fromJson(jsonMap);
+      return section;
+    } else {
+      Section empty = Section();
+      return empty;
     }
   }
 
