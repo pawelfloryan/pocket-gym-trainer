@@ -6,8 +6,7 @@ import '../constants.dart';
 import '../model/exercise.dart';
 
 class ExerciseService {
-  Future<Exercise?> createExercise(Exercise exercise) async {
-    try {
+  Future<Exercise> createExercise(Exercise exercise) async {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.exerciseEndpoint);
       var exerciseJson = exercise.toJson();
       var response = await http.post(url,
@@ -20,10 +19,10 @@ class ExerciseService {
         Map<String, dynamic> jsonMap = json.decode(response.body);
         Exercise exercise = Exercise.fromJson(jsonMap);
         return exercise;
+      } else {
+        Exercise empty = Exercise();
+        return empty;
       }
-    } catch (e) {
-      log(e.toString());
-    }
   }
 
   Future<List<Exercise>> getAllExercises(String userId) async {

@@ -41,7 +41,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
   List<Exercise> newExercises = <Exercise>[];
   List<Exercise> newExercisesDelete = <Exercise>[];
   List<Section> sections = <Section>[];
-  
+
   Exercise exerciseCreate = Exercise();
   Exercise exercise = Exercise();
   Exercise exerciseDelete = Exercise();
@@ -127,20 +127,45 @@ class _ExercisesPageState extends State<ExercisesPage> {
   }
 
   void createData() async {
-    int lastIndex = exercises.length + SectionPage.exercisesCountedLength;
-    print(lastIndex);
-    if (!RootPage.workoutStarted) {
-      if (prefsComplete.isEmpty) {
-        setState(() {
-          for (int i = 0; i < SectionPage.allExercises.length; i++) {
-            prefsComplete.add("temp");
-          }
-        });
+    exercise = (await ExerciseService().createExercise(exerciseCreate));
+    if (exercise.id == null) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          actions: [
+            TextButton(
+              onPressed: () {
+                context.pop();
+              },
+              child: Container(
+                padding: EdgeInsets.only(right: 10, bottom: 10),
+                child: Text(
+                  "Close",
+                  style: TextStyle(fontSize: 17),
+                ),
+              ),
+            )
+          ],
+          title: const Text("Too many exercises"),
+          content: const Text("Max amount is 15"),
+          contentPadding: const EdgeInsets.all(25.0),
+        ),
+      );
+    } else {
+      int lastIndex = exercises.length + SectionPage.exercisesCountedLength;
+      print(lastIndex);
+      if (!RootPage.workoutStarted) {
+        if (prefsComplete.isEmpty) {
+          setState(() {
+            for (int i = 0; i < SectionPage.allExercises.length; i++) {
+              prefsComplete.add("temp");
+            }
+          });
+        }
+        prefsComplete.insert(lastIndex, "temp");
       }
-      prefsComplete.insert(lastIndex, "temp");
+      exercises.add(exercise);
     }
-    exercise = (await ExerciseService().createExercise(exerciseCreate))!;
-    exercises.add(exercise);
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
   }
@@ -161,7 +186,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
         .then((value) => setState(() {}));
   }
 
-  void editSection(){
+  void editSection() {
     sectionUpsert.id = sectionId;
     sectionUpsert.name = sectionName;
     sectionUpsert.userId = decodedUserId;
@@ -228,6 +253,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                 deleteExercise(exercises[index].id!);
                                 prefsComplete.removeAt(
                                     index + SectionPage.exercisesCountedLength);
+                                print(index + SectionPage.exercisesCountedLength);
                               },
                               backgroundColor: Colors.red,
                               foregroundColor: Colors.white,
@@ -335,7 +361,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                                     print(index +
                                                         SectionPage
                                                             .exercisesCountedLength);
-                                                    
                                                   }),
                                                   child: Text(
                                                     "Complete",
