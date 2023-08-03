@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class NewItemTextField extends StatelessWidget {
   String text = "";
-  bool notClicked = false;
+  double opacity = 0;
   var textController = TextEditingController();
   final void Function() onClicked;
   final Future<void> Function() addElement;
@@ -11,7 +11,7 @@ class NewItemTextField extends StatelessWidget {
 
   NewItemTextField({
     required this.text,
-    required this.notClicked,
+    required this.opacity,
     required this.textController,
     required this.onClicked,
     required this.addElement,
@@ -42,8 +42,9 @@ class NewItemTextField extends StatelessWidget {
             ),
           ),
         ),
-        Visibility(
-          visible: notClicked,
+        AnimatedOpacity(
+          duration: Duration(milliseconds: 150),
+          opacity: opacity,
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Container(

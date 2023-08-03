@@ -29,7 +29,7 @@ class ExercisesPage extends StatefulWidget {
 class _ExercisesPageState extends State<ExercisesPage> {
   final _textController = TextEditingController();
   String userPost = '';
-  bool notClicked = false;
+  double opacity = 0;
   bool enterPrefsCalled = false;
   String exerciseUserPost = '';
   String weightUserPost = '';
@@ -203,7 +203,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
       createData();
       Future.delayed(const Duration(milliseconds: 10))
           .then((value) => setState(() {}));
-      notClicked = false;
+      opacity = 0;
       _textController.text = "";
       click -= 1;
     });
@@ -253,7 +253,8 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                 deleteExercise(exercises[index].id!);
                                 prefsComplete.removeAt(
                                     index + SectionPage.exercisesCountedLength);
-                                print(index + SectionPage.exercisesCountedLength);
+                                print(
+                                    index + SectionPage.exercisesCountedLength);
                               },
                               backgroundColor: Colors.red,
                               foregroundColor: Colors.white,
@@ -265,14 +266,15 @@ class _ExercisesPageState extends State<ExercisesPage> {
                           elevation: 6,
                           child: Container(
                             decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
-                              colors: [
-                                Colors.black,
-                                Colors.white,
-                              ],
-                            )),
+                              gradient: LinearGradient(
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomLeft,
+                                colors: [
+                                  Colors.black,
+                                  Colors.white,
+                                ],
+                              ),
+                            ),
                             child: Row(
                               children: [
                                 Container(
@@ -291,8 +293,10 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                           onPressed: () {
                                             pickImage();
                                           },
-                                          child: const Tooltip(
-                                            message: "Upload your photos here!",
+                                          child: Tooltip(
+                                            message: RootPage.toolTipsOn
+                                                ? "Upload your photos here!"
+                                                : "",
                                             child: Icon(
                                               Icons
                                                   .add_photo_alternate_outlined,
@@ -424,11 +428,15 @@ class _ExercisesPageState extends State<ExercisesPage> {
           ),
           NewItemTextField(
             text: "Name of a new exercise",
-            notClicked: notClicked,
+            opacity: opacity,
             textController: _textController,
             onClicked: () {
               setState(() {
-                notClicked = !notClicked;
+                if (opacity == 0) {
+                  opacity = 1;
+                } else {
+                  opacity = 0;
+                }
               });
             },
             addElement: addExercise,

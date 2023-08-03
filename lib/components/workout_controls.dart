@@ -117,7 +117,8 @@ class _WorkoutControlsState extends State<WorkoutControls> {
               ? Column(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(bottom: toolTip ? 0 : 25),
+                      margin: EdgeInsets.only(
+                          bottom: toolTip && RootPage.toolTipsOn ? 0 : 25),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100),
                       ),
@@ -169,7 +170,7 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                       ),
                     ),
                     Visibility(
-                      visible: toolTip,
+                      visible: toolTip && RootPage.toolTipsOn,
                       child: Container(
                         margin: EdgeInsets.only(top: 7, bottom: 7),
                         child: Text(
@@ -217,6 +218,7 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                         setState(() {
                           WorkoutTimer.startTimer();
                           RootPage.workoutStarted = true;
+                          RootPage.cancelToolTip = false;
                         });
                       }),
                       child: Text(
@@ -285,7 +287,7 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                       ),
                     ),
                     Visibility(
-                      visible: RootPage.cancelToolTip,
+                      visible: RootPage.cancelToolTip && RootPage.toolTipsOn,
                       child: Container(
                         margin: EdgeInsets.only(top: 7),
                         child: Text(

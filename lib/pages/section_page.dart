@@ -54,7 +54,7 @@ class _SectionPageState extends State<SectionPage> {
   final _textController = TextEditingController();
   String userPost = '';
   String sectionName = '';
-  bool notClicked = false;
+  double opacity = 0;
   bool editing = false;
   int selectedSectionIndex = -1;
   int sectionIndex = -1;
@@ -196,7 +196,7 @@ class _SectionPageState extends State<SectionPage> {
       createData();
       Future.delayed(const Duration(milliseconds: 10))
           .then((value) => setState(() {}));
-      notClicked = false;
+      opacity = 0;
       _textController.text = "";
     });
   }
@@ -250,11 +250,27 @@ class _SectionPageState extends State<SectionPage> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
 
-    return Container(
-      margin: EdgeInsets.only(top: 5),
-      child: Stack(
-        children: <Widget>[
-          ListView.builder(
+    return Stack(
+      children: <Widget>[
+        Container(
+          color: Colors.white,
+          child: DefaultTabController(
+            length: 2,
+            child: TabBar(
+              tabs: <Widget>[
+                Tab(
+                  icon: Icon(Icons.subject_outlined, color: Colors.grey[900]!,),
+                ),
+                Tab(
+                  icon: Icon(Icons.subject_outlined, color: Colors.grey[900]!,),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 55),
+          child: ListView.builder(
             itemBuilder: (context, index) {
               return Center(
                 child: Column(
@@ -284,7 +300,7 @@ class _SectionPageState extends State<SectionPage> {
                                 selectedSectionIndex = -1;
                                 countedExercises(index);
                                 exercisesCompleted();
-                                notClicked = false;
+                                opacity = 0;
                                 context.push('/exercises');
                               },
                               child: !editing || selectedSectionIndex != index
@@ -438,21 +454,25 @@ class _SectionPageState extends State<SectionPage> {
             },
             itemCount: sections.length,
           ),
-          NewItemTextField(
-            text: "Name of a new section",
-            notClicked: notClicked,
-            textController: _textController,
-            onClicked: () {
-              setState(() {
-                notClicked = !notClicked;
-              });
-            },
-            addElement: addSection,
-            backgroundColor: Color.fromARGB(255, 255, 255, 255),
-            iconColor: Color.fromARGB(255, 0, 0, 0),
-          )
-        ],
-      ),
+        ),
+        NewItemTextField(
+          text: "Name of a new section",
+          opacity: opacity,
+          textController: _textController,
+          onClicked: () {
+            setState(() {
+              if (opacity == 0) {
+                opacity = 1;
+              } else {
+                opacity = 0;
+              }
+            });
+          },
+          addElement: addSection,
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          iconColor: Color.fromARGB(255, 0, 0, 0),
+        )
+      ],
     );
   }
 }

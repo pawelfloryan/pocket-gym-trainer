@@ -42,6 +42,8 @@ class _SettingsPageState extends State<SettingsPage> {
   UserStats newUserStats = UserStats();
   UserStats userStatsUpsert = UserStats();
 
+  bool languageClicked = false;
+
   @override
   void initState() {
     super.initState();
@@ -190,10 +192,24 @@ class _SettingsPageState extends State<SettingsPage> {
               Setting(
                 text: settings[0].toString(),
                 child: Icon(Icons.arrow_forward_ios),
+                clicked: languageClicked,
+                onClicked: () {
+                  setState(() {
+                    languageClicked = !languageClicked;
+                  });
+                },
               ),
               Setting(
                 text: settings[1].toString(),
-                child: Icon(Icons.arrow_forward_ios),
+                child: Checkbox(
+                  onChanged: (value) {
+                    setState(() {
+                      RootPage.toolTipsOn = !RootPage.toolTipsOn;
+                    });
+                  },
+                  value: RootPage.toolTipsOn,
+                ),
+                clicked: false,
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -221,6 +237,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     print(selectedTheme);
                   },
                 ),
+                clicked: false,
               ),
               Setting(
                 text: settings[3].toString(),
@@ -235,6 +252,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     print(selectedTheme);
                   },
                 ),
+                clicked: false,
               ),
               Setting(
                 text: settings[4].toString(),
@@ -249,6 +267,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     print(selectedTheme);
                   },
                 ),
+                clicked: false,
               ),
               Setting(
                 text: settings[5].toString(),
@@ -263,6 +282,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     print(selectedTheme);
                   },
                 ),
+                clicked: false,
               ),
             ],
           ),

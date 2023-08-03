@@ -3,7 +3,14 @@ import 'package:flutter/material.dart';
 class Setting extends StatelessWidget {
   late String text = "";
   final Widget child;
-  Setting({required this.text, required this.child});
+  bool clicked = false;
+  late void Function()? onClicked;
+  Setting({
+    required this.text,
+    required this.child,
+    required this.clicked,
+    this.onClicked,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +34,15 @@ class Setting extends StatelessWidget {
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Container(
-                margin: EdgeInsets.only(right: 5),
-                child: child,
+              child: GestureDetector(
+                onTap: onClicked,
+                child: Container(
+                  margin: EdgeInsets.only(right: 5),
+                  child: Transform.rotate(
+                    angle: !clicked ? 0 : 1.5,
+                    child: child,
+                  ),
+                ),
               ),
             ),
           ),

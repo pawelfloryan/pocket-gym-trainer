@@ -18,15 +18,23 @@ class AboutPage extends StatelessWidget {
             },
             icon: const Icon(Icons.arrow_back_ios)),
       ),
-      body: Center(
-        heightFactor: 4.0,
-        child: Text(
-          "Coming soon",
-          style: TextStyle(
-            fontSize: 50,
-            fontWeight: FontWeight.w800,
+      body: Column(
+        children: [
+          Text(
+            "About the project",
+            style: TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.w800,
+            ),
           ),
-        ),
+          Text(
+            "I built this app as an open-source project to help people (and myself) reach fitness goals.\nIt digitalizes a traditional method of writing the workout plan on a piece of paper.\nI never wanted to do that so here I am writing a whole mobile app for this sole purpose.\n",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ],
       ),
     );
   }

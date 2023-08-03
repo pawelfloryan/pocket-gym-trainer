@@ -209,6 +209,7 @@ class RootPage extends StatefulWidget {
   static late bool filledOnce = false;
   static late List<String> sectionIdList;
   static late bool cancelToolTip = false;
+  static late bool toolTipsOn = true;
 
   @override
   State<RootPage> createState() => _RootPageState();
