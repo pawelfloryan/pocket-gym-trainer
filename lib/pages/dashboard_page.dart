@@ -1,6 +1,7 @@
 import 'package:PocketGymTrainer/components/workout_timer.dart';
 import 'package:PocketGymTrainer/main.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../pages/home_page.dart';
 import '../pages/section_page.dart';
 import '../pages/stats_page.dart';
@@ -18,6 +19,18 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   List<Widget> pages = const [HomePage(), SectionPage(), StatsPage()];
   final _key = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    setSettings();
+  }
+
+  void setSettings() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    RootPage.toolTipsOn = prefs.getBool('toolTips') ?? true;
+  }
+
   void showSidebar() {
     setState(() {
       _key.currentState?.openDrawer();

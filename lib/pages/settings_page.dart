@@ -79,6 +79,11 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
+  void setSettings() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('toolTips', RootPage.toolTipsOn);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -206,6 +211,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     setState(() {
                       RootPage.toolTipsOn = !RootPage.toolTipsOn;
                     });
+                    setSettings();
                   },
                   value: RootPage.toolTipsOn,
                 ),
