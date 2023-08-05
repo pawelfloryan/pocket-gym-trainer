@@ -259,10 +259,16 @@ class _SectionPageState extends State<SectionPage> {
             child: TabBar(
               tabs: <Widget>[
                 Tab(
-                  icon: Icon(Icons.subject_outlined, color: Colors.grey[900]!,),
+                  icon: Icon(
+                    Icons.subject_outlined,
+                    color: Colors.grey[900]!,
+                  ),
                 ),
                 Tab(
-                  icon: Icon(Icons.subject_outlined, color: Colors.grey[900]!,),
+                  icon: Icon(
+                    Icons.subject_outlined,
+                    color: Colors.grey[900]!,
+                  ),
                 ),
               ],
             ),
@@ -437,8 +443,56 @@ class _SectionPageState extends State<SectionPage> {
                             motion: ScrollMotion(),
                             children: [
                               SlidableAction(
-                                onPressed: (context) =>
-                                    deleteSection(sections[index].id!),
+                                onPressed: (context) {
+                                  if (sections[index].exercisesPerformed! > 0) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              deleteSection(
+                                                  sections[index].id!);
+                                              context.pop();
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.only(
+                                                  right: 10, bottom: 10),
+                                              child: Text(
+                                                "Delete anyway",
+                                                style: TextStyle(fontSize: 17),
+                                              ),
+                                            ),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              context.pop();
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.only(
+                                                right: 10,
+                                                bottom: 5,
+                                              ),
+                                              child: Text(
+                                                "Cancel",
+                                                style: TextStyle(fontSize: 17),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                        title: Text(
+                                            "Exercise data of ${sections[index].name}"),
+                                        content: const Text(
+                                          "After deleting this section, data used in the radar chart will be lost!",
+                                        ),
+                                        contentPadding:
+                                            const EdgeInsets.all(25.0),
+                                      ),
+                                    );
+                                  } else {
+                                    deleteSection(sections[index].id!);
+                                  }
+                                },
                                 backgroundColor: Colors.red,
                                 foregroundColor: Colors.white,
                                 icon: Icons.delete_sharp,
