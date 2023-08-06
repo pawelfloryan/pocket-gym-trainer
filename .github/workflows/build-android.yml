@@ -61,4 +61,3 @@ jobs:
           draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            #if: ${{ env.CURRENT_BRANCH == 'main' }}
