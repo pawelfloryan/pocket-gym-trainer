@@ -1,8 +1,8 @@
 name: Build app for Android
 
 on:
-  release:
-    types: [created]
+  push:
+    branches: [ main ]
 
 jobs:
   build:
@@ -61,3 +61,4 @@ jobs:
           draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ env.CURRENT_BRANCH == 'main' && startsWith(env.COMMIT_MESSAGE, '[Release]') }}
