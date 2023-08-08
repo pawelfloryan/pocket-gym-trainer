@@ -1,5 +1,6 @@
 import 'package:PocketGymTrainer/components/workout_controls.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
@@ -253,21 +254,32 @@ class _SectionPageState extends State<SectionPage> {
     return Stack(
       children: <Widget>[
         Container(
-          color: Colors.white,
           child: DefaultTabController(
             length: 2,
             child: TabBar(
               tabs: <Widget>[
                 Tab(
                   icon: Icon(
-                    Icons.subject_outlined,
+                    FontAwesomeIcons.rectangleList,
                     color: Colors.grey[900]!,
+                  ),
+                  child: Text(
+                    "Section tiles",
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
                   ),
                 ),
                 Tab(
                   icon: Icon(
                     Icons.subject_outlined,
                     color: Colors.grey[900]!,
+                  ),
+                  child: Text(
+                    "No tiles",
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ],
