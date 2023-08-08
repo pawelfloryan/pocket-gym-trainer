@@ -287,11 +287,10 @@ class _SectionPageState extends State<SectionPage> {
           ),
         ),
         Container(
-          margin: EdgeInsets.only(top: 55),
+          margin: EdgeInsets.only(top: 80),
           child: ListView.builder(
             itemBuilder: (context, index) {
-              return Center(
-                child: Column(
+              return Column(
                   children: <Widget>[
                     Container(
                       margin: const EdgeInsets.only(
@@ -299,10 +298,7 @@ class _SectionPageState extends State<SectionPage> {
                         top: 10,
                         right: 20,
                       ),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 110,
-                        child: Slidable(
+                      child: Slidable(
                           closeOnScroll: true,
                           child: Container(
                             width: double.infinity,
@@ -512,11 +508,9 @@ class _SectionPageState extends State<SectionPage> {
                             ],
                           ),
                         ),
-                      ),
                     )
                   ],
-                ),
-              );
+                );
             },
             itemCount: sections.length,
           ),
