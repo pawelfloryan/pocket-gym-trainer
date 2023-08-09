@@ -17,9 +17,9 @@ class SectionComponent extends StatelessWidget {
   late int Function(int index) exercisesCountDisplay;
   bool editing = false;
   int selectedSectionIndex = -1;
-  int index = -1;
 
   SectionComponent({
+    required this.sections,
     required this.exercises,
     required this.textController,
     required this.sectionClicked,
@@ -27,7 +27,6 @@ class SectionComponent extends StatelessWidget {
     required this.exercisesCountDisplay,
     required this.editing,
     required this.selectedSectionIndex,
-    required this.index
   });
 
   @override
@@ -39,7 +38,7 @@ class SectionComponent extends StatelessWidget {
         onPressed: () {
           sectionClicked();
         },
-        child: !editing || selectedSectionIndex != index
+        child: !editing || selectedSectionIndex != SectionPage.sectionIndex
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -49,7 +48,7 @@ class SectionComponent extends StatelessWidget {
                       margin: EdgeInsets.only(left: 50),
                       child: Center(
                         child: AutoSizeText(
-                          sections[index].name!,
+                          sections[SectionPage.sectionIndex].name!,
                           style: const TextStyle(
                             fontSize: 70,
                           ),
@@ -66,7 +65,8 @@ class SectionComponent extends StatelessWidget {
                             child: Container(
                               margin: EdgeInsets.only(top: 20),
                               child: exercises.any((element) =>
-                                      element.sectionId == sections[index].id)
+                                      element.sectionId ==
+                                      sections[SectionPage.sectionIndex].id)
                                   //        &&
                                   //SectionPage
                                   //    .certainExercises
@@ -78,7 +78,7 @@ class SectionComponent extends StatelessWidget {
                                   //            .id)
                                   ? Text(
                                       //"${SectionPage.certainExercises.length}/${exercisesCountDisplay(index)}",
-                                      "${exercisesCountDisplay(index)}",
+                                      "${exercisesCountDisplay(SectionPage.sectionIndex)}",
                                       style: TextStyle(
                                         fontSize: 17,
                                       ),
