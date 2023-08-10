@@ -17,6 +17,7 @@ class SectionComponent extends StatelessWidget {
   late int Function(int index) exercisesCountDisplay;
   bool editing = false;
   int selectedSectionIndex = -1;
+  int certainIndex;
 
   SectionComponent({
     required this.sections,
@@ -27,6 +28,7 @@ class SectionComponent extends StatelessWidget {
     required this.exercisesCountDisplay,
     required this.editing,
     required this.selectedSectionIndex,
+    required this.certainIndex,
   });
 
   @override
@@ -38,7 +40,7 @@ class SectionComponent extends StatelessWidget {
         onPressed: () {
           sectionClicked();
         },
-        child: !editing || selectedSectionIndex != SectionPage.sectionIndex
+        child: !editing || selectedSectionIndex != certainIndex
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -48,7 +50,7 @@ class SectionComponent extends StatelessWidget {
                       margin: EdgeInsets.only(left: 50),
                       child: Center(
                         child: AutoSizeText(
-                          sections[SectionPage.sectionIndex].name!,
+                          sections[certainIndex].name!,
                           style: const TextStyle(
                             fontSize: 70,
                           ),
@@ -66,7 +68,7 @@ class SectionComponent extends StatelessWidget {
                               margin: EdgeInsets.only(top: 20),
                               child: exercises.any((element) =>
                                       element.sectionId ==
-                                      sections[SectionPage.sectionIndex].id)
+                                      sections[certainIndex].id)
                                   //        &&
                                   //SectionPage
                                   //    .certainExercises
@@ -78,7 +80,7 @@ class SectionComponent extends StatelessWidget {
                                   //            .id)
                                   ? Text(
                                       //"${SectionPage.certainExercises.length}/${exercisesCountDisplay(index)}",
-                                      "${exercisesCountDisplay(SectionPage.sectionIndex)}",
+                                      "${exercisesCountDisplay(certainIndex)}",
                                       style: TextStyle(
                                         fontSize: 17,
                                       ),

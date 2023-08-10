@@ -58,7 +58,6 @@ class _SectionPageState extends State<SectionPage> {
   double opacity = 0;
   bool editing = false;
   int selectedSectionIndex = -1;
-  int sectionIndex = -1;
 
   String sectionId = "";
   String? jwtToken = RootPage.token;
@@ -299,8 +298,8 @@ class _SectionPageState extends State<SectionPage> {
                     child: Slidable(
                       closeOnScroll: true,
                       child: SectionComponent(
-                        sections: [],
-                        exercises: [],
+                        sections: sections,
+                        exercises: exercises,
                         textController: _textController,
                         sectionClicked: () {
                           SectionPage.sectionKey = sections[index].id;
@@ -316,8 +315,7 @@ class _SectionPageState extends State<SectionPage> {
                           context.push('/exercises');
                         },
                         sectionEdited: () {
-                          sectionIndex = index;
-                          editSection(sections[index].id!, sectionIndex);
+                          editSection(sections[index].id!, index);
                           _textController.text = "";
                         },
                         exercisesCountDisplay: (index) {
@@ -330,6 +328,7 @@ class _SectionPageState extends State<SectionPage> {
                         },
                         editing: editing,
                         selectedSectionIndex: selectedSectionIndex,
+                        certainIndex: index,
                       ),
                       startActionPane: ActionPane(
                         extentRatio: 0.15,
