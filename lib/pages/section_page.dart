@@ -59,7 +59,6 @@ class _SectionPageState extends State<SectionPage> {
   double opacity = 0;
   bool editing = false;
   int selectedSectionIndex = -1;
-  int sectionIndex = -1;
 
   String sectionId = "";
   String? jwtToken = RootPage.token;
