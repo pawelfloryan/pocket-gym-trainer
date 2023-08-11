@@ -28,7 +28,7 @@ class AboutPage extends StatelessWidget {
             ),
           ),
           Text(
-            "I built this app as an open-source project to help people (and myself) reach fitness goals.\nIt digitalizes a traditional method of writing the workout plan on a piece of paper.\nI never wanted to do that so here I am writing a whole mobile app for this sole purpose.\nI hope that it will help you and thanks for using it!",
+            "I built this app as an open-source project to help people (and myself) reach fitness goals.\nIt digitalizes a traditional method of writing the workout plan on a piece of paper.\nI never wanted to do that so here I am writing a whole mobile app for this purpose.\nI hope that it will help you and thanks for using it!",
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w800,

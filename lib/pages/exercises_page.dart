@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:PocketGymTrainer/components/empty_list.dart';
+
 import '../components/new_item_textfield.dart';
 import '../components/workout_controls.dart';
 import '../model/section.dart';
@@ -231,220 +233,255 @@ class _ExercisesPageState extends State<ExercisesPage> {
             },
             icon: const Icon(Icons.arrow_back_ios)),
       ),
-      body: Stack(
-        children: <Widget>[
-          ListView.builder(
-            itemBuilder: (context, index) {
-              return Center(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      width: double.infinity,
-                      height: 195,
-                      margin: const EdgeInsets.only(
-                          left: 10, top: 10, right: 10, bottom: 5),
-                      child: Slidable(
-                        endActionPane: ActionPane(
-                          extentRatio: 0.2,
-                          motion: ScrollMotion(),
-                          children: [
-                            SlidableAction(
-                              onPressed: (context) {
-                                deleteExercise(exercises[index].id!);
-                                prefsComplete.removeAt(
-                                    index + SectionPage.exercisesCountedLength);
-                                print(
-                                    index + SectionPage.exercisesCountedLength);
-                              },
-                              backgroundColor: Colors.red,
-                              foregroundColor: Colors.white,
-                              icon: Icons.delete_sharp,
-                            ),
-                          ],
-                        ),
-                        child: Material(
-                          elevation: 6,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topRight,
-                                end: Alignment.bottomLeft,
-                                colors: [
-                                  Colors.black,
-                                  Colors.white,
+      body: exercises.length > 0
+          ? Stack(
+              children: <Widget>[
+                ListView.builder(
+                  itemBuilder: (context, index) {
+                    return Center(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            width: double.infinity,
+                            height: 195,
+                            margin: const EdgeInsets.only(
+                                left: 10, top: 10, right: 10, bottom: 5),
+                            child: Slidable(
+                              endActionPane: ActionPane(
+                                extentRatio: 0.2,
+                                motion: ScrollMotion(),
+                                children: [
+                                  SlidableAction(
+                                    onPressed: (context) {
+                                      deleteExercise(exercises[index].id!);
+                                      prefsComplete.removeAt(index +
+                                          SectionPage.exercisesCountedLength);
+                                      print(index +
+                                          SectionPage.exercisesCountedLength);
+                                    },
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.delete_sharp,
+                                  ),
                                 ],
                               ),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                    left: 15,
-                                  ),
-                                  width: 150,
-                                  height: 135,
-                                  //Image button
-                                  child: image != null
-                                      ? Image.file(image!)
-                                      : ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.grey[400],
-                                          ),
-                                          onPressed: () {
-                                            pickImage();
-                                          },
-                                          child: Tooltip(
-                                            message: RootPage.toolTipsOn
-                                                ? "Upload your photos here!"
-                                                : "",
-                                            child: Icon(
-                                              Icons
-                                                  .add_photo_alternate_outlined,
-                                              size: 70,
-                                            ),
-                                          ),
-                                        ),
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 130,
-                                      height: 70,
-                                      margin: const EdgeInsets.only(
-                                        left: 20,
-                                        top: 18,
-                                        bottom: 20,
-                                      ),
-                                      padding: EdgeInsets.only(left: 15),
-                                      child: AutoSizeText(
-                                        exercises[index].name!,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                        minFontSize: 20,
-                                      ),
+                              child: Material(
+                                elevation: 6,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topRight,
+                                      end: Alignment.bottomLeft,
+                                      colors: [
+                                        Colors.black,
+                                        Colors.white,
+                                      ],
                                     ),
-                                    prefsComplete.any((element) =>
-                                                element ==
-                                                exercises[index].id) &&
-                                            RootPage.workoutStarted == false
-                                        ? Container(
-                                            margin: EdgeInsets.only(left: 30),
-                                            width: 140,
-                                            height: 40,
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                          left: 15,
+                                        ),
+                                        width: 150,
+                                        height: 135,
+                                        //Image button
+                                        child: image != null
+                                            ? Image.file(image!)
+                                            : ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
                                                   backgroundColor:
-                                                      Colors.black),
-                                              onPressed: (() {
-                                                print(index);
-                                              }),
-                                              child: Text(
-                                                "Go back",
-                                                style: const TextStyle(
-                                                    fontSize: 25),
-                                              ),
-                                            ),
-                                          )
-                                        : RootPage.workoutStarted == false
-                                            ? Container(
-                                                margin:
-                                                    EdgeInsets.only(left: 30),
-                                                width: 140,
-                                                height: 40,
-                                                child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                          backgroundColor:
-                                                              Colors.black),
-                                                  onPressed: (() {
-                                                    setPrefs(index);
-                                                    print(index +
-                                                        SectionPage
-                                                            .exercisesCountedLength);
-                                                  }),
-                                                  child: Text(
-                                                    "Complete",
-                                                    style: const TextStyle(
-                                                        fontSize: 25),
+                                                      Colors.grey[400],
+                                                ),
+                                                onPressed: () {
+                                                  pickImage();
+                                                },
+                                                child: Tooltip(
+                                                  message: RootPage.toolTipsOn
+                                                      ? "Upload your photos here!"
+                                                      : "",
+                                                  child: Icon(
+                                                    Icons
+                                                        .add_photo_alternate_outlined,
+                                                    size: 70,
                                                   ),
                                                 ),
-                                              )
-                                            : Container(
-                                                margin:
-                                                    EdgeInsets.only(left: 30),
-                                                width: 140,
-                                                height: 40,
-                                                child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        Colors.black,
-                                                  ),
-                                                  onPressed: (() {
-                                                    context.pop();
-                                                    DashboardPage.currentPage =
-                                                        0;
-                                                  }),
-                                                  child: Text(
-                                                    "Start a workout",
-                                                    style: const TextStyle(
-                                                      fontSize: 15,
+                                              ),
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            width: 130,
+                                            height: 70,
+                                            margin: const EdgeInsets.only(
+                                              left: 20,
+                                              top: 18,
+                                              bottom: 20,
+                                            ),
+                                            padding: EdgeInsets.only(left: 15),
+                                            child: AutoSizeText(
+                                              exercises[index].name!,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              minFontSize: 20,
+                                            ),
+                                          ),
+                                          prefsComplete.any((element) =>
+                                                      element ==
+                                                      exercises[index].id) &&
+                                                  RootPage.workoutStarted ==
+                                                      false
+                                              ? Container(
+                                                  margin:
+                                                      EdgeInsets.only(left: 30),
+                                                  width: 140,
+                                                  height: 40,
+                                                  child: ElevatedButton(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            backgroundColor:
+                                                                Colors.black),
+                                                    onPressed: (() {
+                                                      print(index);
+                                                    }),
+                                                    child: Text(
+                                                      "Go back",
+                                                      style: const TextStyle(
+                                                          fontSize: 25),
                                                     ),
                                                   ),
+                                                )
+                                              : RootPage.workoutStarted == false
+                                                  ? Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: 30),
+                                                      width: 140,
+                                                      height: 40,
+                                                      child: ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black),
+                                                        onPressed: (() {
+                                                          setPrefs(index);
+                                                          print(index +
+                                                              SectionPage
+                                                                  .exercisesCountedLength);
+                                                        }),
+                                                        child: Text(
+                                                          "Complete",
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 25),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: 30),
+                                                      width: 140,
+                                                      height: 40,
+                                                      child: ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          backgroundColor:
+                                                              Colors.black,
+                                                        ),
+                                                        onPressed: (() {
+                                                          context.pop();
+                                                          DashboardPage
+                                                              .currentPage = 0;
+                                                        }),
+                                                        child: Text(
+                                                          "Start a workout",
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 15,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                        ],
+                                      ),
+                                      prefsComplete.any((element) =>
+                                                  element ==
+                                                  exercises[index].id!) &&
+                                              RootPage.workoutStarted == false
+                                          ? Container(
+                                              margin: EdgeInsets.only(top: 5),
+                                              child: Align(
+                                                alignment: Alignment.topCenter,
+                                                child: Icon(
+                                                  Icons.done,
+                                                  color: Colors.green[600],
+                                                  size: 40,
                                                 ),
                                               ),
-                                  ],
+                                            )
+                                          : Container()
+                                    ],
+                                  ),
                                 ),
-                                prefsComplete.any((element) =>
-                                            element == exercises[index].id!) &&
-                                        RootPage.workoutStarted == false
-                                    ? Container(
-                                        margin: EdgeInsets.only(top: 5),
-                                        child: Align(
-                                          alignment: Alignment.topCenter,
-                                          child: Icon(
-                                            Icons.done,
-                                            color: Colors.green[600],
-                                            size: 40,
-                                          ),
-                                        ),
-                                      )
-                                    : Container()
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
+                          )
+                        ],
                       ),
-                    )
-                  ],
+                    );
+                  },
+                  itemCount: exercises.length,
                 ),
-              );
-            },
-            itemCount: exercises.length,
-          ),
-          NewItemTextField(
-            text: "Name of a new exercise",
-            opacity: opacity,
-            textController: _textController,
-            onClicked: () {
-              setState(() {
-                if (opacity == 0) {
-                  opacity = 1;
-                } else {
-                  opacity = 0;
-                }
-              });
-            },
-            addElement: addExercise,
-            backgroundColor: Color.fromARGB(255, 0, 0, 0),
-            iconColor: Color.fromARGB(255, 255, 255, 255),
-          )
-        ],
-      ),
+                NewItemTextField(
+                  text: "Name of a new exercise",
+                  opacity: opacity,
+                  textController: _textController,
+                  onClicked: () {
+                    setState(() {
+                      if (opacity == 0) {
+                        opacity = 1;
+                      } else {
+                        opacity = 0;
+                      }
+                    });
+                  },
+                  addElement: addExercise,
+                  backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                  iconColor: Color.fromARGB(255, 255, 255, 255),
+                )
+              ],
+            )
+          : Stack(
+              children: [
+                EmptyList(
+                  imagePath: "images/exercise.png",
+                  text: "Click the button in right bottom\nto add new exercises",
+                ),
+                NewItemTextField(
+                  text: "Name of a new exercise",
+                  opacity: opacity,
+                  textController: _textController,
+                  onClicked: () {
+                    setState(() {
+                      if (opacity == 0) {
+                        opacity = 1;
+                      } else {
+                        opacity = 0;
+                      }
+                    });
+                  },
+                  addElement: addExercise,
+                  backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                  iconColor: Color.fromARGB(255, 255, 255, 255),
+                )
+              ],
+            ),
     );
   }
 }

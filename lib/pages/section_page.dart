@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../components/empty_list.dart';
 import '../main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -134,6 +135,8 @@ class _SectionPageState extends State<SectionPage> {
     sections = (await SectionService().getSection(jwtToken!, decodedUserId));
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
+    print(sections.length);
+    print("/////////////////");
   }
 
   void createData() async {
@@ -249,66 +252,61 @@ class _SectionPageState extends State<SectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-
-    return Stack(
-      children: <Widget>[
-        Container(
-          child: DefaultTabController(
-            length: 2,
-            child: TabBar(
-              tabs: <Widget>[
-                Tab(
-                  icon: Icon(
-                    FontAwesomeIcons.rectangleList,
-                    color: Colors.grey[900]!,
-                  ),
-                  child: Text(
-                    "Section tiles",
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                Tab(
-                  icon: Icon(
-                    Icons.subject_outlined,
-                    color: Colors.grey[900]!,
-                  ),
-                  child: Text(
-                    "No tiles",
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.only(top: 55),
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              return Center(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.only(
-                        left: 20,
-                        top: 10,
-                        right: 20,
+    return sections.length > 0
+        ? Stack(
+            children: <Widget>[
+              Container(
+                child: DefaultTabController(
+                  length: 2,
+                  child: TabBar(
+                    tabs: <Widget>[
+                      Tab(
+                        icon: Icon(
+                          FontAwesomeIcons.rectangleList,
+                          color: Colors.grey[900]!,
+                        ),
+                        child: Text(
+                          "Section tiles",
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 110,
-                        child: Slidable(
-                          closeOnScroll: true,
-                          child: Container(
-                            width: double.infinity,
-                            height: 110,
-                            child: ElevatedButton(
-                              onPressed: () {
+                      Tab(
+                        icon: Icon(
+                          Icons.subject_outlined,
+                          color: Colors.grey[900]!,
+                        ),
+                        child: Text(
+                          "No tiles",
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 80),
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: <Widget>[
+                        Container(
+                          margin: const EdgeInsets.only(
+                            left: 20,
+                            top: 10,
+                            right: 20,
+                          ),
+                          child: Slidable(
+                            closeOnScroll: true,
+                            child: SectionComponent(
+                              sections: sections,
+                              exercises: exercises,
+                              textController: _textController,
+                              sectionClicked: () {
                                 SectionPage.sectionKey = sections[index].id;
                                 SectionPage.sectionName = sections[index].name;
                                 SectionPage.exercisesPerformed =
@@ -321,224 +319,171 @@ class _SectionPageState extends State<SectionPage> {
                                 opacity = 0;
                                 context.push('/exercises');
                               },
-                              child: !editing || selectedSectionIndex != index
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          flex: 6,
-                                          child: Container(
-                                            margin: EdgeInsets.only(left: 50),
-                                            child: Center(
-                                              child: AutoSizeText(
-                                                sections[index].name!,
-                                                style: const TextStyle(
-                                                  fontSize: 70,
-                                                ),
-                                                minFontSize: 40,
-                                                maxLines: 1,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        RootPage.workoutStarted
-                                            ? Expanded(
-                                                child: Align(
-                                                  alignment: Alignment.topRight,
-                                                  child: Container(
-                                                    margin: EdgeInsets.only(
-                                                        top: 20),
-                                                    child: exercises.any(
-                                                            (element) =>
-                                                                element
-                                                                    .sectionId ==
-                                                                sections[index]
-                                                                    .id)
-                                                        //        &&
-                                                        //SectionPage
-                                                        //    .certainExercises
-                                                        //    .any((element) =>
-                                                        //        element
-                                                        //            .sectionId ==
-                                                        //        sections[
-                                                        //                index]
-                                                        //            .id)
-                                                        ? Text(
-                                                            //"${SectionPage.certainExercises.length}/${exercisesCountDisplay(index)}",
-                                                            "${exercisesCountDisplay(index)}",
-                                                            style: TextStyle(
-                                                              fontSize: 17,
-                                                            ),
-                                                          )
-                                                        : Text("0/0"),
-                                                  ),
-                                                ),
-                                              )
-                                            : Expanded(
-                                                child: Container(
-                                                  margin:
-                                                      EdgeInsets.only(top: 20),
-                                                ),
-                                              )
-                                      ],
-                                    )
-                                  : Container(
-                                      margin: const EdgeInsets.only(
-                                          left: 7, right: 10),
-                                      child: TextField(
-                                        cursorColor: Colors.white,
-                                        autofocus: true,
-                                        controller: _textController,
-                                        style: TextStyle(
-                                          fontSize: 50,
-                                          color: Colors.white,
-                                        ),
-                                        decoration: InputDecoration(
-                                          focusedBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          suffixIcon: IconButton(
-                                            color: Colors.white,
-                                            onPressed: () {
-                                              sectionIndex = index;
-                                              editSection(sections[index].id!,
-                                                  sectionIndex);
-                                              _textController.text = "";
-                                            },
-                                            icon: Icon(
-                                              Icons.done,
-                                              size: 40,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                              sectionEdited: () {
+                                editSection(sections[index].id!, index);
+                                _textController.text = "";
+                              },
+                              exercisesCountDisplay: (index) {
+                                print(index);
+                                newExercises = exercises
+                                    .where((element) =>
+                                        element.sectionId == sections[index].id)
+                                    .toList();
+                                return newExercises.length;
+                              },
+                              editing: editing,
+                              selectedSectionIndex: selectedSectionIndex,
+                              certainIndex: index,
                             ),
-                          ),
-                          startActionPane: ActionPane(
-                            extentRatio: 0.15,
-                            motion: ScrollMotion(),
-                            children: [
-                              SlidableAction(
-                                onPressed: (context) => setState(() {
-                                  if (!editing) {
-                                    editing = true;
-                                    _textController.text =
-                                        sections[index].name!;
-                                    selectedSectionIndex = index;
-                                  } else {
-                                    if (selectedSectionIndex != index) {
+                            startActionPane: ActionPane(
+                              extentRatio: 0.15,
+                              motion: ScrollMotion(),
+                              children: [
+                                SlidableAction(
+                                  onPressed: (context) => setState(() {
+                                    if (!editing) {
                                       editing = true;
                                       _textController.text =
                                           sections[index].name!;
                                       selectedSectionIndex = index;
                                     } else {
-                                      editing = false;
-                                      _textController.text = "";
-                                      selectedSectionIndex = -1;
+                                      if (selectedSectionIndex != index) {
+                                        editing = true;
+                                        _textController.text =
+                                            sections[index].name!;
+                                        selectedSectionIndex = index;
+                                      } else {
+                                        editing = false;
+                                        _textController.text = "";
+                                        selectedSectionIndex = -1;
+                                      }
                                     }
-                                  }
-                                }),
-                                backgroundColor: Colors.blue,
-                                foregroundColor: Colors.white,
-                                icon: !editing || selectedSectionIndex != index
-                                    ? Icons.edit
-                                    : Icons.subdirectory_arrow_left_sharp,
-                              ),
-                            ],
-                          ),
-                          endActionPane: ActionPane(
-                            extentRatio: 0.2,
-                            motion: ScrollMotion(),
-                            children: [
-                              SlidableAction(
-                                onPressed: (context) {
-                                  if (sections[index].exercisesPerformed! > 0) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              deleteSection(
-                                                  sections[index].id!);
-                                              context.pop();
-                                            },
-                                            child: Container(
-                                              padding: EdgeInsets.only(
-                                                  right: 10, bottom: 10),
-                                              child: Text(
-                                                "Delete anyway",
-                                                style: TextStyle(fontSize: 17),
+                                  }),
+                                  backgroundColor: Colors.blue,
+                                  foregroundColor: Colors.white,
+                                  icon:
+                                      !editing || selectedSectionIndex != index
+                                          ? Icons.edit
+                                          : Icons.subdirectory_arrow_left_sharp,
+                                ),
+                              ],
+                            ),
+                            endActionPane: ActionPane(
+                              extentRatio: 0.2,
+                              motion: ScrollMotion(),
+                              children: [
+                                SlidableAction(
+                                  onPressed: (context) {
+                                    if (sections[index].exercisesPerformed! >
+                                        0) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                deleteSection(
+                                                    sections[index].id!);
+                                                context.pop();
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.only(
+                                                    right: 10, bottom: 10),
+                                                child: Text(
+                                                  "Delete anyway",
+                                                  style:
+                                                      TextStyle(fontSize: 17),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              context.pop();
-                                            },
-                                            child: Container(
-                                              padding: EdgeInsets.only(
-                                                right: 10,
-                                                bottom: 5,
-                                              ),
-                                              child: Text(
-                                                "Cancel",
-                                                style: TextStyle(fontSize: 17),
+                                            TextButton(
+                                              onPressed: () {
+                                                context.pop();
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.only(
+                                                  right: 10,
+                                                  bottom: 5,
+                                                ),
+                                                child: Text(
+                                                  "Cancel",
+                                                  style:
+                                                      TextStyle(fontSize: 17),
+                                                ),
                                               ),
                                             ),
+                                          ],
+                                          title: Text(
+                                              "Exercise data of ${sections[index].name}"),
+                                          content: const Text(
+                                            "After deleting this section, data used in the radar chart will be lost!",
                                           ),
-                                        ],
-                                        title: Text(
-                                            "Exercise data of ${sections[index].name}"),
-                                        content: const Text(
-                                          "After deleting this section, data used in the radar chart will be lost!",
+                                          contentPadding:
+                                              const EdgeInsets.all(25.0),
                                         ),
-                                        contentPadding:
-                                            const EdgeInsets.all(25.0),
-                                      ),
-                                    );
-                                  } else {
-                                    deleteSection(sections[index].id!);
-                                  }
-                                },
-                                backgroundColor: Colors.red,
-                                foregroundColor: Colors.white,
-                                icon: Icons.delete_sharp,
-                              ),
-                            ],
+                                      );
+                                    } else {
+                                      deleteSection(sections[index].id!);
+                                    }
+                                  },
+                                  backgroundColor: Colors.red,
+                                  foregroundColor: Colors.white,
+                                  icon: Icons.delete_sharp,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ),
-                    )
-                  ],
+                        )
+                      ],
+                    );
+                  },
+                  itemCount: sections.length,
                 ),
-              );
-            },
-            itemCount: sections.length,
-          ),
-        ),
-        NewItemTextField(
-          text: "Name of a new section",
-          opacity: opacity,
-          textController: _textController,
-          onClicked: () {
-            setState(() {
-              if (opacity == 0) {
-                opacity = 1;
-              } else {
-                opacity = 0;
-              }
-            });
-          },
-          addElement: addSection,
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
-          iconColor: Color.fromARGB(255, 0, 0, 0),
-        )
-      ],
-    );
+              ),
+              NewItemTextField(
+                text: "Name of a new section",
+                opacity: opacity,
+                textController: _textController,
+                onClicked: () {
+                  setState(() {
+                    if (opacity == 0) {
+                      opacity = 1;
+                    } else {
+                      opacity = 0;
+                    }
+                  });
+                },
+                addElement: addSection,
+                backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                iconColor: Color.fromARGB(255, 0, 0, 0),
+              )
+            ],
+          )
+        : Stack(
+            children: [
+              EmptyList(
+                imagePath: "images/push-up.png",
+                text:
+                    "Click the button in right bottom\nto add new exercise sections",
+              ),
+              NewItemTextField(
+                text: "Name of a new section",
+                opacity: opacity,
+                textController: _textController,
+                onClicked: () {
+                  setState(() {
+                    if (opacity == 0) {
+                      opacity = 1;
+                    } else {
+                      opacity = 0;
+                    }
+                  });
+                },
+                addElement: addSection,
+                backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                iconColor: Color.fromARGB(255, 0, 0, 0),
+              )
+            ],
+          );
   }
 }
