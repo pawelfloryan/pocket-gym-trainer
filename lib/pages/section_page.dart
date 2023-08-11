@@ -133,8 +133,10 @@ class _SectionPageState extends State<SectionPage> {
   void getData() async {
     sections = (await SectionService().getSection(jwtToken!, decodedUserId));
     Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
-    print(sections.length);
+        .then((value) => setState(() {
+              RootPage.sectionsLength = sections.length;
+            }));
+    print(RootPage.sectionsLength);
     print("/////////////////");
   }
 
@@ -166,6 +168,7 @@ class _SectionPageState extends State<SectionPage> {
       );
     } else {
       sections.add(section);
+      RootPage.sectionsLength++;
     }
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
@@ -251,7 +254,7 @@ class _SectionPageState extends State<SectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return sections.length > 0
+    return RootPage.sectionsLength > 0
         ? Stack(
             children: <Widget>[
               Container(
