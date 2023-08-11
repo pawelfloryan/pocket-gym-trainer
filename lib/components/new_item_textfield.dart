@@ -9,15 +9,14 @@ class NewItemTextField extends StatelessWidget {
   final Color backgroundColor;
   final Color iconColor;
 
-  NewItemTextField({
-    required this.text,
-    required this.opacity,
-    required this.textController,
-    required this.onClicked,
-    required this.addElement,
-    required this.backgroundColor,
-    required this.iconColor
-  });
+  NewItemTextField(
+      {required this.text,
+      required this.opacity,
+      required this.textController,
+      required this.onClicked,
+      required this.addElement,
+      required this.backgroundColor,
+      required this.iconColor});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +27,7 @@ class NewItemTextField extends StatelessWidget {
         Align(
           alignment: Alignment.bottomRight,
           child: Container(
-            margin:
-                const EdgeInsets.only(right: 10, bottom: 10),
+            margin: const EdgeInsets.only(right: 10, bottom: 10),
             child: FloatingActionButton(
               backgroundColor: backgroundColor,
               onPressed: () {
@@ -50,15 +48,18 @@ class NewItemTextField extends StatelessWidget {
             child: Container(
               width: MediaQuery.of(context).size.width - 90,
               decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 3.5),
-                  color: Colors.white),
+                border: Border.all(color: Colors.black, width: 3.5),
+                color: Colors.white,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(5.0),
+                ),
+              ),
               margin: EdgeInsets.only(
                 right: screenSize.width * 0.15,
                 bottom: 10,
               ),
               child: Container(
-                margin:
-                    const EdgeInsets.only(left: 7),
+                margin: const EdgeInsets.only(left: 7),
                 child: TextField(
                   controller: textController,
                   decoration: InputDecoration(
