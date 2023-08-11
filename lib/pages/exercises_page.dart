@@ -227,22 +227,21 @@ class _ExercisesPageState extends State<ExercisesPage> {
         title: Text(sectionName),
         automaticallyImplyLeading: false,
         leading: IconButton(
-            onPressed: () {
-              context.pop();
-              leavePrefs();
-            },
-            icon: const Icon(Icons.arrow_back_ios)),
+          onPressed: () {
+            context.pop();
+            leavePrefs();
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
       ),
       body: exercises.length > 0
           ? Stack(
               children: <Widget>[
                 ListView.builder(
                   itemBuilder: (context, index) {
-                    return Center(
-                      child: Column(
+                    return Column(
                         children: <Widget>[
                           Container(
-                            width: double.infinity,
                             height: 195,
                             margin: const EdgeInsets.only(
                                 left: 10, top: 10, right: 10, bottom: 5),
@@ -357,7 +356,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                                     ),
                                                   ),
                                                 )
-                                              : RootPage.workoutStarted == false
+                                              : RootPage.workoutStarted
                                                   ? Container(
                                                       margin: EdgeInsets.only(
                                                           left: 30),
@@ -413,7 +412,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                       prefsComplete.any((element) =>
                                                   element ==
                                                   exercises[index].id!) &&
-                                              RootPage.workoutStarted == false
+                                              RootPage.workoutStarted
                                           ? Container(
                                               margin: EdgeInsets.only(top: 5),
                                               child: Align(
@@ -433,8 +432,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
                             ),
                           )
                         ],
-                      ),
-                    );
+                      );
                   },
                   itemCount: exercises.length,
                 ),
@@ -461,7 +459,8 @@ class _ExercisesPageState extends State<ExercisesPage> {
               children: [
                 EmptyList(
                   imagePath: "images/exercise.png",
-                  text: "Click the button in right bottom\nto add new exercises",
+                  text:
+                      "Click the button in right bottom\nto add new exercises",
                 ),
                 NewItemTextField(
                   text: "Name of a new exercise",
