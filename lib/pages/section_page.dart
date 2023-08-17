@@ -303,6 +303,7 @@ class _SectionPageState extends State<SectionPage> {
                             right: 20,
                           ),
                           child: Slidable(
+                            enabled: !RootPage.workoutStarted,
                             closeOnScroll: true,
                             child: SectionComponent(
                               sections: sections,
