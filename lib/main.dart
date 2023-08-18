@@ -1,7 +1,7 @@
 import 'package:sidebarx/sidebarx.dart';
 
 import 'pages/about_page.dart';
-import 'pages/muscle_map.dart';
+import 'pages/muscle_list_page.dart';
 import 'pages/profile_page.dart';
 import 'pages/forgot_password_page.dart';
 import 'pages/title_page.dart';
@@ -172,8 +172,8 @@ final _router = GoRouter(
       builder: (context, state) => ProfilePage(),
     ),
     GoRoute(
-      path: '/muscleMap',
-      builder: (context, state) => MuscleMapPage(),
+      path: '/muscleList',
+      builder: (context, state) => MuscleListPage(),
     ),
     GoRoute(
       path: '/about',
