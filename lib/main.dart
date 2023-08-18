@@ -1,3 +1,5 @@
+import 'package:sidebarx/sidebarx.dart';
+
 import 'pages/about_page.dart';
 import 'pages/muscle_list_page.dart';
 import 'pages/profile_page.dart';
@@ -211,12 +213,24 @@ class RootPage extends StatefulWidget {
   static late bool cancelToolTip = false;
   static late bool toolTipsOn = true;
   static late int sectionsLength = -1;
+  static late var sidebarController =
+      SidebarXController(selectedIndex: 0, extended: true);
 
   @override
   State<RootPage> createState() => _RootPageState();
 }
 
 class _RootPageState extends State<RootPage> {
+
+  //TODO Make sidebar hide after coming back to the dashboard
+  void sidebarHide() {
+    setState(() {
+      RootPage.sidebarController =
+          SidebarXController(selectedIndex: 0, extended: false);
+      print(RootPage.sidebarController.extended);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return RootPage.logged ? DashboardPage() : TitlePage();

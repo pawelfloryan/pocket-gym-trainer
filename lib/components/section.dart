@@ -69,15 +69,7 @@ class SectionComponent extends StatelessWidget {
                               child: exercises.any((element) =>
                                       element.sectionId ==
                                       sections[certainIndex].id)
-                                  //        &&
-                                  //SectionPage
-                                  //    .certainExercises
-                                  //    .any((element) =>
-                                  //        element
-                                  //            .sectionId ==
-                                  //        sections[
-                                  //                index]
-                                  //            .id)
+                                  
                                   ? Text(
                                       //"${SectionPage.certainExercises.length}/${exercisesCountDisplay(index)}",
                                       "${exercisesCountDisplay(certainIndex)}",
