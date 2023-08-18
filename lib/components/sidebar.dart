@@ -55,9 +55,9 @@ class Sidebar extends StatelessWidget {
           ),
           SidebarXItem(
             icon: Icons.map_outlined,
-            label: 'Muscle Map',
+            label: 'Muscle List',
             onTap: () {
-              context.push('/muscleMap');
+              context.push('/muscleList');
             },
           ),
           SidebarXItem(
