@@ -19,10 +19,10 @@ class ExerciseComponent extends StatelessWidget {
 
   ExerciseComponent({
     required this.exercises,
-    this.prefsComplete,
+    required this.prefsComplete,
     this.image,
-    this.pickImage,
-    this.setPrefs,
+    required this.pickImage,
+    required this.setPrefs,
     required this.certainIndex,
   });
 
