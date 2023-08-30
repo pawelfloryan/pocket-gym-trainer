@@ -45,7 +45,7 @@ class ExerciseService {
   }
 
   Future<List<Exercise>> getExercise(String sectionId, String userId) async {
-    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.exerciseEndpoint);
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.exerciseEndpoint + "/${userId}");
     var response = await http.get(url);
 
     if (response.statusCode == 200) {

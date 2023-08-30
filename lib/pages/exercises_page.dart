@@ -85,6 +85,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
     super.initState();
     getData(sectionId);
     getPrefs();
+    print(exercises);
   }
 
   //Sets list index of the completed exercise
@@ -100,7 +101,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
       prefsComplete[index + SectionPage.exercisesCountedLength] =
           exercises[index].id!;
       SectionPage.exercisesPerformed++;
-      print(SectionPage.exercisesPerformed);
       print("object");
       editSection();
     });
@@ -114,7 +114,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
     setState(() {
       prefsComplete = strList!;
     });
-    print(prefsComplete);
   }
 
   //All completed exercises are saved into a list of prefs

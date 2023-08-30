@@ -114,19 +114,15 @@ class _SectionPageState extends State<SectionPage> {
     setState(() {
       prefsComplete = strList;
     });
-    print(prefsComplete);
 
     certainExercises = exercises.where((element) {
       return strList.contains(element.sectionId);
     }).toList();
 
-    print(certainExercises);
-
     certainSections = sections.where((section) {
       return certainExercises
           .any((exercise) => section.id == exercise.sectionId);
     }).toList();
-    print(certainSections);
     SectionPage.certainExercises = certainExercises;
   }
 

@@ -14,7 +14,7 @@ class EmptyList extends StatelessWidget {
     return Column(
       children: [
         Container(
-          margin: EdgeInsets.only(top: 110, right: 30, left: 30),
+          margin: EdgeInsets.only(top: 110, right: 50, left: 50),
           child: Image.asset(imagePath),
         ),
         Container(
