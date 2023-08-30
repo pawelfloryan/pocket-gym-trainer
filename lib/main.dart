@@ -216,7 +216,6 @@ class RootPage extends StatefulWidget {
   static late int sectionsLength = -1;
   static late var sidebarController =
       SidebarXController(selectedIndex: 0, extended: true);
-  static late bool display = true;
 
   @override
   State<RootPage> createState() => _RootPageState();

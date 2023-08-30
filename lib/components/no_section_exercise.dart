@@ -9,21 +9,23 @@ import '../model/exercise.dart';
 import '../pages/dashboard_page.dart';
 import '../pages/section_page.dart';
 
-class ExerciseComponent extends StatelessWidget {
+class NoSectionExerciseComponent extends StatelessWidget {
   List<Exercise> exercises = <Exercise>[];
   late List<String>? prefsComplete = <String>[];
   File? image;
   late void Function()? pickImage;
   late void Function(int index)? setPrefs;
-  int certainIndex;
+  String exerciseId;
+  String exerciseName;
 
-  ExerciseComponent({
+  NoSectionExerciseComponent({
     required this.exercises,
     required this.prefsComplete,
     this.image,
     required this.pickImage,
     required this.setPrefs,
-    required this.certainIndex,
+    required this.exerciseId,
+    required this.exerciseName,
   });
 
   @override
@@ -83,7 +85,7 @@ class ExerciseComponent extends StatelessWidget {
                   ),
                   padding: EdgeInsets.only(left: 15),
                   child: AutoSizeText(
-                    exercises[certainIndex].name!,
+                    exerciseName,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 30,
@@ -92,8 +94,7 @@ class ExerciseComponent extends StatelessWidget {
                     minFontSize: 20,
                   ),
                 ),
-                prefsComplete!.any((element) =>
-                            element == exercises[certainIndex].id) &&
+                prefsComplete!.any((element) => element == exerciseId) &&
                         RootPage.workoutStarted == false
                     ? Container(
                         margin: EdgeInsets.only(left: 30),
@@ -103,7 +104,7 @@ class ExerciseComponent extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.black),
                           onPressed: (() {
-                            print(certainIndex);
+                            //TODO
                           }),
                           child: Text(
                             "Go back",
@@ -120,7 +121,7 @@ class ExerciseComponent extends StatelessWidget {
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.black),
                               onPressed: (() {
-                                setPrefs!(certainIndex);
+                                //setPrefs!(certainIndex);
                               }),
                               child: Text(
                                 "Complete",
@@ -137,7 +138,7 @@ class ExerciseComponent extends StatelessWidget {
                                 backgroundColor: Colors.black,
                               ),
                               onPressed: (() {
-                                context.pop();
+                                DashboardPage.currentPage = 0;
                               }),
                               child: Text(
                                 "Start a workout",
@@ -149,8 +150,7 @@ class ExerciseComponent extends StatelessWidget {
                           ),
               ],
             ),
-            prefsComplete!.any(
-                        (element) => element == exercises[certainIndex].id!) &&
+            prefsComplete!.any((element) => element == exerciseId) &&
                     RootPage.workoutStarted
                 ? Container(
                     margin: EdgeInsets.only(top: 5),

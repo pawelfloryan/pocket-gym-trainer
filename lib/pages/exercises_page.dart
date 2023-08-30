@@ -82,7 +82,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
   @override
   void initState() {
     super.initState();
-    RootPage.display = false;
     getData(sectionId);
     getPrefs();
     print(exercises);
