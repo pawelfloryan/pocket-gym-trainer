@@ -1,3 +1,4 @@
+import 'package:PocketGymTrainer/pages/display_exercises_page.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 import 'pages/about_page.dart';
@@ -148,8 +149,8 @@ final _router = GoRouter(
       builder: (context, state) => HomePage(),
     ),
     GoRoute(
-      path: '/sections',
-      builder: (context, state) => SectionPage(),
+      path: '/display',
+      builder: (context, state) => DisplayExercisesPage(),
     ),
     GoRoute(
       path: '/exercises',
@@ -221,7 +222,6 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
-
   //TODO Make sidebar hide after coming back to the dashboard
   void sidebarHide() {
     setState(() {
