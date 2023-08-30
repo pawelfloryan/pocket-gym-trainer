@@ -37,8 +37,6 @@ class _WorkoutCounterState extends State<WorkoutCounter> {
         WorkoutCounter.number.value = userStats.entries!;
       });
     }
-    print(decodedUserId);
-    print(userStats.entries);
   }
 
   @override

@@ -1,5 +1,6 @@
-import 'package:PocketGymTrainer/components/workout_timer.dart';
-import 'package:PocketGymTrainer/main.dart';
+import '../components/workout_timer.dart';
+import '../main.dart';
+import '../pages/display_exercises_page.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../pages/home_page.dart';
@@ -17,7 +18,7 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  List<Widget> pages = const [HomePage(), SectionPage(), StatsPage()];
+  List<Widget> pages = const [HomePage(), DisplayExercisesPage(), StatsPage()];
   final _key = GlobalKey<ScaffoldState>();
 
   @override
@@ -51,7 +52,7 @@ class _DashboardPageState extends State<DashboardPage> {
           title: DashboardPage.currentPage == 0
               ? const Text("Home")
               : DashboardPage.currentPage == 1
-                  ? const Text("Sections")
+                  ? const Text("Exercises")
                   : const Text("Statistics"),
           actions: [WorkoutTimer()],
         ),

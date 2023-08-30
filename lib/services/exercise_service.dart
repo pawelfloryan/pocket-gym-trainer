@@ -44,6 +44,25 @@ class ExerciseService {
     }
   }
 
+  Future<List<Exercise>> getNoSectionExercise(String userId) async {
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.exerciseEndpoint + "/${userId}");
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      List<Exercise> exercisesTemp = exerciseFromJsonList(response.body);
+      List<Exercise> exercises = <Exercise>[];
+      for (Exercise exercise in exercisesTemp) {
+        if (exercise.userId == userId) {
+          exercises.add(exercise);
+        }
+      }
+      return exercises;
+    } else {
+      List<Exercise> exercises = <Exercise>[];
+      return exercises;
+    }
+  }
+
   Future<List<Exercise>> getExercise(String sectionId, String userId) async {
     var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.exerciseEndpoint + "/${userId}");
     var response = await http.get(url);

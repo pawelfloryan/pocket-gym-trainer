@@ -37,7 +37,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
   String exerciseUserPost = '';
   String weightUserPost = '';
   File? image;
-  double click = 1;
   double temp = 1;
 
   List<Exercise> exercises = <Exercise>[];
@@ -83,6 +82,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
   @override
   void initState() {
     super.initState();
+    RootPage.display = false;
     getData(sectionId);
     getPrefs();
     print(exercises);
@@ -207,7 +207,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
           .then((value) => setState(() {}));
       opacity = 0;
       _textController.text = "";
-      click -= 1;
     });
   }
 
@@ -240,42 +239,46 @@ class _ExercisesPageState extends State<ExercisesPage> {
                 ListView.builder(
                   itemBuilder: (context, index) {
                     return Column(
-                        children: <Widget>[
-                          Container(
-                            height: 195,
-                            margin: const EdgeInsets.only(
-                                left: 10, top: 10, right: 10, bottom: 5),
-                            child: Slidable(
-                              endActionPane: ActionPane(
-                                extentRatio: 0.2,
-                                motion: ScrollMotion(),
-                                children: [
-                                  SlidableAction(
-                                    onPressed: (context) {
-                                      deleteExercise(exercises[index].id!);
-                                      prefsComplete.removeAt(index +
-                                          SectionPage.exercisesCountedLength);
-                                      print(index +
-                                          SectionPage.exercisesCountedLength);
-                                    },
-                                    backgroundColor: Colors.red,
-                                    foregroundColor: Colors.white,
-                                    icon: Icons.delete_sharp,
-                                  ),
-                                ],
-                              ),
-                              child: ExerciseComponent(
-                                exercises: exercises,
-                                prefsComplete: prefsComplete,
-                                image: image,
-                                pickImage: pickImage,
-                                setPrefs: setPrefs,
-                                certainIndex: index,
-                              ),
+                      children: <Widget>[
+                        Container(
+                          height: 195,
+                          margin: const EdgeInsets.only(
+                            left: 10,
+                            top: 10,
+                            right: 10,
+                            bottom: 5,
+                          ),
+                          child: Slidable(
+                            endActionPane: ActionPane(
+                              extentRatio: 0.2,
+                              motion: ScrollMotion(),
+                              children: [
+                                SlidableAction(
+                                  onPressed: (context) {
+                                    deleteExercise(exercises[index].id!);
+                                    prefsComplete.removeAt(index +
+                                        SectionPage.exercisesCountedLength);
+                                    print(index +
+                                        SectionPage.exercisesCountedLength);
+                                  },
+                                  backgroundColor: Colors.red,
+                                  foregroundColor: Colors.white,
+                                  icon: Icons.delete_sharp,
+                                ),
+                              ],
                             ),
-                          )
-                        ],
-                      );
+                            child: ExerciseComponent(
+                              exercises: exercises,
+                              prefsComplete: prefsComplete,
+                              image: image,
+                              pickImage: pickImage,
+                              setPrefs: setPrefs,
+                              certainIndex: index,
+                            ),
+                          ),
+                        )
+                      ],
+                    );
                   },
                   itemCount: exercises.length,
                 ),

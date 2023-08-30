@@ -132,12 +132,9 @@ class _SectionPageState extends State<SectionPage> {
         .then((value) => setState(() {
               RootPage.sectionsLength = sections.length;
             }));
-    print(RootPage.sectionsLength);
-    print("/////////////////");
   }
 
   void createData() async {
-    print(sectionCreate.name);
     section = (await SectionService().createSection(sectionCreate));
     if (section.id == null) {
       showDialog(
@@ -254,40 +251,6 @@ class _SectionPageState extends State<SectionPage> {
         ? Stack(
             children: <Widget>[
               Container(
-                child: DefaultTabController(
-                  length: 2,
-                  child: TabBar(
-                    tabs: <Widget>[
-                      Tab(
-                        icon: Icon(
-                          FontAwesomeIcons.rectangleList,
-                          color: Colors.grey[900]!,
-                        ),
-                        child: Text(
-                          "Section tiles",
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      Tab(
-                        icon: Icon(
-                          Icons.subject_outlined,
-                          color: Colors.grey[900]!,
-                        ),
-                        child: Text(
-                          "No tiles",
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 80),
                 child: ListView.builder(
                   itemBuilder: (context, index) {
                     return Column(
@@ -323,7 +286,6 @@ class _SectionPageState extends State<SectionPage> {
                                 _textController.text = "";
                               },
                               exercisesCountDisplay: (index) {
-                                print(index);
                                 newExercises = exercises
                                     .where((element) =>
                                         element.sectionId == sections[index].id)

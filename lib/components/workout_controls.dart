@@ -62,7 +62,6 @@ class _WorkoutControlsState extends State<WorkoutControls> {
           .reduce((currentMax, date) =>
               date.isAfter(currentMax) ? date : currentMax);
     });
-    print(WorkoutControls.lastWorkoutDate);
   }
 
   Future<void> addWorkout() async {
@@ -84,8 +83,6 @@ class _WorkoutControlsState extends State<WorkoutControls> {
         WorkoutCounter.number.value = userStats.entries!;
       });
     }
-    print(decodedUserId);
-    print(userStats.entries);
   }
 
   void upsertUserEntries() async {
@@ -275,7 +272,6 @@ class _WorkoutControlsState extends State<WorkoutControls> {
                             WorkoutTimer.pauseTimer();
                             setState(() {
                               RootPage.cancelToolTip = !RootPage.cancelToolTip;
-                              print(RootPage.cancelToolTip);
                             });
                           }),
                           child: Text(

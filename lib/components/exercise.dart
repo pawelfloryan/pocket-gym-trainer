@@ -121,8 +121,6 @@ class ExerciseComponent extends StatelessWidget {
                                   backgroundColor: Colors.black),
                               onPressed: (() {
                                 setPrefs!(certainIndex);
-                                print(
-                                    certainIndex + SectionPage.exercisesCountedLength);
                               }),
                               child: Text(
                                 "Complete",
@@ -139,8 +137,11 @@ class ExerciseComponent extends StatelessWidget {
                                 backgroundColor: Colors.black,
                               ),
                               onPressed: (() {
-                                context.pop();
+                                if(RootPage.display == false){
+                                  context.pop();
+                                }
                                 DashboardPage.currentPage = 0;
+                                print(DashboardPage.currentPage);
                               }),
                               child: Text(
                                 "Start a workout",
