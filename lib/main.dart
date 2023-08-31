@@ -1,3 +1,4 @@
+import 'package:PocketGymTrainer/model/exercise.dart';
 import 'package:PocketGymTrainer/pages/display_exercises_page.dart';
 import 'package:sidebarx/sidebarx.dart';
 
@@ -216,6 +217,7 @@ class RootPage extends StatefulWidget {
   static late int sectionsLength = -1;
   static late var sidebarController =
       SidebarXController(selectedIndex: 0, extended: true);
+  static late List<Exercise> allExercises = <Exercise>[];
 
   @override
   State<RootPage> createState() => _RootPageState();

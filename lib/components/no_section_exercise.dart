@@ -8,6 +8,7 @@ import '../main.dart';
 import '../model/exercise.dart';
 import '../pages/dashboard_page.dart';
 import '../pages/section_page.dart';
+import '../components/exercise_button.dart';
 
 class NoSectionExerciseComponent extends StatelessWidget {
   List<Exercise> exercises = <Exercise>[];
@@ -49,8 +50,8 @@ class NoSectionExerciseComponent extends StatelessWidget {
               margin: const EdgeInsets.only(
                 left: 15,
               ),
-              width: 150,
-              height: 135,
+              width: 130,
+              height: 130,
               //Image button
               child: image != null
                   ? Image.file(image!)
@@ -96,57 +97,17 @@ class NoSectionExerciseComponent extends StatelessWidget {
                 ),
                 prefsComplete!.any((element) => element == exerciseId) &&
                         RootPage.workoutStarted == false
-                    ? Container(
-                        margin: EdgeInsets.only(left: 30),
-                        width: 140,
-                        height: 40,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black),
-                          onPressed: (() {
-                            //TODO
-                          }),
-                          child: Text(
-                            "Go back",
-                            style: const TextStyle(fontSize: 25),
-                          ),
-                        ),
+                    ? ExerciseButton(
+                        text: "Go back",
                       )
                     : RootPage.workoutStarted
-                        ? Container(
-                            margin: EdgeInsets.only(left: 30),
-                            width: 140,
-                            height: 40,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.black),
-                              onPressed: (() {
-                                //setPrefs!(certainIndex);
-                              }),
-                              child: Text(
-                                "Complete",
-                                style: const TextStyle(fontSize: 25),
-                              ),
-                            ),
+                        ? ExerciseButton(
+                            //action: () => setPrefs!(certainIndex),
+                            text: "Complete",
                           )
-                        : Container(
-                            margin: EdgeInsets.only(left: 30),
-                            width: 140,
-                            height: 40,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black,
-                              ),
-                              onPressed: (() {
-                                DashboardPage.currentPage = 0;
-                              }),
-                              child: Text(
-                                "Start a workout",
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ),
+                        : ExerciseButton(
+                            action: () => DashboardPage.currentPage = 0,
+                            text: "Start a workout",
                           ),
               ],
             ),

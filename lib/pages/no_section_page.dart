@@ -32,14 +32,14 @@ class _NoSectionPageState extends State<NoSectionPage> {
   final _textController = TextEditingController();
   String userPost = '';
   double opacity = 0;
+  String exerciseId = '';
 
   List<Exercise> exercises = <Exercise>[];
-  List<Exercise> exercisesDelete = <Exercise>[];
+  List exercisesDelete = [];
 
   List<Section> sections = <Section>[];
   Exercise exercise = Exercise();
   Exercise exerciseCreate = Exercise();
-  Exercise exerciseDelete = Exercise();
 
   List dividedExercises = [];
 
@@ -120,6 +120,9 @@ class _NoSectionPageState extends State<NoSectionPage> {
   Future<void> fetchDataAndDivideExercises() async {
     await getSections();
     await getExercises();
+    setState(() {
+      RootPage.allExercises = exercises;
+    });
     divideExercises();
   }
 
@@ -148,20 +151,6 @@ class _NoSectionPageState extends State<NoSectionPage> {
           contentPadding: const EdgeInsets.all(25.0),
         ),
       );
-    } else {
-      //int lastIndex = exercises.length + SectionPage.exercisesCountedLength;
-      //print(lastIndex);
-      //if (!RootPage.workoutStarted) {
-      //  if (prefsComplete.isEmpty) {
-      //    setState(() {
-      //      for (int i = 0; i < SectionPage.allExercises.length; i++) {
-      //        prefsComplete.add("temp");
-      //      }
-      //    });
-      //  }
-      //  prefsComplete.insert(lastIndex, "temp");
-      //}
-      //exercises.add(exercise);
     }
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
@@ -182,19 +171,12 @@ class _NoSectionPageState extends State<NoSectionPage> {
 
   void deleteData(String exerciseId) async {
     await ExerciseService().deleteExerciseSingle(exerciseId);
-    getExercises();
-    exerciseDelete.id = exerciseId;
-    exercisesDelete = exercises;
-    exercisesDelete.remove(exerciseDelete);
-    Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
-  }
-
-  void deleteExercise(String id) {
+    exercisesDelete = dividedExercises;
     setState(() {
-      deleteData(id);
-      exercises = exercisesDelete;
+      exercisesDelete.removeWhere((exercise) => exercise['exerciseId'] == exerciseId);
+      dividedExercises = exercisesDelete;
     });
+    fetchDataAndDivideExercises();
   }
 
   Future<void> setPrefs(int index) async {}
@@ -210,7 +192,6 @@ class _NoSectionPageState extends State<NoSectionPage> {
           width: 300,
           onSelectionChanged: (p0) {
             setState(() {
-              print(p0);
               exerciseCreate.sectionId = p0[0].id;
               if (opacity == 0) {
                 opacity = 1;
@@ -222,7 +203,10 @@ class _NoSectionPageState extends State<NoSectionPage> {
           },
           confirmText: Text(""),
           cancelText: Text(""),
-          title: Text("Select section of this exercise", style: TextStyle(fontSize: 20),),
+          title: Text(
+            "Select section of this exercise",
+            style: TextStyle(fontSize: 20),
+          ),
           itemsTextStyle: TextStyle(fontSize: 18),
         );
       },
@@ -263,7 +247,7 @@ class _NoSectionPageState extends State<NoSectionPage> {
                             children: [
                               SlidableAction(
                                 onPressed: (context) {
-                                  deleteExercise(index['exerciseId']);
+                                  deleteData(index['exerciseId']);
                                   //prefsComplete.removeAt(
                                   //    index + SectionPage.exercisesCountedLength);
                                 },
@@ -311,13 +295,7 @@ class _NoSectionPageState extends State<NoSectionPage> {
                 opacity: opacity,
                 textController: _textController,
                 onClicked: () {
-                  setState(() {
-                    if (opacity == 0) {
-                      opacity = 1;
-                    } else {
-                      opacity = 0;
-                    }
-                  });
+                  showMultiSelect(context);
                 },
                 addElement: addExercise,
                 backgroundColor: Color.fromARGB(255, 0, 0, 0),

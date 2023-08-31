@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:PocketGymTrainer/components/exercise_button.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -86,7 +87,7 @@ class ExerciseComponent extends StatelessWidget {
                     exercises[certainIndex].name!,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 30,
+                      fontSize: 28,
                       fontWeight: FontWeight.w600,
                     ),
                     minFontSize: 20,
@@ -95,57 +96,17 @@ class ExerciseComponent extends StatelessWidget {
                 prefsComplete!.any((element) =>
                             element == exercises[certainIndex].id) &&
                         RootPage.workoutStarted == false
-                    ? Container(
-                        margin: EdgeInsets.only(left: 30),
-                        width: 140,
-                        height: 40,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black),
-                          onPressed: (() {
-                            print(certainIndex);
-                          }),
-                          child: Text(
-                            "Go back",
-                            style: const TextStyle(fontSize: 25),
-                          ),
-                        ),
+                    ? ExerciseButton(
+                        text: "Go back",
                       )
                     : RootPage.workoutStarted
-                        ? Container(
-                            margin: EdgeInsets.only(left: 30),
-                            width: 140,
-                            height: 40,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.black),
-                              onPressed: (() {
-                                setPrefs!(certainIndex);
-                              }),
-                              child: Text(
-                                "Complete",
-                                style: const TextStyle(fontSize: 25),
-                              ),
-                            ),
+                        ? ExerciseButton(
+                            action: () => setPrefs!(certainIndex),
+                            text: "Complete",
                           )
-                        : Container(
-                            margin: EdgeInsets.only(left: 30),
-                            width: 140,
-                            height: 40,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black,
-                              ),
-                              onPressed: (() {
-                                context.pop();
-                              }),
-                              child: Text(
-                                "Start a workout",
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ),
+                        : ExerciseButton(
+                            action: () => context.pop(),
+                            text: "Start a workout",
                           ),
               ],
             ),

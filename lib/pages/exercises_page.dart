@@ -174,11 +174,20 @@ class _ExercisesPageState extends State<ExercisesPage> {
   void deleteData(String exerciseId) async {
     await ExerciseService().deleteExerciseSingle(exerciseId);
     getData(sectionId);
+    print(exercises);
     exerciseDelete.id = exerciseId;
     newExercisesDelete = exercises;
     newExercisesDelete.remove(exerciseDelete);
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
+  }
+
+  void deleteExercise(String id) {
+    setState(() {
+      exerciseId = id;
+      deleteData(exerciseId);
+      exercises = newExercisesDelete;
+    });
   }
 
   void updateExercisesPerformed() async {
@@ -206,14 +215,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
           .then((value) => setState(() {}));
       opacity = 0;
       _textController.text = "";
-    });
-  }
-
-  void deleteExercise(String id) {
-    setState(() {
-      exerciseId = id;
-      deleteData(exerciseId);
-      exercises = newExercisesDelete;
     });
   }
 
