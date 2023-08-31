@@ -2,6 +2,15 @@ import 'package:PocketGymTrainer/components/spinningLogo.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+final Uri _url = Uri.parse("https://github.com/pawelfloryan/pocket-gym-trainer");
+
+Future<void> _launchUrl() async {
+  if (!await launchUrl(_url)) {
+    throw Exception('Could not launch $_url');
+  }
+}
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -15,7 +24,6 @@ class AboutPage extends StatelessWidget {
         automaticallyImplyLeading: false,
         leading: IconButton(
             onPressed: () {
-              //context.go('/sections');
               context.pop();
             },
             icon: const Icon(Icons.arrow_back_ios)),
@@ -59,19 +67,32 @@ class AboutPage extends StatelessWidget {
               ),
             ),
           ),
-          Row(
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: 50, left: 40),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: GestureDetector(
+              onTap: () => _launchUrl(),
+              child: Container(
+                margin: EdgeInsets.only(top: 30, left: 40, bottom: 20),
                 child: SpinningLogo(
-                  //child: Image.asset("images/icon.png"),
                   child: Icon(
                     FontAwesomeIcons.github,
                     size: 120,
                   ),
                 ),
-              )
-            ],
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 20),
+            child: AboutListTile(
+              icon: Icon(Icons.info),
+              applicationIcon: Image.asset(
+                "images/icon.png",
+                scale: 5,
+              ),
+              applicationName: 'Pocket gym trainer',
+              applicationVersion: 'version 0.0.1',
+            ),
           )
         ],
       ),
