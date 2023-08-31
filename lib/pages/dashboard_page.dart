@@ -24,10 +24,10 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
-    setSettings();
+    getSettings();
   }
 
-  void setSettings() async {
+  void getSettings() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     RootPage.toolTipsOn = prefs.getBool('toolTips') ?? true;
   }

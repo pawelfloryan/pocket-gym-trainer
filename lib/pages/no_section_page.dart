@@ -89,7 +89,9 @@ class _NoSectionPageState extends State<NoSectionPage> {
   Future<void> getExercises() async {
     exercises = (await ExerciseService().getNoSectionExercise(decodedUserId));
     Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
+        .then((value) => setState(() {
+          RootPage.noSectionExercisesLength = exercises.length;
+        }));
   }
 
   void divideExercises() {
@@ -151,6 +153,9 @@ class _NoSectionPageState extends State<NoSectionPage> {
           contentPadding: const EdgeInsets.all(25.0),
         ),
       );
+    } else {
+      exercises.add(exercise);
+      RootPage.noSectionExercisesLength++;
     }
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
@@ -215,7 +220,7 @@ class _NoSectionPageState extends State<NoSectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return exercises.length > 0
+    return RootPage.noSectionExercisesLength > 0
         ? Stack(
             children: [
               GroupedListView<dynamic, String>(

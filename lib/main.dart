@@ -214,7 +214,9 @@ class RootPage extends StatefulWidget {
   static late List<String> sectionIdList;
   static late bool cancelToolTip = false;
   static late bool toolTipsOn = true;
+  static late int display = 0;
   static late int sectionsLength = -1;
+  static late int noSectionExercisesLength = -1;
   static late var sidebarController =
       SidebarXController(selectedIndex: 0, extended: true);
   static late List<Exercise> allExercises = <Exercise>[];
