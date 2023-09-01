@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:sidebarx/sidebarx.dart';
 import '../pages/dashboard_page.dart';
 import '../main.dart';
+
+String? jwtToken = RootPage.token;
+
+late Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken!);
+late String decodedUserName = decodedToken["name"];
 
 class Sidebar extends StatelessWidget {
   const Sidebar({Key? key}) : super(key: key);
@@ -33,7 +39,7 @@ class Sidebar extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "Pablo\nPicasso",
+                      decodedUserName,
                       style: TextStyle(color: Colors.white),
                     ),
                   ],
@@ -94,8 +100,7 @@ class Sidebar extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.white),
           selectedIconTheme: IconThemeData(color: Colors.white),
           selectedTextStyle: TextStyle(color: Colors.white),
-          selectedItemTextPadding:
-              EdgeInsets.only(left: 5),
+          selectedItemTextPadding: EdgeInsets.only(left: 5),
         ),
         extendedTheme: const SidebarXTheme(
           width: 175,

@@ -57,10 +57,12 @@ class _WorkoutControlsState extends State<WorkoutControls> {
   void getData() async {
     workouts = (await WorkoutService().getWorkout(jwtToken!, decodedUserId));
     setState(() {
-      WorkoutControls.lastWorkoutDate = workouts
-          .map((workout) => DateTime.parse(workout.workoutDate!))
-          .reduce((currentMax, date) =>
-              date.isAfter(currentMax) ? date : currentMax);
+      if (workouts.isNotEmpty) {
+        WorkoutControls.lastWorkoutDate = workouts
+            .map((workout) => DateTime.parse(workout.workoutDate!))
+            .reduce((currentMax, date) =>
+                date.isAfter(currentMax) ? date : currentMax);
+      }
     });
   }
 

@@ -90,7 +90,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void authenticate() {
     setState(() {
-      register.name = _emailController.text;
+      register.name = _nameController.text;
       register.email = _emailController.text;
       register.password = _passwordController.text;
       registerAction();
