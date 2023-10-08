@@ -7,22 +7,22 @@ import '../model/exercise.dart';
 
 class ExerciseService {
   Future<Exercise> createExercise(Exercise exercise) async {
-      var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.exerciseEndpoint);
-      var exerciseJson = exercise.toJson();
-      var response = await http.post(url,
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: json.encode(exerciseJson));
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.exerciseEndpoint);
+    var exerciseJson = exercise.toJson();
+    var response = await http.post(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(exerciseJson));
 
-      if (response.statusCode == 201) {
-        Map<String, dynamic> jsonMap = json.decode(response.body);
-        Exercise exercise = Exercise.fromJson(jsonMap);
-        return exercise;
-      } else {
-        Exercise empty = Exercise();
-        return empty;
-      }
+    if (response.statusCode == 201) {
+      Map<String, dynamic> jsonMap = json.decode(response.body);
+      Exercise exercise = Exercise.fromJson(jsonMap);
+      return exercise;
+    } else {
+      Exercise empty = Exercise();
+      return empty;
+    }
   }
 
   Future<List<Exercise>> getAllExercises(String userId) async {
@@ -45,7 +45,8 @@ class ExerciseService {
   }
 
   Future<List<Exercise>> getNoSectionExercise(String userId) async {
-    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.exerciseEndpoint + "/${userId}");
+    var url = Uri.parse(
+        ApiConstants.baseUrl + ApiConstants.exerciseEndpoint + "/${userId}");
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -64,7 +65,8 @@ class ExerciseService {
   }
 
   Future<List<Exercise>> getExercise(String sectionId, String userId) async {
-    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.exerciseEndpoint + "/${userId}");
+    var url = Uri.parse(
+        ApiConstants.baseUrl + ApiConstants.exerciseEndpoint + "/${userId}");
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -84,8 +86,9 @@ class ExerciseService {
 
   Future<List<Exercise>?> deleteExerciseSingle(String id) async {
     try {
-      var url = Uri.parse(
-          ApiConstants.baseUrl + ApiConstants.exerciseSingleEndpoint + "/${id}");
+      var url = Uri.parse(ApiConstants.baseUrl +
+          ApiConstants.exerciseSingleEndpoint +
+          "/${id}");
       var response = await http.delete(url);
     } catch (e) {
       log(e.toString());

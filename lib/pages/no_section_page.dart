@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:PocketGymTrainer/providers/section_provider.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
@@ -74,13 +75,10 @@ class _NoSectionPageState extends State<NoSectionPage> {
     super.initState();
     fetchDataAndDivideExercises();
     //getPrefs();
-    divideExercises();
   }
 
   Future<void> getSections() async {
     sections = (await SectionService().getSection(jwtToken!, decodedUserId));
-    Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
     _items = sections
         .map((section) => MultiSelectItem<Section>(section, section.name!))
         .toList();
@@ -90,27 +88,21 @@ class _NoSectionPageState extends State<NoSectionPage> {
     exercises = (await ExerciseService().getNoSectionExercise(decodedUserId));
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {
-          RootPage.noSectionExercisesLength = exercises.length;
-        }));
+              RootPage.noSectionExercisesLength = exercises.length;
+            }));
   }
 
   void divideExercises() {
     List tempDivided = List.of(dividedExercises);
-
+    print(exercises);
     for (var exercise in exercises) {
+      int sectionId =
+          sections.indexWhere((section) => section.id == exercise.sectionId);
       tempDivided.add({
-        'sectionName': null,
+        'sectionName': sections[sectionId].name,
         'exerciseId': exercise.id,
         'exerciseName': exercise.name,
         'exerciseSectionId': exercise.sectionId
-      });
-    }
-
-    for (var section in sections) {
-      tempDivided.forEach((element) {
-        if (element['exerciseSectionId'] == section.id) {
-          element['sectionName'] = section.name;
-        }
       });
     }
 
@@ -120,6 +112,7 @@ class _NoSectionPageState extends State<NoSectionPage> {
   }
 
   Future<void> fetchDataAndDivideExercises() async {
+    dividedExercises = [];
     await getSections();
     await getExercises();
     setState(() {
@@ -156,6 +149,7 @@ class _NoSectionPageState extends State<NoSectionPage> {
     } else {
       exercises.add(exercise);
       RootPage.noSectionExercisesLength++;
+      fetchDataAndDivideExercises();
     }
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
@@ -178,7 +172,8 @@ class _NoSectionPageState extends State<NoSectionPage> {
     await ExerciseService().deleteExerciseSingle(exerciseId);
     exercisesDelete = dividedExercises;
     setState(() {
-      exercisesDelete.removeWhere((exercise) => exercise['exerciseId'] == exerciseId);
+      exercisesDelete
+          .removeWhere((exercise) => exercise['exerciseId'] == exerciseId);
       dividedExercises = exercisesDelete;
     });
     fetchDataAndDivideExercises();
