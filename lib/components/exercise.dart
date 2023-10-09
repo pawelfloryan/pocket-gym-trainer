@@ -11,7 +11,7 @@ import '../pages/dashboard_page.dart';
 import '../pages/section_page.dart';
 
 class ExerciseComponent extends StatelessWidget {
-  List<Exercise> exercises = <Exercise>[];
+  List<Exercise>? exercises = <Exercise>[];
   late List<String>? prefsComplete = <String>[];
   File? image;
   late void Function()? pickImage;
@@ -84,7 +84,7 @@ class ExerciseComponent extends StatelessWidget {
                   ),
                   padding: EdgeInsets.only(left: 15),
                   child: AutoSizeText(
-                    exercises[certainIndex].name!,
+                    exercises?[certainIndex].name ?? "Wait...",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 28,
@@ -94,7 +94,8 @@ class ExerciseComponent extends StatelessWidget {
                   ),
                 ),
                 prefsComplete!.any((element) =>
-                            element == exercises[certainIndex].id) &&
+                            element ==
+                            (exercises?[certainIndex].id ?? "Wait...")) &&
                         RootPage.workoutStarted == false
                     ? ExerciseButton(
                         text: "Go back",
@@ -110,8 +111,9 @@ class ExerciseComponent extends StatelessWidget {
                           ),
               ],
             ),
-            prefsComplete!.any(
-                        (element) => element == exercises[certainIndex].id!) &&
+            prefsComplete!.any((element) =>
+                        element ==
+                        (exercises?[certainIndex].id ?? "Wait...")) &&
                     RootPage.workoutStarted
                 ? Container(
                     margin: EdgeInsets.only(top: 5),

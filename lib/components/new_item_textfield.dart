@@ -9,14 +9,15 @@ class NewItemTextField extends StatelessWidget {
   final Color backgroundColor;
   final Color iconColor;
 
-  NewItemTextField(
-      {required this.text,
-      required this.opacity,
-      required this.textController,
-      required this.onClicked,
-      required this.addElement,
-      required this.backgroundColor,
-      required this.iconColor});
+  NewItemTextField({
+    required this.text,
+    required this.opacity,
+    required this.textController,
+    required this.onClicked,
+    required this.addElement,
+    required this.backgroundColor,
+    required this.iconColor,
+  });
 
   @override
   Widget build(BuildContext context) {

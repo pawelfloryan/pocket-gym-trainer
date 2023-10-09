@@ -96,14 +96,16 @@ class _NoSectionPageState extends State<NoSectionPage> {
     List tempDivided = List.of(dividedExercises);
     print(exercises);
     for (var exercise in exercises) {
-      int sectionId =
-          sections.indexWhere((section) => section.id == exercise.sectionId);
-      tempDivided.add({
-        'sectionName': sections[sectionId].name,
-        'exerciseId': exercise.id,
-        'exerciseName': exercise.name,
-        'exerciseSectionId': exercise.sectionId
-      });
+      if (sections.any((section) => section.id == exercise.sectionId)) {
+        int sectionId =
+            sections.indexWhere((section) => section.id == exercise.sectionId);
+        tempDivided.add({
+          'sectionName': sections[sectionId].name,
+          'exerciseId': exercise.id,
+          'exerciseName': exercise.name,
+          'exerciseSectionId': exercise.sectionId
+        });
+      }
     }
 
     setState(() {

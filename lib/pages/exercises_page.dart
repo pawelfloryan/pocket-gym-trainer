@@ -84,7 +84,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
     super.initState();
     getData(sectionId);
     getPrefs();
-    print(exercises);
   }
 
   //Sets list index of the completed exercise
@@ -127,7 +126,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
         .then((value) => setState(() {}));
   }
 
-  void createData() async {
+  Future<Exercise> createData() async {
     exercise = (await ExerciseService().createExercise(exerciseCreate));
     if (exercise.id == null) {
       showDialog(
@@ -153,6 +152,10 @@ class _ExercisesPageState extends State<ExercisesPage> {
         ),
       );
     } else {
+      print(exercise.name);
+
+      print(exercises);
+      print("////////");
       int lastIndex = exercises.length + SectionPage.exercisesCountedLength;
       print(lastIndex);
       if (!RootPage.workoutStarted) {
@@ -165,10 +168,8 @@ class _ExercisesPageState extends State<ExercisesPage> {
         }
         prefsComplete.insert(lastIndex, "temp");
       }
-      exercises.add(exercise);
     }
-    Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
+    return exercise;
   }
 
   void deleteData(String exerciseId) async {
@@ -210,12 +211,13 @@ class _ExercisesPageState extends State<ExercisesPage> {
       exerciseCreate.name = userPost;
       exerciseCreate.sectionId = sectionId;
       exerciseCreate.userId = decodedUserId;
-      createData();
       Future.delayed(const Duration(milliseconds: 10))
           .then((value) => setState(() {}));
       opacity = 0;
       _textController.text = "";
     });
+    exercises.add(await createData());
+    getData(sectionId);
   }
 
   @override
