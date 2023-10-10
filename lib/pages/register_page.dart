@@ -26,7 +26,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Register register = Register();
   AuthResult authResult = AuthResult();
   UserStats userStats = UserStats();
-  
+
   String errorText = "";
 
   bool isElevated = false;
@@ -249,6 +249,68 @@ class _RegisterPageState extends State<RegisterPage> {
                     }
                   },
                 ),
+                Container(
+                  margin: const EdgeInsets.only(right: 40, top: 15),
+                  child: GestureDetector(
+                    onTap: () {
+                      context.go('/login');
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 5),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                        ),
+                        child: Text("Password requirements"),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    context.pop();
+                                  },
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.only(right: 10, bottom: 10),
+                                    child: Text(
+                                      "Close",
+                                      style: TextStyle(fontSize: 17),
+                                    ),
+                                  ),
+                                )
+                              ],
+                              title: const Text("Password must:"),
+                              content: Container(
+                                height: 150,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      child: const Text(
+                                        "- have at least 1 special character",
+                                      ),
+                                    ),
+                                    Container(
+                                      child: const Text(
+                                        "- have at least 1 number",
+                                      ),
+                                    ),
+                                    const Text(
+                                      "- have at least 8 characters",
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.all(15.0),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -264,7 +326,10 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                     ),
-                    AuthButton(isElevated: isElevated, buttonActions: buttonActions)
+                    AuthButton(
+                      isElevated: isElevated,
+                      buttonActions: buttonActions,
+                    )
                   ],
                 ),
                 Visibility(

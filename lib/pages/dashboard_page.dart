@@ -38,6 +38,13 @@ class _DashboardPageState extends State<DashboardPage> {
     });
   }
 
+  void changePage() {
+    setState(() {
+      DashboardPage.currentPage = 0;
+      print(DashboardPage.currentPage);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

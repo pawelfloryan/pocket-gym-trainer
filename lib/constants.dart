@@ -1,5 +1,5 @@
 class ApiConstants {
-  static String baseUrl = "https://server.pocketgymtrainer.tech";
+  static String baseUrl = "http://localhost:8088";
   static String exerciseEndpoint = '/exercises';
   static String exerciseSingleEndpoint = '/exercises/single';
   static String exerciseListEndpoint = '/exercises/list';
