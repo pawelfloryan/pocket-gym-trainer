@@ -282,23 +282,26 @@ class _RegisterPageState extends State<RegisterPage> {
                                   ),
                                 )
                               ],
-                              title: const Text("Password must:"),
+                              title: const Text("Password must have:"),
                               content: Container(
-                                height: 150,
+                                height: 100,
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      child: const Text(
-                                        "- have at least 1 special character",
-                                      ),
-                                    ),
-                                    Container(
-                                      child: const Text(
-                                        "- have at least 1 number",
-                                      ),
+                                    const Text(
+                                      "- a non-alphanumeric character",
                                     ),
                                     const Text(
-                                      "- have at least 8 characters",
+                                      "- a number",
+                                    ),
+                                    const Text(
+                                      "- at least 6 characters",
+                                    ),
+                                    const Text(
+                                      "- an uppercase character",
+                                    ),
+                                    const Text(
+                                      "- a lowercase character",
                                     ),
                                   ],
                                 ),
