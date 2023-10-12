@@ -62,22 +62,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
   late List<String> prefsComplete = <String>[];
 
   late Completer<void> enterPrefsCompleter;
-
-  Future pickImage() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) {
-        return;
-      }
-
-      final imageTemporary = File(image.path);
-      setState(() {
-        this.image = imageTemporary;
-      });
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
-    }
-  }
+  Future<List<Exercise>>? exercisesData;
 
   @override
   void initState() {
@@ -86,42 +71,9 @@ class _ExercisesPageState extends State<ExercisesPage> {
     getPrefs();
   }
 
-  //Sets list index of the completed exercise
-  Future<void> setPrefs(int index) async {
-    if (prefsComplete.isEmpty) {
-      setState(() {
-        for (int i = 0; i < SectionPage.allExercises.length; i++) {
-          prefsComplete.add("temp");
-        }
-      });
-    }
-    setState(() {
-      prefsComplete[index + SectionPage.exercisesCountedLength] =
-          exercises[index].id!;
-      SectionPage.exercisesPerformed++;
-      print("object");
-      editSection();
-    });
-  }
-
-  //Gets prefs saved in a pref list to know which exercises are already completed
-  Future<void> getPrefs() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? strList = prefs.getStringList('complete');
-
-    setState(() {
-      prefsComplete = strList!;
-    });
-  }
-
-  //All completed exercises are saved into a list of prefs
-  Future<void> leavePrefs() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('complete', prefsComplete);
-  }
-
   Future<void> getData(sectionId) async {
     exercises = (await ExerciseService().getExercise(sectionId, decodedUserId));
+    exercisesData = ExerciseService().getExercise(sectionId, decodedUserId);
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
   }
@@ -238,51 +190,62 @@ class _ExercisesPageState extends State<ExercisesPage> {
       body: exercises.length > 0
           ? Stack(
               children: <Widget>[
-                ListView.builder(
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: <Widget>[
-                        Container(
-                          height: 195,
-                          margin: const EdgeInsets.only(
-                            left: 10,
-                            top: 10,
-                            right: 10,
-                            bottom: 5,
-                          ),
-                          child: Slidable(
-                            endActionPane: ActionPane(
-                              extentRatio: 0.2,
-                              motion: ScrollMotion(),
-                              children: [
-                                SlidableAction(
-                                  onPressed: (context) {
-                                    deleteExercise(exercises[index].id!);
-                                    prefsComplete.removeAt(index +
-                                        SectionPage.exercisesCountedLength);
-                                    print(index +
-                                        SectionPage.exercisesCountedLength);
-                                  },
-                                  backgroundColor: Colors.red,
-                                  foregroundColor: Colors.white,
-                                  icon: Icons.delete_sharp,
+                FutureBuilder<List<Exercise>>(
+                  future: exercisesData,
+                  builder: ((context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return ListView.builder(
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: <Widget>[
+                              Container(
+                                height: 195,
+                                margin: const EdgeInsets.only(
+                                  left: 10,
+                                  top: 10,
+                                  right: 10,
+                                  bottom: 5,
                                 ),
-                              ],
-                            ),
-                            child: ExerciseComponent(
-                              exercises: exercises,
-                              prefsComplete: prefsComplete,
-                              image: image,
-                              pickImage: pickImage,
-                              setPrefs: setPrefs,
-                              certainIndex: index,
-                            ),
-                          ),
-                        )
-                      ],
-                    );
-                  },
-                  itemCount: exercises.length,
+                                child: Slidable(
+                                  endActionPane: ActionPane(
+                                    extentRatio: 0.2,
+                                    motion: ScrollMotion(),
+                                    children: [
+                                      SlidableAction(
+                                        onPressed: (context) {
+                                          deleteExercise(exercises[index].id!);
+                                          prefsComplete.removeAt(index +
+                                              SectionPage
+                                                  .exercisesCountedLength);
+                                          print(index +
+                                              SectionPage
+                                                  .exercisesCountedLength);
+                                        },
+                                        backgroundColor: Colors.red,
+                                        foregroundColor: Colors.white,
+                                        icon: Icons.delete_sharp,
+                                      ),
+                                    ],
+                                  ),
+                                  child: ExerciseComponent(
+                                    exercises: exercises,
+                                    prefsComplete: prefsComplete,
+                                    image: image,
+                                    pickImage: pickImage,
+                                    setPrefs: setPrefs,
+                                    certainIndex: index,
+                                  ),
+                                ),
+                              )
+                            ],
+                          );
+                        },
+                        itemCount: exercises.length,
+                      );
+                    } else {
+                      return CircularProgressIndicator();
+                    }
+                  }),
                 ),
                 NewItemTextField(
                   text: "Name of a new exercise",
@@ -330,5 +293,55 @@ class _ExercisesPageState extends State<ExercisesPage> {
               ],
             ),
     );
+  }
+
+  Future pickImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) {
+        return;
+      }
+
+      final imageTemporary = File(image.path);
+      setState(() {
+        this.image = imageTemporary;
+      });
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+    }
+  }
+
+  //Sets list index of the completed exercise
+  Future<void> setPrefs(int index) async {
+    if (prefsComplete.isEmpty) {
+      setState(() {
+        for (int i = 0; i < SectionPage.allExercises.length; i++) {
+          prefsComplete.add("temp");
+        }
+      });
+    }
+    setState(() {
+      prefsComplete[index + SectionPage.exercisesCountedLength] =
+          exercises[index].id!;
+      SectionPage.exercisesPerformed++;
+      print("object");
+      editSection();
+    });
+  }
+
+  //Gets prefs saved in a pref list to know which exercises are already completed
+  Future<void> getPrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? strList = prefs.getStringList('complete');
+
+    setState(() {
+      prefsComplete = strList!;
+    });
+  }
+
+  //All completed exercises are saved into a list of prefs
+  Future<void> leavePrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('complete', prefsComplete);
   }
 }
