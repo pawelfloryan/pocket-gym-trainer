@@ -73,9 +73,10 @@ class _ExercisesPageState extends State<ExercisesPage> {
 
   Future<void> getData(sectionId) async {
     exercises = (await ExerciseService().getExercise(sectionId, decodedUserId));
-    exercisesData = ExerciseService().getExercise(sectionId, decodedUserId);
-    Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
+    Future.delayed(const Duration(seconds: 3)).then((value) => setState(() {
+          exercisesData =
+              ExerciseService().getExercise(sectionId, decodedUserId);
+        }));
   }
 
   Future<Exercise> createData() async {
@@ -104,10 +105,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
         ),
       );
     } else {
-      print(exercise.name);
-
-      print(exercises);
-      print("////////");
       int lastIndex = exercises.length + SectionPage.exercisesCountedLength;
       print(lastIndex);
       if (!RootPage.workoutStarted) {
@@ -187,111 +184,92 @@ class _ExercisesPageState extends State<ExercisesPage> {
           icon: const Icon(Icons.arrow_back_ios),
         ),
       ),
-      body: exercises.length > 0
-          ? Stack(
-              children: <Widget>[
-                FutureBuilder<List<Exercise>>(
-                  future: exercisesData,
-                  builder: ((context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return ListView.builder(
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: <Widget>[
-                              Container(
-                                height: 195,
-                                margin: const EdgeInsets.only(
-                                  left: 10,
-                                  top: 10,
-                                  right: 10,
-                                  bottom: 5,
-                                ),
-                                child: Slidable(
-                                  endActionPane: ActionPane(
-                                    extentRatio: 0.2,
-                                    motion: ScrollMotion(),
-                                    children: [
-                                      SlidableAction(
-                                        onPressed: (context) {
-                                          deleteExercise(exercises[index].id!);
-                                          prefsComplete.removeAt(index +
-                                              SectionPage
-                                                  .exercisesCountedLength);
-                                          print(index +
-                                              SectionPage
-                                                  .exercisesCountedLength);
-                                        },
-                                        backgroundColor: Colors.red,
-                                        foregroundColor: Colors.white,
-                                        icon: Icons.delete_sharp,
-                                      ),
-                                    ],
+      body: Stack(
+        children: <Widget>[
+          FutureBuilder<List<Exercise>>(
+            future: exercisesData,
+            builder: ((context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (exercises.length > 0) {
+                  return ListView.builder(
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: <Widget>[
+                          Container(
+                            height: 195,
+                            margin: const EdgeInsets.only(
+                              left: 10,
+                              top: 10,
+                              right: 10,
+                              bottom: 5,
+                            ),
+                            child: Slidable(
+                              endActionPane: ActionPane(
+                                extentRatio: 0.2,
+                                motion: ScrollMotion(),
+                                children: [
+                                  SlidableAction(
+                                    onPressed: (context) {
+                                      deleteExercise(exercises[index].id!);
+                                      prefsComplete.removeAt(index +
+                                          SectionPage.exercisesCountedLength);
+                                      print(index +
+                                          SectionPage.exercisesCountedLength);
+                                    },
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.delete_sharp,
                                   ),
-                                  child: ExerciseComponent(
-                                    exercises: exercises,
-                                    prefsComplete: prefsComplete,
-                                    image: image,
-                                    pickImage: pickImage,
-                                    setPrefs: setPrefs,
-                                    certainIndex: index,
-                                  ),
-                                ),
-                              )
-                            ],
-                          );
-                        },
-                        itemCount: exercises.length,
+                                ],
+                              ),
+                              child: ExerciseComponent(
+                                exercises: exercises,
+                                prefsComplete: prefsComplete,
+                                image: image,
+                                pickImage: pickImage,
+                                setPrefs: setPrefs,
+                                certainIndex: index,
+                              ),
+                            ),
+                          )
+                        ],
                       );
-                    } else {
-                      return CircularProgressIndicator();
-                    }
-                  }),
-                ),
-                NewItemTextField(
-                  text: "Name of a new exercise",
-                  opacity: opacity,
-                  textController: _textController,
-                  onClicked: () {
-                    setState(() {
-                      if (opacity == 0) {
-                        opacity = 1;
-                      } else {
-                        opacity = 0;
-                      }
-                    });
-                  },
-                  addElement: addExercise,
-                  backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                  iconColor: Color.fromARGB(255, 255, 255, 255),
-                )
-              ],
-            )
-          : Stack(
-              children: [
-                EmptyList(
-                  imagePath: "images/exercise.png",
-                  text:
-                      "Click the button in right bottom\nto add new exercises",
-                ),
-                NewItemTextField(
-                  text: "Name of a new exercise",
-                  opacity: opacity,
-                  textController: _textController,
-                  onClicked: () {
-                    setState(() {
-                      if (opacity == 0) {
-                        opacity = 1;
-                      } else {
-                        opacity = 0;
-                      }
-                    });
-                  },
-                  addElement: addExercise,
-                  backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                  iconColor: Color.fromARGB(255, 255, 255, 255),
-                )
-              ],
-            ),
+                    },
+                    itemCount: exercises.length,
+                  );
+                } else {
+                  return EmptyList(
+                    imagePath: "images/exercise.png",
+                    text:
+                        "Click the button in right bottom\nto add new exercises",
+                  );
+                }
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            }),
+          ),
+          NewItemTextField(
+            text: "Name of a new exercise",
+            opacity: opacity,
+            textController: _textController,
+            onClicked: () {
+              setState(() {
+                if (opacity == 0) {
+                  opacity = 1;
+                } else {
+                  opacity = 0;
+                }
+              });
+            },
+            addElement: addExercise,
+            backgroundColor: Color.fromARGB(255, 0, 0, 0),
+            iconColor: Color.fromARGB(255, 255, 255, 255),
+          )
+        ],
+      ),
     );
   }
 
