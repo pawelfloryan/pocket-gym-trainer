@@ -73,10 +73,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
 
   Future<void> getData(sectionId) async {
     exercises = (await ExerciseService().getExercise(sectionId, decodedUserId));
-    Future.delayed(const Duration(seconds: 3)).then((value) => setState(() {
-          exercisesData =
-              ExerciseService().getExercise(sectionId, decodedUserId);
-        }));
+    exercisesData = ExerciseService().getExercise(sectionId, decodedUserId);
   }
 
   Future<Exercise> createData() async {
@@ -246,7 +243,13 @@ class _ExercisesPageState extends State<ExercisesPage> {
                 }
               } else {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: SizedBox(
+                    height: 80,
+                    width: 80,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 6,
+                    ),
+                  ),
                 );
               }
             }),

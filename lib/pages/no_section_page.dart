@@ -54,6 +54,8 @@ class _NoSectionPageState extends State<NoSectionPage> {
 
   var _items = <MultiSelectItem<Section>>[];
 
+  Future<List<Section>>? sectionsData;
+
   Future pickImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -79,6 +81,7 @@ class _NoSectionPageState extends State<NoSectionPage> {
 
   Future<void> getSections() async {
     sections = (await SectionService().getSection(jwtToken!, decodedUserId));
+    sectionsData = SectionService().getSection(jwtToken!, decodedUserId);
     _items = sections
         .map((section) => MultiSelectItem<Section>(section, section.name!))
         .toList();
@@ -217,93 +220,99 @@ class _NoSectionPageState extends State<NoSectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return RootPage.noSectionExercisesLength > 0
-        ? Stack(
-            children: [
-              GroupedListView<dynamic, String>(
-                elements: dividedExercises,
-                groupBy: (section) => section['sectionName'],
-                groupSeparatorBuilder: (value) => Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(16),
-                  color: Colors.white,
-                  child: Text(
-                    value,
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
+    return Stack(
+      children: [
+        FutureBuilder(
+          future: sectionsData,
+          builder: (((context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (RootPage.noSectionExercisesLength > 0) {
+                return GroupedListView<dynamic, String>(
+                  elements: dividedExercises,
+                  groupBy: (section) => section['sectionName'],
+                  groupSeparatorBuilder: (value) => Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(16),
+                    color: Colors.white,
+                    child: Text(
+                      value,
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: <Widget>[
+                        Container(
+                          height: 195,
+                          margin: const EdgeInsets.only(
+                            left: 20,
+                            right: 20,
+                            bottom: 20,
+                          ),
+                          child: Slidable(
+                            endActionPane: ActionPane(
+                              extentRatio: 0.2,
+                              motion: ScrollMotion(),
+                              children: [
+                                SlidableAction(
+                                  onPressed: (context) {
+                                    deleteData(index['exerciseId']);
+                                    //prefsComplete.removeAt(
+                                    //    index + SectionPage.exercisesCountedLength);
+                                  },
+                                  backgroundColor: Colors.red,
+                                  foregroundColor: Colors.white,
+                                  icon: Icons.delete_sharp,
+                                ),
+                              ],
+                            ),
+                            child: NoSectionExerciseComponent(
+                              exercises: exercises,
+                              prefsComplete: prefsComplete,
+                              pickImage: pickImage,
+                              setPrefs: setPrefs,
+                              exerciseId: index['exerciseId'],
+                              exerciseName: index['exerciseName'],
+                            ),
+                          ),
+                        )
+                      ],
+                    );
+                  },
+                );
+              } else {
+                return EmptyList(
+                  imagePath: "images/exercise.png",
+                  text:
+                      "Click the button in right bottom\nto add new exercises",
+                );
+              }
+            } else {
+              return Center(
+                child: SizedBox(
+                  height: 80,
+                  width: 80,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 6,
                   ),
                 ),
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: <Widget>[
-                      Container(
-                        height: 195,
-                        margin: const EdgeInsets.only(
-                          left: 20,
-                          right: 20,
-                          bottom: 20,
-                        ),
-                        child: Slidable(
-                          endActionPane: ActionPane(
-                            extentRatio: 0.2,
-                            motion: ScrollMotion(),
-                            children: [
-                              SlidableAction(
-                                onPressed: (context) {
-                                  deleteData(index['exerciseId']);
-                                  //prefsComplete.removeAt(
-                                  //    index + SectionPage.exercisesCountedLength);
-                                },
-                                backgroundColor: Colors.red,
-                                foregroundColor: Colors.white,
-                                icon: Icons.delete_sharp,
-                              ),
-                            ],
-                          ),
-                          child: NoSectionExerciseComponent(
-                            exercises: exercises,
-                            prefsComplete: prefsComplete,
-                            pickImage: pickImage,
-                            setPrefs: setPrefs,
-                            exerciseId: index['exerciseId'],
-                            exerciseName: index['exerciseName'],
-                          ),
-                        ),
-                      )
-                    ],
-                  );
-                },
-              ),
-              NewItemTextField(
-                text: "Name of a new exercise",
-                opacity: opacity,
-                textController: _textController,
-                onClicked: () {
-                  showMultiSelect(context);
-                },
-                addElement: addExercise,
-                backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                iconColor: Color.fromARGB(255, 255, 255, 255),
-              )
-            ],
-          )
-        : Stack(
-            children: [
-              EmptyList(
-                imagePath: "images/exercise.png",
-                text: "Click the button in right bottom\nto add new exercises",
-              ),
-              NewItemTextField(
-                text: "Name of a new exercise",
-                opacity: opacity,
-                textController: _textController,
-                onClicked: () {
-                  showMultiSelect(context);
-                },
-                addElement: addExercise,
-                backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                iconColor: Color.fromARGB(255, 255, 255, 255),
-              )
-            ],
-          );
+              );
+            }
+          })),
+        ),
+        NewItemTextField(
+          text: "Name of a new exercise",
+          opacity: opacity,
+          textController: _textController,
+          onClicked: () {
+            showMultiSelect(context);
+          },
+          addElement: addExercise,
+          backgroundColor: Color.fromARGB(255, 0, 0, 0),
+          iconColor: Color.fromARGB(255, 255, 255, 255),
+        )
+      ],
+    );
   }
 }

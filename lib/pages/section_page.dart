@@ -72,6 +72,8 @@ class _SectionPageState extends State<SectionPage> {
   bool enterPrefsCalled = false;
   int exercisesLength = 0;
 
+  Future<List<Section>>? sectionsData;
+
   @override
   void initState() {
     super.initState();
@@ -81,53 +83,9 @@ class _SectionPageState extends State<SectionPage> {
     exercisesCompleted();
   }
 
-  //Deletes prefs if a workout is not active
-  Future<void> deletePrefs() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (WorkoutControls.workoutDone) {
-      await prefs.remove('complete');
-      Future.delayed(const Duration(milliseconds: 100))
-          .then((value) => setState(() {
-                WorkoutControls.workoutDone = false;
-              }));
-    }
-  }
-
-  void countedExercises(int index) {
-    if (index > 0) {
-      exercisesCounted = exercises.where((element) {
-        int sectionIndex =
-            sections.indexWhere((section) => section.id == element.sectionId);
-        return sectionIndex >= 0 && sectionIndex < index;
-      }).toList();
-      SectionPage.exercisesCountedLength = exercisesCounted.length;
-    } else {
-      SectionPage.exercisesCountedLength = 0;
-    }
-  }
-
-  void exercisesCompleted() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? strList = prefs.getStringList('complete') ?? [];
-    //It adds into the list but prefs reset only when i enter the exercises
-
-    setState(() {
-      prefsComplete = strList;
-    });
-
-    certainExercises = exercises.where((element) {
-      return strList.contains(element.sectionId);
-    }).toList();
-
-    certainSections = sections.where((section) {
-      return certainExercises
-          .any((exercise) => section.id == exercise.sectionId);
-    }).toList();
-    SectionPage.certainExercises = certainExercises;
-  }
-
   void getData() async {
     sections = (await SectionService().getSection(jwtToken!, decodedUserId));
+    sectionsData = SectionService().getSection(jwtToken!, decodedUserId);
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {
               RootPage.sectionsLength = sections.length;
@@ -247,11 +205,14 @@ class _SectionPageState extends State<SectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return RootPage.sectionsLength > 0
-        ? Stack(
-            children: <Widget>[
-              Container(
-                child: ListView.builder(
+    return Stack(
+      children: <Widget>[
+        FutureBuilder(
+          future: sectionsData,
+          builder: ((context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (RootPage.sectionsLength > 0) {
+                return ListView.builder(
                   itemBuilder: (context, index) {
                     return Column(
                       children: <Widget>[
@@ -399,52 +360,90 @@ class _SectionPageState extends State<SectionPage> {
                     );
                   },
                   itemCount: sections.length,
+                );
+              } else {
+                return EmptyList(
+                  imagePath: "images/push-up.png",
+                  text:
+                      "Click the button in right bottom\nto add new exercise sections",
+                );
+              }
+            } else {
+              return Center(
+                child: SizedBox(
+                  height: 80,
+                  width: 80,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 6,
+                  ),
                 ),
-              ),
-              NewItemTextField(
-                text: "Name of a new section",
-                opacity: opacity,
-                textController: _textController,
-                onClicked: () {
-                  setState(() {
-                    if (opacity == 0) {
-                      opacity = 1;
-                    } else {
-                      opacity = 0;
-                    }
-                  });
-                },
-                addElement: addSection,
-                backgroundColor: Color.fromARGB(255, 255, 255, 255),
-                iconColor: Color.fromARGB(255, 0, 0, 0),
-              )
-            ],
-          )
-        : Stack(
-            children: [
-              EmptyList(
-                imagePath: "images/push-up.png",
-                text:
-                    "Click the button in right bottom\nto add new exercise sections",
-              ),
-              NewItemTextField(
-                text: "Name of a new section",
-                opacity: opacity,
-                textController: _textController,
-                onClicked: () {
-                  setState(() {
-                    if (opacity == 0) {
-                      opacity = 1;
-                    } else {
-                      opacity = 0;
-                    }
-                  });
-                },
-                addElement: addSection,
-                backgroundColor: Color.fromARGB(255, 255, 255, 255),
-                iconColor: Color.fromARGB(255, 0, 0, 0),
-              )
-            ],
-          );
+              );
+            }
+          }),
+        ),
+        NewItemTextField(
+          text: "Name of a new section",
+          opacity: opacity,
+          textController: _textController,
+          onClicked: () {
+            setState(() {
+              if (opacity == 0) {
+                opacity = 1;
+              } else {
+                opacity = 0;
+              }
+            });
+          },
+          addElement: addSection,
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          iconColor: Color.fromARGB(255, 0, 0, 0),
+        )
+      ],
+    );
+  }
+
+  //Deletes prefs if a workout is not active
+  Future<void> deletePrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (WorkoutControls.workoutDone) {
+      await prefs.remove('complete');
+      Future.delayed(const Duration(milliseconds: 100))
+          .then((value) => setState(() {
+                WorkoutControls.workoutDone = false;
+              }));
+    }
+  }
+
+  void countedExercises(int index) {
+    if (index > 0) {
+      exercisesCounted = exercises.where((element) {
+        int sectionIndex =
+            sections.indexWhere((section) => section.id == element.sectionId);
+        return sectionIndex >= 0 && sectionIndex < index;
+      }).toList();
+      SectionPage.exercisesCountedLength = exercisesCounted.length;
+    } else {
+      SectionPage.exercisesCountedLength = 0;
+    }
+  }
+
+  void exercisesCompleted() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? strList = prefs.getStringList('complete') ?? [];
+    //It adds into the list but prefs reset only when i enter the exercises
+
+    setState(() {
+      prefsComplete = strList;
+    });
+
+    certainExercises = exercises.where((element) {
+      return strList.contains(element.sectionId);
+    }).toList();
+
+    certainSections = sections.where((section) {
+      return certainExercises
+          .any((exercise) => section.id == exercise.sectionId);
+    }).toList();
+    SectionPage.certainExercises = certainExercises;
   }
 }
