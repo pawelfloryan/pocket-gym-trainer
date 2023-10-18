@@ -3,6 +3,7 @@ class ApiConstants {
   static String exerciseEndpoint = '/exercises';
   static String exerciseSingleEndpoint = '/exercises/single';
   static String exerciseListEndpoint = '/exercises/list';
+  static String preparedExerciseEndpoint = '/preparedExercises';
   static String sectionEndpoint = '/sections';
   static String loginEndpoint = '/auth/login';
   static String registerEndpoint = '/auth/register';

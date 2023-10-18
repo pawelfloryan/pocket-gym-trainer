@@ -1,16 +1,15 @@
-import 'package:PocketGymTrainer/components/exercise.dart';
-import 'package:PocketGymTrainer/components/prepared_exercise.dart';
-import 'package:PocketGymTrainer/model/exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
+import '../components/prepared_exercise.dart';
 import '../main.dart';
+import '../model/prepared_exercise.dart';
 import '../services/exercise_service.dart';
 
 class PreparedListPage extends StatefulWidget {
-  static List<Exercise> exercises = <Exercise>[];
+  static List<PreparedExercise> preparedExercises = <PreparedExercise>[];
   static late ItemScrollController itemScrollController =
       ItemScrollController();
 
@@ -31,10 +30,8 @@ class _PreparedListPageState extends State<PreparedListPage> {
   }
 
   void getExercises() async {
-    PreparedListPage.exercises = (await ExerciseService()
-        .getExercise("e16fc64e-04e6-4676-8324-63b730658b26", decodedUserId));
-    Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
+    PreparedListPage.preparedExercises =
+        (await ExerciseService().getPreparedExerciseList(0));
   }
 
   @override
@@ -70,15 +67,15 @@ class _PreparedListPageState extends State<PreparedListPage> {
                 height: 195,
                 margin: const EdgeInsets.only(
                     left: 10, top: 10, right: 10, bottom: 5),
-                child: PreparedExercise(
-                  exercises: PreparedListPage.exercises,
+                child: PreparedExerciseComponent(
+                  preparedExercises: PreparedListPage.preparedExercises,
                   certainIndex: index,
                 ),
               )
             ],
           );
         },
-        itemCount: PreparedListPage.exercises.length,
+        itemCount: 25,
       ),
     );
   }
@@ -110,7 +107,7 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     List<String> matchQuery = [];
-    for (var exercise in PreparedListPage.exercises) {
+    for (var exercise in PreparedListPage.preparedExercises) {
       if (exercise.name!.toLowerCase().contains(query.toLowerCase())) {
         matchQuery.add(exercise.name!);
       }
@@ -138,7 +135,7 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     List<String> matchQuery = [];
-    for (var exercise in PreparedListPage.exercises) {
+    for (var exercise in PreparedListPage.preparedExercises) {
       if (exercise.name!.toLowerCase().contains(query.toLowerCase())) {
         matchQuery.add(exercise.name!);
       }

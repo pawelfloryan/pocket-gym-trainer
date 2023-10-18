@@ -1,21 +1,16 @@
 import 'dart:io';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
 import '../main.dart';
-import '../model/exercise.dart';
-import '../pages/dashboard_page.dart';
-import '../pages/section_page.dart';
+import '../model/prepared_exercise.dart';
 
-class PreparedExercise extends StatelessWidget {
-  List<Exercise> exercises = <Exercise>[];
+class PreparedExerciseComponent extends StatelessWidget {
+  List<PreparedExercise> preparedExercises = <PreparedExercise>[];
   File? image;
   int certainIndex;
 
-  PreparedExercise({
-    required this.exercises,
+  PreparedExerciseComponent({
+    required this.preparedExercises,
     this.image,
     required this.certainIndex,
   });
@@ -63,11 +58,11 @@ class PreparedExercise extends StatelessWidget {
                     ),
             ),
             Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 130,
-                  height: 70,
+                  width: 150,
+                  height: 60,
                   margin: const EdgeInsets.only(
                     left: 20,
                     top: 18,
@@ -75,32 +70,42 @@ class PreparedExercise extends StatelessWidget {
                   ),
                   padding: EdgeInsets.only(left: 15),
                   child: AutoSizeText(
-                    exercises[certainIndex].name!,
+                    textAlign: TextAlign.center,
+                    preparedExercises[certainIndex].name!,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 30,
+                      fontSize: 35,
                       fontWeight: FontWeight.w600,
                     ),
-                    minFontSize: 20,
+                    minFontSize: 10,
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 30),
-                  width: 140,
+                  margin: EdgeInsets.only(left: 30, bottom: 20),
+                  width: 120,
                   height: 40,
                   child: ElevatedButton(
                     style:
                         ElevatedButton.styleFrom(backgroundColor: Colors.black),
-                    onPressed: (() {
-                      print(certainIndex);
-                    }),
+                    onPressed: (() {}),
                     child: Text(
-                      "Go back",
-                      style: const TextStyle(fontSize: 25),
+                      textAlign: TextAlign.center,
+                      "Add to your section",
+                      style: const TextStyle(fontSize: 15),
                     ),
                   ),
                 )
               ],
+            ),
+            Container(
+              margin: EdgeInsets.only(bottom: 145),
+              child: IconButton(
+                onPressed: (() {}),
+                icon: Icon(
+                  color: Colors.white,
+                  Icons.info,
+                ),
+              ),
             ),
           ],
         ),

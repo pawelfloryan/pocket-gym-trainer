@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:PocketGymTrainer/components/prepared_exercise.dart';
 import 'package:http/http.dart' as http;
 import '../constants.dart';
 import '../model/exercise.dart';
+import '../model/prepared_exercise.dart';
 
 class ExerciseService {
   Future<Exercise> createExercise(Exercise exercise) async {
@@ -81,6 +83,22 @@ class ExerciseService {
     } else {
       List<Exercise> exercises = <Exercise>[];
       return exercises;
+    }
+  }
+
+  Future<List<PreparedExercise>> getPreparedExerciseList(int position) async {
+    var url = Uri.parse(ApiConstants.baseUrl +
+        ApiConstants.preparedExerciseEndpoint +
+        "?${position}");
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      List<PreparedExercise> preparedExercises =
+          preparedExerciseFromJsonList(response.body);
+      return preparedExercises;
+    } else {
+      List<PreparedExercise> preparedExercises = <PreparedExercise>[];
+      return preparedExercises;
     }
   }
 
