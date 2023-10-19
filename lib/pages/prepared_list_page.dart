@@ -35,7 +35,6 @@ class _PreparedListPageState extends State<PreparedListPage> {
     preparedExercisesData = ExerciseService().getPreparedExerciseList(0);
     PreparedListPage.preparedExercises =
         (await ExerciseService().getPreparedExerciseList(0));
-    print(preparedExercisesData);
   }
 
   @override
@@ -77,7 +76,7 @@ class _PreparedListPageState extends State<PreparedListPage> {
                         margin: const EdgeInsets.only(
                             left: 10, top: 10, right: 10, bottom: 5),
                         child: PreparedExerciseComponent(
-                          preparedExercises: PreparedListPage.preparedExercises,
+                          preparedExercises: snapshot.data,
                           certainIndex: index,
                         ),
                       )

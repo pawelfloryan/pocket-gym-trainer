@@ -6,7 +6,7 @@ import '../main.dart';
 import '../model/prepared_exercise.dart';
 
 class PreparedExerciseComponent extends StatelessWidget {
-  List<PreparedExercise> preparedExercises = <PreparedExercise>[];
+  List<PreparedExercise>? preparedExercises = <PreparedExercise>[];
   File? image;
   int certainIndex;
 
@@ -72,7 +72,7 @@ class PreparedExerciseComponent extends StatelessWidget {
                   padding: EdgeInsets.only(left: 15),
                   child: AutoSizeText(
                     textAlign: TextAlign.center,
-                    preparedExercises[certainIndex].name!,
+                    preparedExercises?[certainIndex].name ?? "",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 35,
@@ -119,14 +119,15 @@ class PreparedExerciseComponent extends StatelessWidget {
                           ),
                         )
                       ],
-                      title: Text("${preparedExercises[certainIndex].name}"),
+                      title: Text(
+                          "${preparedExercises?[certainIndex].name ?? ""}"),
                       content: Container(
                         height: 80,
                         child: Container(
                           width: 100,
                           margin: EdgeInsets.only(left: 10),
                           child: Text(
-                            "\u2022 Muscle group: ${preparedExercises[certainIndex].muscleGroup ?? ""}\n\u2022 Level: ${preparedExercises[certainIndex].level ?? ""}\n\u2022 Movement type: ${preparedExercises[certainIndex].p_p ?? ""}",
+                            "\u2022 Muscle group: ${preparedExercises?[certainIndex].muscleGroup ?? ""}\n\u2022 Level: ${preparedExercises?[certainIndex].level ?? ""}\n\u2022 Movement type: ${preparedExercises?[certainIndex].p_p ?? ""}",
                           ),
                         ),
                       ),

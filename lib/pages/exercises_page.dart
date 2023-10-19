@@ -72,8 +72,8 @@ class _ExercisesPageState extends State<ExercisesPage> {
   }
 
   Future<void> getData(sectionId) async {
-    exercises = (await ExerciseService().getExercise(sectionId, decodedUserId));
     exercisesData = ExerciseService().getExercise(sectionId, decodedUserId);
+    exercises = (await ExerciseService().getExercise(sectionId, decodedUserId));
   }
 
   Future<Exercise> createData() async {
