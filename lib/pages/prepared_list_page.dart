@@ -23,6 +23,8 @@ class _PreparedListPageState extends State<PreparedListPage> {
   late Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken!);
   late String decodedUserId = decodedToken["id"];
 
+  Future<List<PreparedExercise>>? preparedExercisesData;
+
   @override
   void initState() {
     super.initState();
@@ -32,52 +34,70 @@ class _PreparedListPageState extends State<PreparedListPage> {
   void getExercises() async {
     PreparedListPage.preparedExercises =
         (await ExerciseService().getPreparedExerciseList(0));
+    preparedExercisesData = ExerciseService().getPreparedExerciseList(0);
+    print(preparedExercisesData);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text("Prepared exercises list"),
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-            onPressed: () {
-              //context.go('/sections');
-              context.pop();
-            },
-            icon: const Icon(Icons.arrow_back_ios)),
-        actions: [
-          IconButton(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: Text("Prepared exercises list"),
+          automaticallyImplyLeading: false,
+          leading: IconButton(
               onPressed: () {
-                showSearch(
-                  context: context,
-                  delegate: CustomSearchDelegate(),
-                );
+                //context.go('/sections');
+                context.pop();
               },
-              icon: Icon(Icons.search))
-        ],
-      ),
-      body: ScrollablePositionedList.builder(
-        itemScrollController: PreparedListPage.itemScrollController,
-        itemBuilder: (context, index) {
-          return Column(
-            children: [
-              Container(
-                height: 195,
-                margin: const EdgeInsets.only(
-                    left: 10, top: 10, right: 10, bottom: 5),
-                child: PreparedExerciseComponent(
-                  preparedExercises: PreparedListPage.preparedExercises,
-                  certainIndex: index,
+              icon: const Icon(Icons.arrow_back_ios)),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  showSearch(
+                    context: context,
+                    delegate: CustomSearchDelegate(),
+                  );
+                },
+                icon: Icon(Icons.search))
+          ],
+        ),
+        body: FutureBuilder<List<PreparedExercise>>(
+          future: preparedExercisesData,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return ScrollablePositionedList.builder(
+                itemScrollController: PreparedListPage.itemScrollController,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      Container(
+                        height: 195,
+                        margin: const EdgeInsets.only(
+                            left: 10, top: 10, right: 10, bottom: 5),
+                        child: PreparedExerciseComponent(
+                          preparedExercises: PreparedListPage.preparedExercises,
+                          certainIndex: index,
+                        ),
+                      )
+                    ],
+                  );
+                },
+                itemCount: 25,
+              );
+            } else {
+              return Center(
+                child: SizedBox(
+                  height: 80,
+                  width: 80,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 6,
+                  ),
                 ),
-              )
-            ],
-          );
-        },
-        itemCount: 25,
-      ),
-    );
+              );
+            }
+          },
+        ));
   }
 }
 

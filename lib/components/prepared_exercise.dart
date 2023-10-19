@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../main.dart';
 import '../model/prepared_exercise.dart';
 
@@ -64,7 +65,7 @@ class PreparedExerciseComponent extends StatelessWidget {
                   width: 150,
                   height: 60,
                   margin: const EdgeInsets.only(
-                    left: 20,
+                    left: 5,
                     top: 18,
                     bottom: 20,
                   ),
@@ -100,7 +101,39 @@ class PreparedExerciseComponent extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(bottom: 145),
               child: IconButton(
-                onPressed: (() {}),
+                onPressed: (() {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            context.pop();
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(right: 10, bottom: 10),
+                            child: Text(
+                              "Close",
+                              style: TextStyle(fontSize: 17),
+                            ),
+                          ),
+                        )
+                      ],
+                      title: Text("${preparedExercises[certainIndex].name}"),
+                      content: Container(
+                        height: 80,
+                        child: Container(
+                          width: 100,
+                          margin: EdgeInsets.only(left: 10),
+                          child: Text(
+                            "\u2022 Muscle group: ${preparedExercises[certainIndex].muscleGroup ?? ""}\n\u2022 Level: ${preparedExercises[certainIndex].level ?? ""}\n\u2022 Movement type: ${preparedExercises[certainIndex].p_p ?? ""}",
+                          ),
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.all(15.0),
+                    ),
+                  );
+                }),
                 icon: Icon(
                   color: Colors.white,
                   Icons.info,
