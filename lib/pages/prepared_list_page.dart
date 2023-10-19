@@ -32,40 +32,41 @@ class _PreparedListPageState extends State<PreparedListPage> {
   }
 
   void getExercises() async {
+    preparedExercisesData = ExerciseService().getPreparedExerciseList(0);
     PreparedListPage.preparedExercises =
         (await ExerciseService().getPreparedExerciseList(0));
-    preparedExercisesData = ExerciseService().getPreparedExerciseList(0);
     print(preparedExercisesData);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: Text("Prepared exercises list"),
-          automaticallyImplyLeading: false,
-          leading: IconButton(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        title: Text("Prepared exercises list"),
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+            onPressed: () {
+              //context.go('/sections');
+              context.pop();
+            },
+            icon: const Icon(Icons.arrow_back_ios)),
+        actions: [
+          IconButton(
               onPressed: () {
-                //context.go('/sections');
-                context.pop();
+                showSearch(
+                  context: context,
+                  delegate: CustomSearchDelegate(),
+                );
               },
-              icon: const Icon(Icons.arrow_back_ios)),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  showSearch(
-                    context: context,
-                    delegate: CustomSearchDelegate(),
-                  );
-                },
-                icon: Icon(Icons.search))
-          ],
-        ),
-        body: FutureBuilder<List<PreparedExercise>>(
-          future: preparedExercisesData,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
+              icon: Icon(Icons.search))
+        ],
+      ),
+      body: FutureBuilder<List<PreparedExercise>>(
+        future: preparedExercisesData,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
               return ScrollablePositionedList.builder(
                 itemScrollController: PreparedListPage.itemScrollController,
                 itemBuilder: (context, index) {
@@ -86,18 +87,30 @@ class _PreparedListPageState extends State<PreparedListPage> {
                 itemCount: 25,
               );
             } else {
-              return Center(
-                child: SizedBox(
-                  height: 80,
-                  width: 80,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 6,
-                  ),
-                ),
-              );
+              return Text("No data");
             }
-          },
-        ));
+          } else if (snapshot.hasError) {
+            return Center(
+              child: SizedBox(
+                height: 80,
+                width: 80,
+                child: Text("Error"),
+              ),
+            );
+          } else {
+            return Center(
+              child: SizedBox(
+                height: 80,
+                width: 80,
+                child: CircularProgressIndicator(
+                  strokeWidth: 6,
+                ),
+              ),
+            );
+          }
+        },
+      ),
+    );
   }
 }
 
