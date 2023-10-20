@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:number_paginator/number_paginator.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../components/prepared_exercise.dart';
@@ -18,23 +19,32 @@ class PreparedListPage extends StatefulWidget {
 }
 
 class _PreparedListPageState extends State<PreparedListPage> {
+  final NumberPaginatorController _paginatorController =
+      NumberPaginatorController();
+  int currentPage = 0;
+
   String? jwtToken = RootPage.token;
 
   late Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken!);
   late String decodedUserId = decodedToken["id"];
 
   Future<List<PreparedExercise>>? preparedExercisesData;
+  late int perPageCount = 25;
 
   @override
   void initState() {
     super.initState();
-    getExercises();
+    getPreparedExercises();
   }
 
-  void getExercises() async {
-    preparedExercisesData = ExerciseService().getPreparedExerciseList(0);
-    PreparedListPage.preparedExercises =
-        (await ExerciseService().getPreparedExerciseList(0));
+  void getPreparedExercises() async {
+    if (currentPage == 0) {
+      preparedExercisesData = ExerciseService().getPreparedExerciseList(0);
+    } else {
+      preparedExercisesData = ExerciseService().getPreparedExerciseList(
+          _paginatorController.currentPage * perPageCount);
+    }
+    _paginatorController.currentPage = currentPage;
   }
 
   @override
@@ -69,21 +79,17 @@ class _PreparedListPageState extends State<PreparedListPage> {
               return ScrollablePositionedList.builder(
                 itemScrollController: PreparedListPage.itemScrollController,
                 itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      Container(
-                        height: 195,
-                        margin: const EdgeInsets.only(
-                            left: 10, top: 10, right: 10, bottom: 5),
-                        child: PreparedExerciseComponent(
-                          preparedExercises: snapshot.data,
-                          certainIndex: index,
-                        ),
-                      )
-                    ],
+                  return Container(
+                    height: 195,
+                    margin: const EdgeInsets.only(
+                        left: 10, top: 10, right: 10, bottom: 5),
+                    child: PreparedExerciseComponent(
+                      preparedExercises: snapshot.data,
+                      certainIndex: index,
+                    ),
                   );
                 },
-                itemCount: 25,
+                itemCount: perPageCount,
               );
             } else {
               return Text("No data");
@@ -107,6 +113,17 @@ class _PreparedListPageState extends State<PreparedListPage> {
               ),
             );
           }
+        },
+      ),
+      bottomNavigationBar: NumberPaginator(
+        controller: _paginatorController,
+        showPrevButton: true,
+        numberPages: (270 / perPageCount).ceil(),
+        onPageChange: (int index) {
+          setState(() {
+            currentPage = index;
+            getPreparedExercises();
+          });
         },
       ),
     );
