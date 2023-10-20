@@ -15,6 +15,11 @@ class PreparedExercise {
     this.p_p,
   });
 
+  @override
+  String toString() {
+    return '{id: ${id}, name: ${name}, muscleGroup: ${muscleGroup}, level: ${level}, p_p: ${p_p}}';
+  }
+
   Map<String, Object?> toJson() => {
         "id": id,
         "name": name,

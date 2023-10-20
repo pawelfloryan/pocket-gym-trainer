@@ -89,7 +89,7 @@ class ExerciseService {
   Future<List<PreparedExercise>> getPreparedExerciseList(int position) async {
     var url = Uri.parse(ApiConstants.baseUrl +
         ApiConstants.preparedExerciseEndpoint +
-        "?${position}");
+        "?position=${position}");
     var response = await http.get(url);
 
     if (response.statusCode == 200) {

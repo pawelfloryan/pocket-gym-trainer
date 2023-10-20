@@ -21,7 +21,6 @@ class PreparedListPage extends StatefulWidget {
 class _PreparedListPageState extends State<PreparedListPage> {
   final NumberPaginatorController _paginatorController =
       NumberPaginatorController();
-  int currentPage = 0;
 
   String? jwtToken = RootPage.token;
 
@@ -35,16 +34,13 @@ class _PreparedListPageState extends State<PreparedListPage> {
   void initState() {
     super.initState();
     getPreparedExercises();
+    preparedExercisesData = ExerciseService().getPreparedExerciseList(0);
   }
 
   void getPreparedExercises() async {
-    if (currentPage == 0) {
-      preparedExercisesData = ExerciseService().getPreparedExerciseList(0);
-    } else {
-      preparedExercisesData = ExerciseService().getPreparedExerciseList(
-          _paginatorController.currentPage * perPageCount);
-    }
-    _paginatorController.currentPage = currentPage;
+    PreparedListPage.preparedExercises = (await ExerciseService()
+        .getPreparedExerciseList(
+            _paginatorController.currentPage * perPageCount));
   }
 
   @override
@@ -89,7 +85,7 @@ class _PreparedListPageState extends State<PreparedListPage> {
                     ),
                   );
                 },
-                itemCount: perPageCount,
+                itemCount: snapshot.data!.length,
               );
             } else {
               return Text("No data");
@@ -121,7 +117,9 @@ class _PreparedListPageState extends State<PreparedListPage> {
         numberPages: (270 / perPageCount).ceil(),
         onPageChange: (int index) {
           setState(() {
-            currentPage = index;
+            int equate = _paginatorController.currentPage * perPageCount;
+            preparedExercisesData =
+                ExerciseService().getPreparedExerciseList(equate);
             getPreparedExercises();
           });
         },
