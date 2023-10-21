@@ -9,11 +9,15 @@ class PreparedExerciseComponent extends StatelessWidget {
   List<PreparedExercise>? preparedExercises = <PreparedExercise>[];
   File? image;
   int certainIndex;
+  late void Function() onClicked;
+  BuildContext context;
 
   PreparedExerciseComponent({
     required this.preparedExercises,
     this.image,
     required this.certainIndex,
+    required this.onClicked,
+    required this.context,
   });
 
   @override
@@ -88,7 +92,9 @@ class PreparedExerciseComponent extends StatelessWidget {
                   child: ElevatedButton(
                     style:
                         ElevatedButton.styleFrom(backgroundColor: Colors.black),
-                    onPressed: (() {}),
+                    onPressed: (() {
+                      onClicked();
+                    }),
                     child: Text(
                       textAlign: TextAlign.center,
                       "Add to your section",

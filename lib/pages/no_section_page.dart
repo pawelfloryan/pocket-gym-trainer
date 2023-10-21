@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:PocketGymTrainer/providers/section_provider.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:multi_select_flutter/util/multi_select_item.dart';
 
 import '../model/exercise.dart';
 import 'package:flutter/material.dart';
