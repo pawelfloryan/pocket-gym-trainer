@@ -138,10 +138,6 @@ final _router = GoRouter(
       builder: (context, state) => RootPage(),
     ),
     GoRoute(
-      path: '/title',
-      builder: (context, state) => TitlePage(),
-    ),
-    GoRoute(
       path: '/dashboard',
       builder: (context, state) => DashboardPage(),
     ),

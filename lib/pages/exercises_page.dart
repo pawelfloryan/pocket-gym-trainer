@@ -73,7 +73,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
 
   Future<void> getData(sectionId) async {
     exercisesData = ExerciseService().getExercise(sectionId, decodedUserId);
-    exercises = (await ExerciseService().getExercise(sectionId, decodedUserId));
+    exercises = (await exercisesData) ?? [];
   }
 
   Future<Exercise> createData() async {
@@ -185,74 +185,79 @@ class _ExercisesPageState extends State<ExercisesPage> {
         children: <Widget>[
           FutureBuilder<List<Exercise>>(
             future: exercisesData,
-            builder: ((context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: <Widget>[
-                          Container(
-                            height: 195,
-                            margin: const EdgeInsets.only(
-                              left: 10,
-                              top: 10,
-                              right: 10,
-                              bottom: 5,
-                            ),
-                            child: Slidable(
-                              endActionPane: ActionPane(
-                                extentRatio: 0.2,
-                                motion: ScrollMotion(),
-                                children: [
-                                  SlidableAction(
-                                    onPressed: (context) {
-                                      deleteExercise(exercises[index].id!);
-                                      prefsComplete.removeAt(index +
-                                          SectionPage.exercisesCountedLength);
-                                      print(index +
-                                          SectionPage.exercisesCountedLength);
-                                    },
-                                    backgroundColor: Colors.red,
-                                    foregroundColor: Colors.white,
-                                    icon: Icons.delete_sharp,
-                                  ),
-                                ],
-                              ),
-                              child: ExerciseComponent(
-                                exercises: exercises,
-                                prefsComplete: prefsComplete,
-                                image: image,
-                                pickImage: pickImage,
-                                setPrefs: setPrefs,
-                                certainIndex: index,
-                              ),
-                            ),
-                          )
-                        ],
-                      );
-                    },
-                    itemCount: exercises.length,
-                  );
-                } else {
-                  return EmptyList(
-                    imagePath: "images/exercise.png",
-                    text:
-                        "Click the button in right bottom\nto add new exercises",
-                  );
-                }
-              } else {
-                return Center(
-                  child: SizedBox(
-                    height: 80,
-                    width: 80,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 6,
+            builder: (context, snapshot) {
+              print(snapshot.connectionState);
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return Center(
+                    child: SizedBox(
+                      height: 80,
+                      width: 80,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 6,
+                      ),
                     ),
-                  ),
-                );
+                  );
+                case ConnectionState.done:
+                default:
+                  if (snapshot.hasError) {
+                    return Text("Error");
+                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                    return ListView.builder(
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: <Widget>[
+                            Container(
+                              height: 195,
+                              margin: const EdgeInsets.only(
+                                left: 10,
+                                top: 10,
+                                right: 10,
+                                bottom: 5,
+                              ),
+                              child: Slidable(
+                                endActionPane: ActionPane(
+                                  extentRatio: 0.2,
+                                  motion: ScrollMotion(),
+                                  children: [
+                                    SlidableAction(
+                                      onPressed: (context) {
+                                        deleteExercise(exercises[index].id!);
+                                        prefsComplete.removeAt(index +
+                                            SectionPage.exercisesCountedLength);
+                                        print(index +
+                                            SectionPage.exercisesCountedLength);
+                                      },
+                                      backgroundColor: Colors.red,
+                                      foregroundColor: Colors.white,
+                                      icon: Icons.delete_sharp,
+                                    ),
+                                  ],
+                                ),
+                                child: ExerciseComponent(
+                                  exercises: exercises,
+                                  prefsComplete: prefsComplete,
+                                  image: image,
+                                  pickImage: pickImage,
+                                  setPrefs: setPrefs,
+                                  certainIndex: index,
+                                ),
+                              ),
+                            )
+                          ],
+                        );
+                      },
+                      itemCount: exercises.length,
+                    );
+                  } else {
+                    return EmptyList(
+                      imagePath: "images/exercise.png",
+                      text:
+                          "Click the button in right bottom\nto add new exercises",
+                    );
+                  }
               }
-            }),
+            },
           ),
           NewItemTextField(
             text: "Name of a new exercise",

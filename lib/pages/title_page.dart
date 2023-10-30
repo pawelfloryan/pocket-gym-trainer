@@ -35,7 +35,6 @@ class TitlePage extends StatelessWidget {
                     backgroundColor: Colors.white,
                   ),
                   onPressed: () {
-                    print(GoRouter.of(context).location);
                     context.push('/login');
                   },
                   child: Row(

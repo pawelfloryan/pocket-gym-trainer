@@ -292,6 +292,7 @@ class CustomSearchDelegate extends SearchDelegate {
     );
   }
 
+  //This one works
   @override
   Widget buildSuggestions(BuildContext context) {
     List<String> matchQuery = [];
@@ -300,6 +301,7 @@ class CustomSearchDelegate extends SearchDelegate {
         matchQuery.add(exercise.name!);
       }
     }
+
     return ListView.builder(
       itemCount: matchQuery.length,
       itemBuilder: (context, index) {
@@ -307,8 +309,10 @@ class CustomSearchDelegate extends SearchDelegate {
         return GestureDetector(
           onTap: () {
             close(context, null);
+            print(index);
             PreparedListPage.itemScrollController.scrollTo(
-              index: index,
+              index: PreparedListPage.preparedExercises
+                  .indexWhere((exercise) => exercise.name == matchQuery[index]),
               duration: Duration(milliseconds: 500),
             );
           },

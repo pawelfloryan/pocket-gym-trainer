@@ -133,24 +133,19 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(GoRouter.of(context).location);
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-    double deviceWidth(BuildContext context) =>
-        MediaQuery.of(context).size.width;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(0, 61, 18, 18),
-        elevation: 0,
-      ),
       backgroundColor: Color(0xFFffffff),
       body: Column(
         children: [
           Align(
             alignment: Alignment.topLeft,
             child: Container(
-              margin: EdgeInsets.only(left: 35, bottom: 10),
+              margin: EdgeInsets.only(left: 35, bottom: 10, top: 30),
               child: IconButton(
                 onPressed: () {
                   print(GoRouter.of(context).location);

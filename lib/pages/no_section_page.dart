@@ -96,7 +96,6 @@ class _NoSectionPageState extends State<NoSectionPage> {
 
   void divideExercises() {
     List tempDivided = List.of(dividedExercises);
-    print(exercises);
     for (var exercise in exercises) {
       if (sections.any((section) => section.id == exercise.sectionId)) {
         int sectionId =

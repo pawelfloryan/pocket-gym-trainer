@@ -72,7 +72,6 @@ class _DashboardPageState extends State<DashboardPage> {
             setState(() {
               DashboardPage.currentPage = index;
             });
-            print(GoRouter.of(context).location);
           },
           selectedIndex: DashboardPage.currentPage,
         ),
