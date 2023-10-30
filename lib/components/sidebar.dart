@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:sidebarx/sidebarx.dart';
-import '../pages/dashboard_page.dart';
 import '../main.dart';
 
 String? jwtToken = RootPage.token;

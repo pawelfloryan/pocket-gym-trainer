@@ -141,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
       resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color.fromARGB(0, 61, 18, 18),
         elevation: 0,
       ),
       backgroundColor: Color(0xFFffffff),
@@ -151,11 +151,12 @@ class _LoginPageState extends State<LoginPage> {
             alignment: Alignment.topLeft,
             child: Container(
               margin: EdgeInsets.only(left: 35, bottom: 10),
-              child: GestureDetector(
-                onTap: () {
-                  context.go('/title');
+              child: IconButton(
+                onPressed: () {
+                  print(GoRouter.of(context).location);
+                  context.pop();
                 },
-                child: FaIcon(
+                icon: FaIcon(
                   FontAwesomeIcons.arrowLeftLong,
                   color: Colors.grey,
                   size: 25,

@@ -1,3 +1,5 @@
+import 'package:go_router/go_router.dart';
+
 import '../components/workout_timer.dart';
 import '../main.dart';
 import '../pages/display_exercises_page.dart';
@@ -70,6 +72,7 @@ class _DashboardPageState extends State<DashboardPage> {
             setState(() {
               DashboardPage.currentPage = index;
             });
+            print(GoRouter.of(context).location);
           },
           selectedIndex: DashboardPage.currentPage,
         ),

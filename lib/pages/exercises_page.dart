@@ -187,7 +187,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
             future: exercisesData,
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                if (exercises.length > 0) {
+                if (snapshot.hasData) {
                   return ListView.builder(
                     itemBuilder: (context, index) {
                       return Column(
