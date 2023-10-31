@@ -51,9 +51,7 @@ class _PreparedListPageState extends State<PreparedListPage> {
   }
 
   void getSuggestions() async {
-    PreparedListPage.preparedExercises = (await ExerciseService()
-        .getPreparedExerciseList(
-            _paginatorController.currentPage * perPageCount));
+    PreparedListPage.preparedExercises = (await preparedExercisesData) ?? [];
   }
 
   Future<void> getSections() async {
@@ -61,7 +59,6 @@ class _PreparedListPageState extends State<PreparedListPage> {
     _items = sections
         .map((section) => MultiSelectItem<Section>(section, section.name!))
         .toList();
-    print(sections);
   }
 
   void addExercise() async {
@@ -309,7 +306,6 @@ class CustomSearchDelegate extends SearchDelegate {
         return GestureDetector(
           onTap: () {
             close(context, null);
-            print(index);
             PreparedListPage.itemScrollController.scrollTo(
               index: PreparedListPage.preparedExercises
                   .indexWhere((exercise) => exercise.name == matchQuery[index]),

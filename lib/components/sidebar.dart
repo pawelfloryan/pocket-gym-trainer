@@ -84,8 +84,6 @@ class Sidebar extends StatelessWidget {
             label: 'Sign out',
             onTap: (() {
               RootPage.logged = false;
-              //DashboardPage.logOut = true;
-              //TODO Find out how to make the context pop() not go()
               context.go('/');
             }),
           ),

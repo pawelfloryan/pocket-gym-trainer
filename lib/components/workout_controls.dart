@@ -35,7 +35,6 @@ class _WorkoutControlsState extends State<WorkoutControls> {
   UserStats newUserStats = UserStats();
   UserStats userStatsUpsert = UserStats();
 
-  //TODO Stop reapeating this code, only use it's variables when it completes once
   String? jwtToken = RootPage.token;
   late Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken!);
   late String decodedUserId = decodedToken["id"];

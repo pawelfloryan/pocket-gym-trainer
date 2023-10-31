@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:core';
 import 'package:PocketGymTrainer/components/empty_list.dart';
 import 'package:PocketGymTrainer/components/exercise.dart';
 
@@ -72,8 +73,12 @@ class _ExercisesPageState extends State<ExercisesPage> {
   }
 
   Future<void> getData(sectionId) async {
-    exercisesData = ExerciseService().getExercise(sectionId, decodedUserId);
+    await (exercisesData =
+        ExerciseService().getExercise(sectionId, decodedUserId));
     exercises = (await exercisesData) ?? [];
+    setState(() {
+      exercises = exercises..sort((ex1, ex2) => ex1.name!.compareTo(ex2.name!));
+    });
   }
 
   Future<Exercise> createData() async {
@@ -102,18 +107,19 @@ class _ExercisesPageState extends State<ExercisesPage> {
         ),
       );
     } else {
-      int lastIndex = exercises.length + SectionPage.exercisesCountedLength;
-      print(lastIndex);
-      if (!RootPage.workoutStarted) {
-        if (prefsComplete.isEmpty) {
-          setState(() {
-            for (int i = 0; i < SectionPage.allExercises.length; i++) {
-              prefsComplete.add("temp");
-            }
-          });
-        }
-        prefsComplete.insert(lastIndex, "temp");
-      }
+      //TODO Fix this code screaming an error
+      //int lastIndex = exercises.length + SectionPage.exercisesCountedLength;
+      //print(lastIndex);
+      //if (!RootPage.workoutStarted) {
+      //  if (prefsComplete.isEmpty) {
+      //    setState(() {
+      //      for (int i = 0; i < SectionPage.allExercises.length; i++) {
+      //        prefsComplete.add("temp");
+      //      }
+      //    });
+      //  }
+      //  prefsComplete.insert(lastIndex, "temp");
+      //}
     }
     return exercise;
   }
@@ -121,7 +127,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
   void deleteData(String exerciseId) async {
     await ExerciseService().deleteExerciseSingle(exerciseId);
     getData(sectionId);
-    print(exercises);
     exerciseDelete.id = exerciseId;
     newExercisesDelete = exercises;
     newExercisesDelete.remove(exerciseDelete);
@@ -186,9 +191,18 @@ class _ExercisesPageState extends State<ExercisesPage> {
           FutureBuilder<List<Exercise>>(
             future: exercisesData,
             builder: (context, snapshot) {
-              print(snapshot.connectionState);
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
+                  return Center(
+                    child: SizedBox(
+                      height: 80,
+                      width: 80,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 6,
+                      ),
+                    ),
+                  );
+                case ConnectionState.none:
                   return Center(
                     child: SizedBox(
                       height: 80,
@@ -223,10 +237,8 @@ class _ExercisesPageState extends State<ExercisesPage> {
                                     SlidableAction(
                                       onPressed: (context) {
                                         deleteExercise(exercises[index].id!);
-                                        prefsComplete.removeAt(index +
-                                            SectionPage.exercisesCountedLength);
-                                        print(index +
-                                            SectionPage.exercisesCountedLength);
+                                        //prefsComplete.removeAt(index +
+                                        //    SectionPage.exercisesCountedLength);
                                       },
                                       backgroundColor: Colors.red,
                                       foregroundColor: Colors.white,
@@ -321,7 +333,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
     List<String>? strList = prefs.getStringList('complete');
 
     setState(() {
-      prefsComplete = strList!;
+      prefsComplete = strList ?? [];
     });
   }
 

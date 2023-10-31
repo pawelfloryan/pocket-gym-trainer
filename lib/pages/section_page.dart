@@ -84,8 +84,13 @@ class _SectionPageState extends State<SectionPage> {
   }
 
   void getData() async {
-    sections = (await SectionService().getSection(jwtToken!, decodedUserId));
-    sectionsData = SectionService().getSection(jwtToken!, decodedUserId);
+    await (sectionsData =
+        SectionService().getSection(jwtToken!, decodedUserId));
+    sections = (await sectionsData) ?? [];
+    setState(() {
+      sections = sections..sort((s1, s2) => s1.name!.compareTo(s2.name!));
+    });
+
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {
               RootPage.sectionsLength = sections.length;
@@ -211,7 +216,7 @@ class _SectionPageState extends State<SectionPage> {
           future: sectionsData,
           builder: ((context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              if (RootPage.sectionsLength > 0) {
+              if (snapshot.hasData) {
                 return ListView.builder(
                   itemBuilder: (context, index) {
                     return Column(

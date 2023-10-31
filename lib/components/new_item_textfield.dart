@@ -41,42 +41,44 @@ class NewItemTextField extends StatelessWidget {
             ),
           ),
         ),
-        AnimatedOpacity(
-          duration: Duration(milliseconds: 150),
-          opacity: opacity,
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              width: MediaQuery.of(context).size.width - 90,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 3.5),
-                color: Colors.white,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(5.0),
-                ),
-              ),
-              margin: EdgeInsets.only(
-                right: screenSize.width * 0.15,
-                bottom: 10,
-              ),
-              child: Container(
-                margin: const EdgeInsets.only(left: 7),
-                child: TextField(
-                  controller: textController,
-                  decoration: InputDecoration(
-                    hintText: text,
-                    hintStyle: TextStyle(color: Colors.grey),
-                    suffixIcon: IconButton(
-                      color: Colors.black,
-                      onPressed: addElement,
-                      icon: Icon((Icons.done)),
+        opacity == 1
+            ? AnimatedOpacity(
+                duration: Duration(milliseconds: 150),
+                opacity: opacity,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width - 90,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 3.5),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5.0),
+                      ),
+                    ),
+                    margin: EdgeInsets.only(
+                      right: screenSize.width * 0.15,
+                      bottom: 10,
+                    ),
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 7),
+                      child: TextField(
+                        controller: textController,
+                        decoration: InputDecoration(
+                          hintText: text,
+                          hintStyle: TextStyle(color: Colors.grey),
+                          suffixIcon: IconButton(
+                            color: Colors.black,
+                            onPressed: addElement,
+                            icon: Icon((Icons.done)),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          ),
-        ),
+              )
+            : Container(),
       ],
     );
   }

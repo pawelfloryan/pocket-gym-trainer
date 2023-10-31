@@ -148,8 +148,7 @@ class _LoginPageState extends State<LoginPage> {
               margin: EdgeInsets.only(left: 35, bottom: 10, top: 30),
               child: IconButton(
                 onPressed: () {
-                  print(GoRouter.of(context).location);
-                  context.pop();
+                  context.go("/");
                 },
                 icon: FaIcon(
                   FontAwesomeIcons.arrowLeftLong,
