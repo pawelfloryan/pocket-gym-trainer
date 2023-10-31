@@ -1,12 +1,13 @@
-import 'package:PocketGymTrainer/components/auth_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../model/auth_result.dart';
 import '../model/login.dart';
 import '../services/auth_service.dart';
 import '../main.dart';
+import '../components/auth_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -168,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                     margin: const EdgeInsets.only(top: 20, bottom: 25),
                     child: Text(
-                      "Welcome back!",
+                      AppLocalizations.of(context)!.welcomeBack,
                       style: TextStyle(fontSize: 40, color: Color(0xFF363f93)),
                     ),
                   ),

@@ -1,24 +1,22 @@
-import 'package:PocketGymTrainer/model/exercise.dart';
-import 'package:PocketGymTrainer/pages/display_exercises_page.dart';
-import 'package:sidebarx/sidebarx.dart';
-
+import '/model/exercise.dart';
+import '/pages/display_exercises_page.dart';
+import 'l10n/l10n.dart';
 import 'pages/about_page.dart';
 import 'pages/prepared_list_page.dart';
 import 'pages/profile_page.dart';
 import 'pages/forgot_password_page.dart';
 import 'pages/title_page.dart';
 import 'package:flutter/material.dart';
-import '../model/login.dart';
 import 'pages/exercises_page.dart';
 import 'pages/login_page.dart';
 import 'pages/register_page.dart';
-import 'pages/section_page.dart';
-import 'pages/stats_page.dart';
 import 'pages/home_page.dart';
 import 'pages/dashboard_page.dart';
 import 'pages/settings_page.dart';
+import 'package:sidebarx/sidebarx.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -72,6 +70,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: L10n.all,
       routerConfig: _router,
       theme: theme == 0
           ? ThemeData(
