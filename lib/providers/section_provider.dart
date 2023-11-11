@@ -1,47 +1,30 @@
+import 'dart:convert';
+
+import 'package:PocketGymTrainer/constants.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../main.dart';
 import '../model/section.dart';
 import '../pages/section_page.dart';
-import '../services/section_services.dart';
+import 'package:http/http.dart' as http;
 
-List<Section> sections = <Section>[];
-List<Section> newSections = <Section>[];
-List<Section> newSectionsDelete = <Section>[];
-Section section = Section();
-Section sectionCreate = Section();
-Section sectionDelete = Section();
-Section sectionUpsert = Section();
+part 'section_provider.g.dart';
 
-String? jwtToken = RootPage.token;
-
-late Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken!);
-late String decodedUserId = decodedToken["id"];
-
-int sectionIndex = SectionPage.sectionIndex;
-
-class SectionProvider {
-  void getData() async {
-    sections = (await SectionService().getSection(jwtToken!, decodedUserId));
-  }
-
-  void createData() async {
-    section = (await SectionService().createSection(sectionCreate))!;
-    sections.add(section);
-  }
-
-  void deleteData(String sectionId) async {
-    await SectionService().deleteSection(sectionId, jwtToken!);
-    getData();
-    sectionDelete.id = sectionId;
-    newSectionsDelete = sections;
-    newSectionsDelete.remove(sectionDelete);
-  }
-
-  void upsertData(String sectionId) async {
-    section = (await SectionService().upsertSection(sectionId, sectionUpsert))!;
-    getData();
-    newSections = sections;
-    newSections[sectionIndex].name = sectionUpsert.name;
-  }
+@riverpod
+Future<List<Section>> getSectionList(
+  GetSectionListRef ref,
+  String result,
+) async {
+  var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.sectionEndpoint);
+  var response = await http.get(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer ' + result,
+    },
+  );
+  //List<Section> sections = sectionFromJsonList(response.body);
+  List<Section> sections = [Section(id: "aaaaa", name: "exec")];
+  return sections;
 }

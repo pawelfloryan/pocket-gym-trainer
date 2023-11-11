@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:PocketGymTrainer/main.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 import '../model/section.dart';
 import '../providers/section_provider.dart';
@@ -18,6 +20,10 @@ class _ExerciseCountChartState extends State<ExerciseCountChart> {
   List<Section> sections = <Section>[];
   double sum = 0;
   double finalValue = 1;
+  String? jwtToken = RootPage.token;
+
+  late Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken!);
+  late String decodedUserId = decodedToken["id"];
 
   @override
   void initState() {
