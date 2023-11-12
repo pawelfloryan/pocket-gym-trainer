@@ -131,20 +131,6 @@ class _SectionPageState extends ConsumerState<SectionPage> {
         .then((value) => setState(() {}));
   }
 
-  Future<void> addSection() async {
-    setState(() {
-      userPost = _textController.text;
-      sectionCreate.name = userPost;
-      sectionCreate.userId = decodedUserId;
-      sectionCreate.exercisesPerformed = 0;
-      createData();
-      Future.delayed(const Duration(milliseconds: 10))
-          .then((value) => setState(() {}));
-      opacity = 0;
-      _textController.text = "";
-    });
-  }
-
   void deleteExercise(String sectionId) async {
     await ExerciseService().deleteExerciseList(sectionId);
     Future.delayed(const Duration(milliseconds: 10))
@@ -192,7 +178,7 @@ class _SectionPageState extends ConsumerState<SectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    final providedSections = ref.read(getSectionListProvider(jwtToken!));
+    final providedSections = ref.watch(SectionsProvider(jwtToken!));
 
     return Stack(
       children: <Widget>[
@@ -209,145 +195,158 @@ class _SectionPageState extends ConsumerState<SectionPage> {
               ),
             ),
           ),
-          data: (sections) => ListView.builder(
-            itemBuilder: (context, index) {
-              print(sections[0]);
-              print("/////");
-              return Column(
-                children: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.only(left: 20, top: 10, right: 20),
-                    child: Slidable(
-                      enabled: !RootPage.workoutStarted,
-                      closeOnScroll: true,
-                      child: SectionComponent(
-                        sections: sections,
-                        exercises: exercises,
-                        textController: _textController,
-                        sectionClicked: () {
-                          SectionPage.sectionKey = sections[index].id;
-                          SectionPage.sectionName = sections[index].name;
-                          SectionPage.exercisesPerformed =
-                              sections[index].exercisesPerformed;
-                          SectionPage.sectionIndex = index;
-                          editing = false;
-                          selectedSectionIndex = -1;
-                          countedExercises(index);
-                          exercisesCompleted();
-                          opacity = 0;
-                          context.push('/exercises');
-                        },
-                        sectionEdited: () {
-                          editSection(sections[index].id!, index);
-                          _textController.text = "";
-                        },
-                        exercisesCountDisplay: (index) {
-                          newExercises = exercises
-                              .where((element) =>
-                                  element.sectionId == sections[index].id)
-                              .toList();
-                          return newExercises.length;
-                        },
-                        editing: editing,
-                        selectedSectionIndex: selectedSectionIndex,
-                        certainIndex: index,
-                      ),
-                      startActionPane: ActionPane(
-                        extentRatio: 0.15,
-                        motion: ScrollMotion(),
-                        children: [
-                          SlidableAction(
-                            onPressed: (context) => setState(() {
-                              if (!editing) {
-                                editing = true;
-                                _textController.text = sections[index].name!;
-                                selectedSectionIndex = index;
-                              } else {
-                                if (selectedSectionIndex != index) {
-                                  editing = true;
-                                  _textController.text = sections[index].name!;
-                                  selectedSectionIndex = index;
-                                } else {
-                                  editing = false;
-                                  _textController.text = "";
-                                  selectedSectionIndex = -1;
-                                }
-                              }
-                            }),
-                            backgroundColor: Colors.blue,
-                            foregroundColor: Colors.white,
-                            icon: !editing || selectedSectionIndex != index
-                                ? Icons.edit
-                                : Icons.subdirectory_arrow_left_sharp,
-                          ),
-                        ],
-                      ),
-                      endActionPane: ActionPane(
-                        extentRatio: 0.2,
-                        motion: ScrollMotion(),
-                        children: [
-                          SlidableAction(
-                            onPressed: (context) {
-                              if (sections[index].exercisesPerformed! > 0) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          deleteSection(sections[index].id!);
-                                          context.pop();
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.only(
-                                              right: 10, bottom: 10),
-                                          child: Text(
-                                            "Delete anyway",
-                                            style: TextStyle(fontSize: 17),
+          data: (sections) => sections.isNotEmpty
+              ? ListView.builder(
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: <Widget>[
+                        Container(
+                          margin: const EdgeInsets.only(
+                              left: 20, top: 10, right: 20),
+                          child: Slidable(
+                            enabled: !RootPage.workoutStarted,
+                            closeOnScroll: true,
+                            child: SectionComponent(
+                              sections: sections,
+                              exercises: exercises,
+                              textController: _textController,
+                              sectionClicked: () {
+                                SectionPage.sectionKey = sections[index].id;
+                                SectionPage.sectionName = sections[index].name;
+                                SectionPage.exercisesPerformed =
+                                    sections[index].exercisesPerformed;
+                                SectionPage.sectionIndex = index;
+                                editing = false;
+                                selectedSectionIndex = -1;
+                                countedExercises(index);
+                                exercisesCompleted();
+                                opacity = 0;
+                                context.push('/exercises');
+                              },
+                              sectionEdited: () {
+                                editSection(sections[index].id!, index);
+                                _textController.text = "";
+                              },
+                              exercisesCountDisplay: (index) {
+                                newExercises = exercises
+                                    .where((element) =>
+                                        element.sectionId == sections[index].id)
+                                    .toList();
+                                return newExercises.length;
+                              },
+                              editing: editing,
+                              selectedSectionIndex: selectedSectionIndex,
+                              certainIndex: index,
+                            ),
+                            startActionPane: ActionPane(
+                              extentRatio: 0.15,
+                              motion: ScrollMotion(),
+                              children: [
+                                SlidableAction(
+                                  onPressed: (context) => setState(() {
+                                    if (!editing) {
+                                      editing = true;
+                                      _textController.text =
+                                          sections[index].name!;
+                                      selectedSectionIndex = index;
+                                    } else {
+                                      if (selectedSectionIndex != index) {
+                                        editing = true;
+                                        _textController.text =
+                                            sections[index].name!;
+                                        selectedSectionIndex = index;
+                                      } else {
+                                        editing = false;
+                                        _textController.text = "";
+                                        selectedSectionIndex = -1;
+                                      }
+                                    }
+                                  }),
+                                  backgroundColor: Colors.blue,
+                                  foregroundColor: Colors.white,
+                                  icon:
+                                      !editing || selectedSectionIndex != index
+                                          ? Icons.edit
+                                          : Icons.subdirectory_arrow_left_sharp,
+                                ),
+                              ],
+                            ),
+                            endActionPane: ActionPane(
+                              extentRatio: 0.2,
+                              motion: ScrollMotion(),
+                              children: [
+                                SlidableAction(
+                                  onPressed: (context) {
+                                    if (sections[index].exercisesPerformed! >
+                                        0) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                deleteSection(
+                                                    sections[index].id!);
+                                                context.pop();
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.only(
+                                                    right: 10, bottom: 10),
+                                                child: Text(
+                                                  "Delete anyway",
+                                                  style:
+                                                      TextStyle(fontSize: 17),
+                                                ),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                context.pop();
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.only(
+                                                  right: 10,
+                                                  bottom: 5,
+                                                ),
+                                                child: Text(
+                                                  "Cancel",
+                                                  style:
+                                                      TextStyle(fontSize: 17),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                          title: Text(
+                                              "Exercise data of ${sections[index].name}"),
+                                          content: const Text(
+                                            "After deleting this section, data used in the radar chart will be lost!",
                                           ),
+                                          contentPadding:
+                                              const EdgeInsets.all(25.0),
                                         ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          context.pop();
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.only(
-                                            right: 10,
-                                            bottom: 5,
-                                          ),
-                                          child: Text(
-                                            "Cancel",
-                                            style: TextStyle(fontSize: 17),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                    title: Text(
-                                        "Exercise data of ${sections[index].name}"),
-                                    content: const Text(
-                                      "After deleting this section, data used in the radar chart will be lost!",
-                                    ),
-                                    contentPadding: const EdgeInsets.all(25.0),
-                                  ),
-                                );
-                              } else {
-                                deleteSection(sections[index].id!);
-                              }
-                            },
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
-                            icon: Icons.delete_sharp,
+                                      );
+                                    } else {
+                                      deleteSection(sections[index].id!);
+                                    }
+                                  },
+                                  backgroundColor: Colors.red,
+                                  foregroundColor: Colors.white,
+                                  icon: Icons.delete_sharp,
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              );
-            },
-            itemCount: sections.length,
-          ),
+                        )
+                      ],
+                    );
+                  },
+                  itemCount: sections.length,
+                )
+              : EmptyList(
+                  imagePath: "images/push-up.png",
+                  text:
+                      "Click the button in right bottom\nto add new exercise sections",
+                ),
         ),
         NewItemTextField(
           text: "Name of a new section",
@@ -362,7 +361,21 @@ class _SectionPageState extends ConsumerState<SectionPage> {
               }
             });
           },
-          addElement: addSection,
+          addElement: () {
+            final addElement =
+                ref.read(sectionsProvider(jwtToken!).notifier).createSection(
+                      Section(
+                        name: _textController.text,
+                        userId: decodedUserId,
+                        exercisesPerformed: 0,
+                      ),
+                    );
+            setState(() {
+              opacity = 0;
+              _textController.text = "";
+            });
+            return addElement;
+          },
           backgroundColor: Color.fromARGB(255, 255, 255, 255),
           iconColor: Color.fromARGB(255, 0, 0, 0),
         )

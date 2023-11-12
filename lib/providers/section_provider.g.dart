@@ -6,7 +6,7 @@ part of 'section_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getSectionListHash() => r'2f7ee33e0b7de7ea001c303d009015799ef59422';
+String _$sectionsHash() => r'62db97165cb40a6f69bd9a16888a59cb21e63711';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,27 +29,36 @@ class _SystemHash {
   }
 }
 
-/// See also [getSectionList].
-@ProviderFor(getSectionList)
-const getSectionListProvider = GetSectionListFamily();
+abstract class _$Sections
+    extends BuildlessAutoDisposeAsyncNotifier<List<Section>> {
+  late final String result;
 
-/// See also [getSectionList].
-class GetSectionListFamily extends Family<AsyncValue<List<Section>>> {
-  /// See also [getSectionList].
-  const GetSectionListFamily();
+  FutureOr<List<Section>> build(
+    String result,
+  );
+}
 
-  /// See also [getSectionList].
-  GetSectionListProvider call(
+/// See also [Sections].
+@ProviderFor(Sections)
+const sectionsProvider = SectionsFamily();
+
+/// See also [Sections].
+class SectionsFamily extends Family<AsyncValue<List<Section>>> {
+  /// See also [Sections].
+  const SectionsFamily();
+
+  /// See also [Sections].
+  SectionsProvider call(
     String result,
   ) {
-    return GetSectionListProvider(
+    return SectionsProvider(
       result,
     );
   }
 
   @override
-  GetSectionListProvider getProviderOverride(
-    covariant GetSectionListProvider provider,
+  SectionsProvider getProviderOverride(
+    covariant SectionsProvider provider,
   ) {
     return call(
       provider.result,
@@ -68,32 +77,29 @@ class GetSectionListFamily extends Family<AsyncValue<List<Section>>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'getSectionListProvider';
+  String? get name => r'sectionsProvider';
 }
 
-/// See also [getSectionList].
-class GetSectionListProvider extends AutoDisposeFutureProvider<List<Section>> {
-  /// See also [getSectionList].
-  GetSectionListProvider(
+/// See also [Sections].
+class SectionsProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<Sections, List<Section>> {
+  /// See also [Sections].
+  SectionsProvider(
     String result,
   ) : this._internal(
-          (ref) => getSectionList(
-            ref as GetSectionListRef,
-            result,
-          ),
-          from: getSectionListProvider,
-          name: r'getSectionListProvider',
+          () => Sections()..result = result,
+          from: sectionsProvider,
+          name: r'sectionsProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$getSectionListHash,
-          dependencies: GetSectionListFamily._dependencies,
-          allTransitiveDependencies:
-              GetSectionListFamily._allTransitiveDependencies,
+                  : _$sectionsHash,
+          dependencies: SectionsFamily._dependencies,
+          allTransitiveDependencies: SectionsFamily._allTransitiveDependencies,
           result: result,
         );
 
-  GetSectionListProvider._internal(
+  SectionsProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -106,13 +112,20 @@ class GetSectionListProvider extends AutoDisposeFutureProvider<List<Section>> {
   final String result;
 
   @override
-  Override overrideWith(
-    FutureOr<List<Section>> Function(GetSectionListRef provider) create,
+  FutureOr<List<Section>> runNotifierBuild(
+    covariant Sections notifier,
   ) {
+    return notifier.build(
+      result,
+    );
+  }
+
+  @override
+  Override overrideWith(Sections Function() create) {
     return ProviderOverride(
       origin: this,
-      override: GetSectionListProvider._internal(
-        (ref) => create(ref as GetSectionListRef),
+      override: SectionsProvider._internal(
+        () => create()..result = result,
         from: from,
         name: null,
         dependencies: null,
@@ -124,13 +137,14 @@ class GetSectionListProvider extends AutoDisposeFutureProvider<List<Section>> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<List<Section>> createElement() {
-    return _GetSectionListProviderElement(this);
+  AutoDisposeAsyncNotifierProviderElement<Sections, List<Section>>
+      createElement() {
+    return _SectionsProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is GetSectionListProvider && other.result == result;
+    return other is SectionsProvider && other.result == result;
   }
 
   @override
@@ -142,18 +156,18 @@ class GetSectionListProvider extends AutoDisposeFutureProvider<List<Section>> {
   }
 }
 
-mixin GetSectionListRef on AutoDisposeFutureProviderRef<List<Section>> {
+mixin SectionsRef on AutoDisposeAsyncNotifierProviderRef<List<Section>> {
   /// The parameter `result` of this provider.
   String get result;
 }
 
-class _GetSectionListProviderElement
-    extends AutoDisposeFutureProviderElement<List<Section>>
-    with GetSectionListRef {
-  _GetSectionListProviderElement(super.provider);
+class _SectionsProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<Sections, List<Section>>
+    with SectionsRef {
+  _SectionsProviderElement(super.provider);
 
   @override
-  String get result => (origin as GetSectionListProvider).result;
+  String get result => (origin as SectionsProvider).result;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
