@@ -38,18 +38,11 @@ class SectionPage extends ConsumerStatefulWidget {
 class _SectionPageState extends ConsumerState<SectionPage> {
   List<Exercise> exercises = <Exercise>[];
   List<Exercise> newExercises = <Exercise>[];
-  List<Exercise> exercisesDelete = <Exercise>[];
   List<Exercise> exercisesCounted = <Exercise>[];
   List<Exercise> certainExercises = <Exercise>[];
 
   List<Section> sections = <Section>[];
-  List<Section> newSections = <Section>[];
-  List<Section> newSectionsDelete = <Section>[];
   List<Section> certainSections = <Section>[];
-  Section section = Section();
-  Section sectionCreate = Section();
-  Section sectionDelete = Section();
-  Section sectionUpsert = Section();
 
   final _textController = TextEditingController();
   String userPost = '';
@@ -68,22 +61,17 @@ class _SectionPageState extends ConsumerState<SectionPage> {
 
   Future<void>? enterPrefsFuture;
   bool enterPrefsCalled = false;
-  int exercisesLength = 0;
 
   @override
   void initState() {
     super.initState();
-    getData();
     deletePrefs();
     getAllExercises();
     exercisesCompleted();
   }
 
-  void getData() async {}
-
   void createData() async {
-    section = (await SectionService().createSection(sectionCreate));
-    if (section.id == null) {
+    if ("section.id" == null) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -107,57 +95,16 @@ class _SectionPageState extends ConsumerState<SectionPage> {
         ),
       );
     } else {
-      sections.add(section);
+      //sections.add(section);
       RootPage.sectionsLength++;
     }
     //countedExercises(sections.length-1);
-  }
-
-  void deleteData(String sectionId) async {
-    await SectionService().deleteSection(sectionId, jwtToken!);
-    getData();
-    deleteExercise(sectionId);
-    sectionDelete.id = sectionId;
-    newSectionsDelete = sections;
-    newSectionsDelete.remove(sectionDelete);
-    Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
-  }
-
-  void upsertData(String sectionId) async {
-    section = (await SectionService().upsertSection(sectionId, sectionUpsert))!;
-    getData();
-    Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
   }
 
   void deleteExercise(String sectionId) async {
     await ExerciseService().deleteExerciseList(sectionId);
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
-  }
-
-  void deleteSection(String id) {
-    setState(() {
-      sectionId = id;
-      deleteData(sectionId);
-      sections = newSectionsDelete;
-    });
-  }
-
-  void editSection(String id, int index) async {
-    setState(() {
-      userPost = _textController.text;
-      sectionUpsert.name = userPost;
-      sectionUpsert.userId = decodedUserId;
-      sectionUpsert.exercisesPerformed = sections[index].exercisesPerformed;
-      editing = false;
-      sectionId = id;
-      upsertData(sectionId);
-      getData();
-      sections = newSections;
-      _textController.text = "";
-    });
   }
 
   void getAllExercises() async {
@@ -224,8 +171,20 @@ class _SectionPageState extends ConsumerState<SectionPage> {
                                 context.push('/exercises');
                               },
                               sectionEdited: () {
-                                editSection(sections[index].id!, index);
-                                _textController.text = "";
+                                ref
+                                    .read(SectionsProvider(jwtToken!).notifier)
+                                    .upsertSection(
+                                      sections[index].id!,
+                                      Section(
+                                          name: _textController.text,
+                                          userId: decodedUserId,
+                                          exercisesPerformed: sections[index]
+                                              .exercisesPerformed),
+                                    );
+                                setState(() {
+                                  _textController.text = "";
+                                  editing = false;
+                                });
                               },
                               exercisesCountDisplay: (index) {
                                 newExercises = exercises
@@ -285,8 +244,13 @@ class _SectionPageState extends ConsumerState<SectionPage> {
                                           actions: [
                                             TextButton(
                                               onPressed: () {
-                                                deleteSection(
-                                                    sections[index].id!);
+                                                ref
+                                                    .read(SectionsProvider(
+                                                            jwtToken!)
+                                                        .notifier)
+                                                    .deleteSection(
+                                                        sections[index].id!,
+                                                        jwtToken!);
                                                 context.pop();
                                               },
                                               child: Container(
@@ -326,7 +290,11 @@ class _SectionPageState extends ConsumerState<SectionPage> {
                                         ),
                                       );
                                     } else {
-                                      deleteSection(sections[index].id!);
+                                      ref
+                                          .read(SectionsProvider(jwtToken!)
+                                              .notifier)
+                                          .deleteSection(
+                                              sections[index].id!, jwtToken!);
                                     }
                                   },
                                   backgroundColor: Colors.red,

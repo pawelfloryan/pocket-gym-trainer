@@ -58,4 +58,18 @@ class Sections extends _$Sections {
 
     await future;
   }
+
+  Future<void> upsertSection(String id, Section section) async {
+    await http.put(
+        Uri.parse(
+            ApiConstants.baseUrl + ApiConstants.sectionEndpoint + "/${id}"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(section.toJson()));
+
+    ref.invalidateSelf();
+
+    await future;
+  }
 }
