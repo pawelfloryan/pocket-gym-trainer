@@ -3,6 +3,8 @@ import 'dart:io';
 import 'dart:core';
 import 'package:PocketGymTrainer/components/empty_list.dart';
 import 'package:PocketGymTrainer/components/exercise.dart';
+import 'package:PocketGymTrainer/providers/exercise_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../components/new_item_textfield.dart';
 import '../components/workout_controls.dart';
@@ -23,20 +25,17 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../services/section_services.dart';
 
-class ExercisesPage extends StatefulWidget {
+class ExercisesPage extends ConsumerStatefulWidget {
   const ExercisesPage({super.key});
 
   @override
-  State<ExercisesPage> createState() => _ExercisesPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ExercisesPageState();
 }
 
-class _ExercisesPageState extends State<ExercisesPage> {
+class _ExercisesPageState extends ConsumerState<ExercisesPage> {
   final _textController = TextEditingController();
   String userPost = '';
   double opacity = 0;
-  bool enterPrefsCalled = false;
-  String exerciseUserPost = '';
-  String weightUserPost = '';
   File? image;
   double temp = 1;
 
@@ -68,7 +67,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
   @override
   void initState() {
     super.initState();
-    getData(sectionId);
     getPrefs();
   }
 
@@ -156,23 +154,11 @@ class _ExercisesPageState extends State<ExercisesPage> {
     updateExercisesPerformed();
   }
 
-  Future<void> addExercise() async {
-    setState(() {
-      userPost = _textController.text;
-      exerciseCreate.name = userPost;
-      exerciseCreate.sectionId = sectionId;
-      exerciseCreate.userId = decodedUserId;
-      Future.delayed(const Duration(milliseconds: 10))
-          .then((value) => setState(() {}));
-      opacity = 0;
-      _textController.text = "";
-    });
-    exercises.add(await createData());
-    getData(sectionId);
-  }
-
   @override
   Widget build(BuildContext context) {
+    final providedExercises =
+        ref.watch(ExercisesProvider(sectionId, decodedUserId));
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -188,88 +174,69 @@ class _ExercisesPageState extends State<ExercisesPage> {
       ),
       body: Stack(
         children: <Widget>[
-          FutureBuilder<List<Exercise>>(
-            future: exercisesData,
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return Center(
-                    child: SizedBox(
-                      height: 80,
-                      width: 80,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 6,
-                      ),
-                    ),
-                  );
-                case ConnectionState.none:
-                  return Center(
-                    child: SizedBox(
-                      height: 80,
-                      width: 80,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 6,
-                      ),
-                    ),
-                  );
-                case ConnectionState.done:
-                default:
-                  if (snapshot.hasError) {
-                    return Text("Error");
-                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                    return ListView.builder(
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: <Widget>[
-                            Container(
-                              height: 195,
-                              margin: const EdgeInsets.only(
-                                left: 10,
-                                top: 10,
-                                right: 10,
-                                bottom: 5,
+          providedExercises.when(
+            error: (error, stackTrace) => Center(
+              child: Text(error.toString()),
+            ),
+            loading: () => Center(
+              child: SizedBox(
+                height: 80,
+                width: 80,
+                child: CircularProgressIndicator(
+                  strokeWidth: 6,
+                ),
+              ),
+            ),
+            data: (exercises) => exercises.isNotEmpty
+                ? ListView.builder(
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: <Widget>[
+                          Container(
+                            height: 195,
+                            margin: const EdgeInsets.only(
+                              left: 10,
+                              top: 10,
+                              right: 10,
+                              bottom: 5,
+                            ),
+                            child: Slidable(
+                              endActionPane: ActionPane(
+                                extentRatio: 0.2,
+                                motion: ScrollMotion(),
+                                children: [
+                                  SlidableAction(
+                                    onPressed: (context) {
+                                      deleteExercise(exercises[index].id!);
+                                      //prefsComplete.removeAt(index +
+                                      //    SectionPage.exercisesCountedLength);
+                                    },
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.delete_sharp,
+                                  ),
+                                ],
                               ),
-                              child: Slidable(
-                                endActionPane: ActionPane(
-                                  extentRatio: 0.2,
-                                  motion: ScrollMotion(),
-                                  children: [
-                                    SlidableAction(
-                                      onPressed: (context) {
-                                        deleteExercise(exercises[index].id!);
-                                        //prefsComplete.removeAt(index +
-                                        //    SectionPage.exercisesCountedLength);
-                                      },
-                                      backgroundColor: Colors.red,
-                                      foregroundColor: Colors.white,
-                                      icon: Icons.delete_sharp,
-                                    ),
-                                  ],
-                                ),
-                                child: ExerciseComponent(
-                                  exercises: exercises,
-                                  prefsComplete: prefsComplete,
-                                  image: image,
-                                  pickImage: pickImage,
-                                  setPrefs: setPrefs,
-                                  certainIndex: index,
-                                ),
+                              child: ExerciseComponent(
+                                exercises: exercises,
+                                prefsComplete: prefsComplete,
+                                image: image,
+                                pickImage: pickImage,
+                                setPrefs: setPrefs,
+                                certainIndex: index,
                               ),
-                            )
-                          ],
-                        );
-                      },
-                      itemCount: exercises.length,
-                    );
-                  } else {
-                    return EmptyList(
-                      imagePath: "images/exercise.png",
-                      text:
-                          "Click the button in right bottom\nto add new exercises",
-                    );
-                  }
-              }
-            },
+                            ),
+                          )
+                        ],
+                      );
+                    },
+                    itemCount: exercises.length,
+                  )
+                : EmptyList(
+                    imagePath: "images/exercise.png",
+                    text:
+                        "Click the button in right bottom\nto add new exercises",
+                  ),
           ),
           NewItemTextField(
             text: "Name of a new exercise",
@@ -284,13 +251,37 @@ class _ExercisesPageState extends State<ExercisesPage> {
                 }
               });
             },
-            addElement: addExercise,
+            addElement: () {
+              final addElement = ref
+                  .read(exercisesProvider(jwtToken!).notifier)
+                  .createExercise();
+              setState(() {
+                opacity = 0;
+                _textController.text = "";
+              });
+              return addElement;
+            },
             backgroundColor: Color.fromARGB(255, 0, 0, 0),
             iconColor: Color.fromARGB(255, 255, 255, 255),
           )
         ],
       ),
     );
+  }
+
+  Future<void> addExercise() async {
+    setState(() {
+      userPost = _textController.text;
+      exerciseCreate.name = userPost;
+      exerciseCreate.sectionId = sectionId;
+      exerciseCreate.userId = decodedUserId;
+      Future.delayed(const Duration(milliseconds: 10))
+          .then((value) => setState(() {}));
+      opacity = 0;
+      _textController.text = "";
+    });
+    exercises.add(await createData());
+    getData(sectionId);
   }
 
   Future pickImage() async {
