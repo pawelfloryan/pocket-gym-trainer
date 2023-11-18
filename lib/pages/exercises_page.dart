@@ -104,20 +104,6 @@ class _ExercisesPageState extends ConsumerState<ExercisesPage> {
           contentPadding: const EdgeInsets.all(25.0),
         ),
       );
-    } else {
-      //TODO Fix this code screaming an error
-      //int lastIndex = exercises.length + SectionPage.exercisesCountedLength;
-      //print(lastIndex);
-      //if (!RootPage.workoutStarted) {
-      //  if (prefsComplete.isEmpty) {
-      //    setState(() {
-      //      for (int i = 0; i < SectionPage.allExercises.length; i++) {
-      //        prefsComplete.add("temp");
-      //      }
-      //    });
-      //  }
-      //  prefsComplete.insert(lastIndex, "temp");
-      //}
     }
     return exercise;
   }
@@ -253,8 +239,14 @@ class _ExercisesPageState extends ConsumerState<ExercisesPage> {
             },
             addElement: () {
               final addElement = ref
-                  .read(exercisesProvider(jwtToken!).notifier)
-                  .createExercise();
+                  .read(exercisesProvider(sectionId, jwtToken!).notifier)
+                  .createExercise(
+                    Exercise(
+                      name: _textController.text,
+                      sectionId: sectionId,
+                      userId: decodedUserId,
+                    ),
+                  );
               setState(() {
                 opacity = 0;
                 _textController.text = "";
@@ -267,21 +259,6 @@ class _ExercisesPageState extends ConsumerState<ExercisesPage> {
         ],
       ),
     );
-  }
-
-  Future<void> addExercise() async {
-    setState(() {
-      userPost = _textController.text;
-      exerciseCreate.name = userPost;
-      exerciseCreate.sectionId = sectionId;
-      exerciseCreate.userId = decodedUserId;
-      Future.delayed(const Duration(milliseconds: 10))
-          .then((value) => setState(() {}));
-      opacity = 0;
-      _textController.text = "";
-    });
-    exercises.add(await createData());
-    getData(sectionId);
   }
 
   Future pickImage() async {

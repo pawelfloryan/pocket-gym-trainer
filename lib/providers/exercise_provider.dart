@@ -14,6 +14,8 @@ class Exercises extends _$Exercises {
     var url = Uri.parse(
         ApiConstants.baseUrl + ApiConstants.exerciseEndpoint + "/${userId}");
     var response = await http.get(url);
+    print("///////////");
+    print(response.statusCode);
     if (response.statusCode == 200) {
       List<Exercise> exercises = exerciseFromJsonList(response.body);
       return exercises;
@@ -23,13 +25,15 @@ class Exercises extends _$Exercises {
   }
 
   Future<void> createExercise(Exercise exercise) async {
-    await http.post(
+    var response = await http.post(
       Uri.parse(ApiConstants.baseUrl + ApiConstants.exerciseEndpoint),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: json.encode(exercise.toJson()),
     );
+    print(response.statusCode);
+    print("creat");
 
     ref.invalidateSelf();
 
