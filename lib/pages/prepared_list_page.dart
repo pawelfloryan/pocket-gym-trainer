@@ -1,6 +1,7 @@
 import 'package:PocketGymTrainer/model/exercise.dart';
 import 'package:PocketGymTrainer/model/section.dart';
 import 'package:PocketGymTrainer/pages/dashboard_page.dart';
+import 'package:PocketGymTrainer/providers/prepared_exercise_provider.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +10,7 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:number_paginator/number_paginator.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../components/prepared_exercise.dart';
 import '../main.dart';
@@ -16,16 +18,17 @@ import '../model/prepared_exercise.dart';
 import '../services/exercise_service.dart';
 import '../services/section_services.dart';
 
-class PreparedListPage extends StatefulWidget {
+class PreparedListPage extends ConsumerStatefulWidget {
   static List<PreparedExercise> preparedExercises = <PreparedExercise>[];
   static late ItemScrollController itemScrollController =
       ItemScrollController();
 
   @override
-  State<PreparedListPage> createState() => _PreparedListPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _PreparedListPageState();
 }
 
-class _PreparedListPageState extends State<PreparedListPage> {
+class _PreparedListPageState extends ConsumerState<PreparedListPage> {
   List<Section> sections = <Section>[];
   Exercise exercise = Exercise();
   Exercise exerciseCreate = Exercise();
@@ -39,19 +42,15 @@ class _PreparedListPageState extends State<PreparedListPage> {
   late Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken!);
   late String decodedUserId = decodedToken["id"];
 
-  Future<List<PreparedExercise>>? preparedExercisesData;
+  late var position = _paginatorController.currentPage * perPageCount;
   late int perPageCount = 25;
+
+  List<PreparedExercise>? suggestions;
 
   @override
   void initState() {
     super.initState();
     getSections();
-    preparedExercisesData = ExerciseService().getPreparedExerciseList(0);
-    getSuggestions();
-  }
-
-  void getSuggestions() async {
-    PreparedListPage.preparedExercises = (await preparedExercisesData) ?? [];
   }
 
   Future<void> getSections() async {
@@ -150,6 +149,9 @@ class _PreparedListPageState extends State<PreparedListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final providedPreparedExercises =
+        ref.watch(GetPreparedExerciseListProvider(position));
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -172,54 +174,49 @@ class _PreparedListPageState extends State<PreparedListPage> {
               icon: Icon(Icons.search))
         ],
       ),
-      body: FutureBuilder<List<PreparedExercise>>(
-        future: preparedExercisesData,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              return ScrollablePositionedList.builder(
-                itemScrollController: PreparedListPage.itemScrollController,
-                itemBuilder: (context, index) {
-                  return Container(
-                    height: 195,
-                    margin: const EdgeInsets.only(
-                        left: 10, top: 10, right: 10, bottom: 5),
-                    child: PreparedExerciseComponent(
-                      preparedExercises: snapshot.data,
-                      certainIndex: index,
-                      onClicked: () {
-                        showMultiSelect(
-                            context, snapshot.data?[index].name ?? "");
-                      },
-                      context: context,
-                    ),
-                  );
-                },
-                itemCount: snapshot.data!.length,
-              );
-            } else {
-              return Text("No data");
-            }
-          } else if (snapshot.hasError) {
-            return Center(
-              child: SizedBox(
-                height: 80,
-                width: 80,
-                child: Text("Error"),
-              ),
-            );
-          } else {
-            return Center(
-              child: SizedBox(
-                height: 80,
-                width: 80,
-                child: CircularProgressIndicator(
-                  strokeWidth: 6,
+      body: providedPreparedExercises.when(
+        data: (preparedExercises) {
+          setState(() {
+            suggestions = preparedExercises;
+            PreparedListPage.preparedExercises = preparedExercises;
+          });
+          return ScrollablePositionedList.builder(
+            itemScrollController: PreparedListPage.itemScrollController,
+            itemBuilder: (context, index) {
+              return Container(
+                height: 195,
+                margin: const EdgeInsets.only(
+                    left: 10, top: 10, right: 10, bottom: 5),
+                child: PreparedExerciseComponent(
+                  preparedExercises: preparedExercises,
+                  certainIndex: index,
+                  onClicked: () {
+                    showMultiSelect(
+                        context, preparedExercises[index].name ?? "");
+                  },
+                  context: context,
                 ),
-              ),
-            );
-          }
+              );
+            },
+            itemCount: preparedExercises.length,
+          );
         },
+        error: (error, stackTrace) => Center(
+          child: SizedBox(
+            height: 80,
+            width: 80,
+            child: Text("Error"),
+          ),
+        ),
+        loading: () => Center(
+          child: SizedBox(
+            height: 80,
+            width: 80,
+            child: CircularProgressIndicator(
+              strokeWidth: 6,
+            ),
+          ),
+        ),
       ),
       bottomNavigationBar: NumberPaginator(
         controller: _paginatorController,
@@ -227,11 +224,10 @@ class _PreparedListPageState extends State<PreparedListPage> {
         numberPages: (270 / perPageCount).ceil(),
         onPageChange: (int index) {
           setState(() {
-            int equate = _paginatorController.currentPage * perPageCount;
-            preparedExercisesData =
-                ExerciseService().getPreparedExerciseList(equate);
-            getSuggestions();
+            position = _paginatorController.currentPage * perPageCount;
           });
+          //providedPreparedExercises = ref.watch(getPreparedExerciseListProvider(
+          //    _paginatorController.currentPage * perPageCount));
         },
       ),
     );

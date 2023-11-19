@@ -6,7 +6,7 @@ part of 'section_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$sectionsHash() => r'42b021f3cf881c093d31675990c49620a49409fd';
+String _$sectionsHash() => r'0800bd2a831fe652062fe3444da40299e6e2ad94';
 
 /// Copied from Dart SDK
 class _SystemHash {
