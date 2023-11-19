@@ -130,9 +130,11 @@ class _SectionPageState extends ConsumerState<SectionPage> {
     return Stack(
       children: <Widget>[
         providedSections.when(
-          error: (error, stackTrace) => Center(
-            child: Text(error.toString()),
-          ),
+          error: (error, stackTrace) {
+            return Center(
+              child: Text(error.toString()),
+            );
+          },
           loading: () => Center(
             child: SizedBox(
               height: 80,
@@ -342,6 +344,7 @@ class _SectionPageState extends ConsumerState<SectionPage> {
               opacity = 0;
               _textController.text = "";
             });
+            //if(providedSections.hasError)
             return addElement;
           },
           backgroundColor: Color.fromARGB(255, 255, 255, 255),

@@ -17,7 +17,13 @@ class Exercises extends _$Exercises {
     print("///////////");
     print(response.statusCode);
     if (response.statusCode == 200) {
-      List<Exercise> exercises = exerciseFromJsonList(response.body);
+      List<Exercise> exercisesTemp = exerciseFromJsonList(response.body);
+      List<Exercise> exercises = <Exercise>[];
+      for (Exercise exercise in exercisesTemp) {
+        if (exercise.sectionId == sectionId) {
+          exercises.add(exercise);
+        }
+      }
       return exercises;
     } else {
       return [];
@@ -25,15 +31,13 @@ class Exercises extends _$Exercises {
   }
 
   Future<void> createExercise(Exercise exercise) async {
-    var response = await http.post(
+    await http.post(
       Uri.parse(ApiConstants.baseUrl + ApiConstants.exerciseEndpoint),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: json.encode(exercise.toJson()),
     );
-    print(response.statusCode);
-    print("creat");
 
     ref.invalidateSelf();
 

@@ -108,24 +108,6 @@ class _ExercisesPageState extends ConsumerState<ExercisesPage> {
     return exercise;
   }
 
-  void deleteData(String exerciseId) async {
-    await ExerciseService().deleteExerciseSingle(exerciseId);
-    getData(sectionId);
-    exerciseDelete.id = exerciseId;
-    newExercisesDelete = exercises;
-    newExercisesDelete.remove(exerciseDelete);
-    Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
-  }
-
-  void deleteExercise(String id) {
-    setState(() {
-      exerciseId = id;
-      deleteData(exerciseId);
-      exercises = newExercisesDelete;
-    });
-  }
-
   void updateExercisesPerformed() async {
     await SectionService().upsertSection(sectionId, sectionUpsert);
     Future.delayed(const Duration(milliseconds: 10))
@@ -193,7 +175,12 @@ class _ExercisesPageState extends ConsumerState<ExercisesPage> {
                                 children: [
                                   SlidableAction(
                                     onPressed: (context) {
-                                      deleteExercise(exercises[index].id!);
+                                      ref
+                                          .read(ExercisesProvider(
+                                                  sectionId, decodedUserId)
+                                              .notifier)
+                                          .deleteExerciseSingle(
+                                              exercises[index].id!);
                                       //prefsComplete.removeAt(index +
                                       //    SectionPage.exercisesCountedLength);
                                     },

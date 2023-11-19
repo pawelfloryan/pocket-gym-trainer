@@ -1,12 +1,9 @@
 import 'dart:convert';
 
-import 'package:PocketGymTrainer/constants.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../main.dart';
+import '../constants.dart';
 import '../model/section.dart';
-import '../pages/section_page.dart';
 import 'package:http/http.dart' as http;
 
 part 'section_provider.g.dart';
@@ -23,6 +20,7 @@ class Sections extends _$Sections {
         'Authorization': 'Bearer ' + result,
       },
     );
+    print(response.statusCode);
     if (response.statusCode == 200) {
       List<Section> sections = sectionFromJsonList(response.body);
       return sections;
