@@ -14,8 +14,7 @@ class Exercises extends _$Exercises {
     var url = Uri.parse(
         ApiConstants.baseUrl + ApiConstants.exerciseEndpoint + "/${userId}");
     var response = await http.get(url);
-    print("///////////");
-    print(response.statusCode);
+
     if (response.statusCode == 200) {
       List<Exercise> exercisesTemp = exerciseFromJsonList(response.body);
       List<Exercise> exercises = <Exercise>[];

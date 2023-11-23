@@ -226,7 +226,7 @@ class _ExercisesPageState extends ConsumerState<ExercisesPage> {
             },
             addElement: () {
               final addElement = ref
-                  .read(exercisesProvider(sectionId, jwtToken!).notifier)
+                  .read(exercisesProvider(sectionId, decodedUserId).notifier)
                   .createExercise(
                     Exercise(
                       name: _textController.text,
