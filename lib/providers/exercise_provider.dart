@@ -11,18 +11,14 @@ part 'exercise_provider.g.dart';
 class Exercises extends _$Exercises {
   @override
   Future<List<Exercise>> build(String sectionId, String userId) async {
-    var url = Uri.parse(
-        ApiConstants.baseUrl + ApiConstants.exerciseEndpoint + "/${userId}");
+    var url = Uri.parse(ApiConstants.baseUrl +
+        ApiConstants.exerciseEndpoint +
+        "/${userId}" +
+        "/${sectionId}");
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
-      List<Exercise> exercisesTemp = exerciseFromJsonList(response.body);
-      List<Exercise> exercises = <Exercise>[];
-      for (Exercise exercise in exercisesTemp) {
-        if (exercise.sectionId == sectionId) {
-          exercises.add(exercise);
-        }
-      }
+      List<Exercise> exercises = exerciseFromJsonList(response.body);
       return exercises;
     } else {
       return [];
