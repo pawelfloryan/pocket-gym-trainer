@@ -17,9 +17,12 @@ import 'package:sidebarx/sidebarx.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ProviderScope(child: const MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {

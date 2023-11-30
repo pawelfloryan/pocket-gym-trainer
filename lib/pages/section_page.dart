@@ -1,5 +1,7 @@
 import 'package:PocketGymTrainer/components/workout_controls.dart';
+import 'package:PocketGymTrainer/providers/section_provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,7 +19,7 @@ import '../services/section_services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../components/section.dart';
 
-class SectionPage extends StatefulWidget {
+class SectionPage extends ConsumerStatefulWidget {
   const SectionPage({super.key});
   static late var sectionKey;
   static late var sectionName;
@@ -29,29 +31,18 @@ class SectionPage extends StatefulWidget {
   static final GlobalKey<_SectionPageState> sectionPageKey =
       GlobalKey<_SectionPageState>();
 
-  static _SectionPageState? of(BuildContext context) {
-    return context.findAncestorStateOfType<_SectionPageState>();
-  }
-
   @override
-  State<SectionPage> createState() => _SectionPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _SectionPageState();
 }
 
-class _SectionPageState extends State<SectionPage> {
+class _SectionPageState extends ConsumerState<SectionPage> {
   List<Exercise> exercises = <Exercise>[];
   List<Exercise> newExercises = <Exercise>[];
-  List<Exercise> exercisesDelete = <Exercise>[];
   List<Exercise> exercisesCounted = <Exercise>[];
   List<Exercise> certainExercises = <Exercise>[];
 
   List<Section> sections = <Section>[];
-  List<Section> newSections = <Section>[];
-  List<Section> newSectionsDelete = <Section>[];
   List<Section> certainSections = <Section>[];
-  Section section = Section();
-  Section sectionCreate = Section();
-  Section sectionDelete = Section();
-  Section sectionUpsert = Section();
 
   final _textController = TextEditingController();
   String userPost = '';
@@ -70,36 +61,17 @@ class _SectionPageState extends State<SectionPage> {
 
   Future<void>? enterPrefsFuture;
   bool enterPrefsCalled = false;
-  int exercisesLength = 0;
-
-  Future<List<Section>>? sectionsData;
 
   @override
   void initState() {
     super.initState();
-    getData();
     deletePrefs();
     getAllExercises();
     exercisesCompleted();
   }
 
-  void getData() async {
-    await (sectionsData =
-        SectionService().getSection(jwtToken!, decodedUserId));
-    sections = (await sectionsData) ?? [];
-    setState(() {
-      sections = sections..sort((s1, s2) => s1.name!.compareTo(s2.name!));
-    });
-
-    Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {
-              RootPage.sectionsLength = sections.length;
-            }));
-  }
-
   void createData() async {
-    section = (await SectionService().createSection(sectionCreate));
-    if (section.id == null) {
+    if ("section.id" == null) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -123,73 +95,16 @@ class _SectionPageState extends State<SectionPage> {
         ),
       );
     } else {
-      sections.add(section);
+      //sections.add(section);
       RootPage.sectionsLength++;
     }
-    Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
     //countedExercises(sections.length-1);
-  }
-
-  void deleteData(String sectionId) async {
-    await SectionService().deleteSection(sectionId, jwtToken!);
-    getData();
-    deleteExercise(sectionId);
-    sectionDelete.id = sectionId;
-    newSectionsDelete = sections;
-    newSectionsDelete.remove(sectionDelete);
-    Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
-  }
-
-  void upsertData(String sectionId) async {
-    section = (await SectionService().upsertSection(sectionId, sectionUpsert))!;
-    getData();
-    Future.delayed(const Duration(milliseconds: 10))
-        .then((value) => setState(() {}));
-  }
-
-  Future<void> addSection() async {
-    setState(() {
-      userPost = _textController.text;
-      sectionCreate.name = userPost;
-      sectionCreate.userId = decodedUserId;
-      sectionCreate.exercisesPerformed = 0;
-      createData();
-      Future.delayed(const Duration(milliseconds: 10))
-          .then((value) => setState(() {}));
-      opacity = 0;
-      _textController.text = "";
-    });
   }
 
   void deleteExercise(String sectionId) async {
     await ExerciseService().deleteExerciseList(sectionId);
     Future.delayed(const Duration(milliseconds: 10))
         .then((value) => setState(() {}));
-  }
-
-  void deleteSection(String id) {
-    setState(() {
-      sectionId = id;
-      deleteData(sectionId);
-      sections = newSectionsDelete;
-    });
-  }
-
-  void editSection(String id, int index) async {
-    setState(() {
-      userPost = _textController.text;
-      sectionUpsert.name = userPost;
-      sectionUpsert.userId = decodedUserId;
-      sectionUpsert.exercisesPerformed = sections[index].exercisesPerformed;
-      editing = false;
-      sectionId = id;
-      upsertData(sectionId);
-      getData();
-      sections = newSections;
-      _textController.text = "";
-    });
   }
 
   void getAllExercises() async {
@@ -210,23 +125,34 @@ class _SectionPageState extends State<SectionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final providedSections =
+        ref.watch(SectionsProvider(jwtToken!, decodedUserId));
+
     return Stack(
       children: <Widget>[
-        FutureBuilder(
-          future: sectionsData,
-          builder: ((context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasData) {
-                return ListView.builder(
+        providedSections.when(
+          error: (error, stackTrace) {
+            return Center(
+              child: Text(error.toString()),
+            );
+          },
+          loading: () => Center(
+            child: SizedBox(
+              height: 80,
+              width: 80,
+              child: CircularProgressIndicator(
+                strokeWidth: 6,
+              ),
+            ),
+          ),
+          data: (sections) => sections.isNotEmpty
+              ? ListView.builder(
                   itemBuilder: (context, index) {
                     return Column(
                       children: <Widget>[
                         Container(
                           margin: const EdgeInsets.only(
-                            left: 20,
-                            top: 10,
-                            right: 20,
-                          ),
+                              left: 20, top: 10, right: 20),
                           child: Slidable(
                             enabled: !RootPage.workoutStarted,
                             closeOnScroll: true,
@@ -248,8 +174,22 @@ class _SectionPageState extends State<SectionPage> {
                                 context.push('/exercises');
                               },
                               sectionEdited: () {
-                                editSection(sections[index].id!, index);
-                                _textController.text = "";
+                                ref
+                                    .read(SectionsProvider(
+                                            jwtToken!, decodedUserId)
+                                        .notifier)
+                                    .upsertSection(
+                                      sections[index].id!,
+                                      Section(
+                                          name: _textController.text,
+                                          userId: decodedUserId,
+                                          exercisesPerformed: sections[index]
+                                              .exercisesPerformed),
+                                    );
+                                setState(() {
+                                  _textController.text = "";
+                                  editing = false;
+                                });
                               },
                               exercisesCountDisplay: (index) {
                                 newExercises = exercises
@@ -309,8 +249,14 @@ class _SectionPageState extends State<SectionPage> {
                                           actions: [
                                             TextButton(
                                               onPressed: () {
-                                                deleteSection(
-                                                    sections[index].id!);
+                                                ref
+                                                    .read(SectionsProvider(
+                                                            jwtToken!,
+                                                            decodedUserId)
+                                                        .notifier)
+                                                    .deleteSection(
+                                                        sections[index].id!,
+                                                        jwtToken!);
                                                 context.pop();
                                               },
                                               child: Container(
@@ -350,7 +296,12 @@ class _SectionPageState extends State<SectionPage> {
                                         ),
                                       );
                                     } else {
-                                      deleteSection(sections[index].id!);
+                                      ref
+                                          .read(SectionsProvider(
+                                                  jwtToken!, decodedUserId)
+                                              .notifier)
+                                          .deleteSection(
+                                              sections[index].id!, jwtToken!);
                                     }
                                   },
                                   backgroundColor: Colors.red,
@@ -365,26 +316,12 @@ class _SectionPageState extends State<SectionPage> {
                     );
                   },
                   itemCount: sections.length,
-                );
-              } else {
-                return EmptyList(
+                )
+              : EmptyList(
                   imagePath: "images/push-up.png",
                   text:
                       "Click the button in right bottom\nto add new exercise sections",
-                );
-              }
-            } else {
-              return Center(
-                child: SizedBox(
-                  height: 80,
-                  width: 80,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 6,
-                  ),
                 ),
-              );
-            }
-          }),
         ),
         NewItemTextField(
           text: "Name of a new section",
@@ -399,7 +336,23 @@ class _SectionPageState extends State<SectionPage> {
               }
             });
           },
-          addElement: addSection,
+          addElement: () {
+            final addElement = ref
+                .read(sectionsProvider(jwtToken!, decodedUserId).notifier)
+                .createSection(
+                  Section(
+                    name: _textController.text,
+                    userId: decodedUserId,
+                    exercisesPerformed: 0,
+                  ),
+                );
+            setState(() {
+              opacity = 0;
+              _textController.text = "";
+            });
+            //if(providedSections.hasError)
+            return addElement;
+          },
           backgroundColor: Color.fromARGB(255, 255, 255, 255),
           iconColor: Color.fromARGB(255, 0, 0, 0),
         )
