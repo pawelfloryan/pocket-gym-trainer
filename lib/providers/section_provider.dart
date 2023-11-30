@@ -11,8 +11,9 @@ part 'section_provider.g.dart';
 @riverpod
 class Sections extends _$Sections {
   @override
-  Future<List<Section>> build(String result) async {
-    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.sectionEndpoint);
+  Future<List<Section>> build(String result, String userId) async {
+    var url = Uri.parse(
+        ApiConstants.baseUrl + ApiConstants.sectionEndpoint + "/${userId}");
     var response = await http.get(
       url,
       headers: <String, String>{

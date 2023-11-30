@@ -125,7 +125,8 @@ class _SectionPageState extends ConsumerState<SectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    final providedSections = ref.watch(SectionsProvider(jwtToken!));
+    final providedSections =
+        ref.watch(SectionsProvider(jwtToken!, decodedUserId));
 
     return Stack(
       children: <Widget>[
@@ -174,7 +175,9 @@ class _SectionPageState extends ConsumerState<SectionPage> {
                               },
                               sectionEdited: () {
                                 ref
-                                    .read(SectionsProvider(jwtToken!).notifier)
+                                    .read(SectionsProvider(
+                                            jwtToken!, decodedUserId)
+                                        .notifier)
                                     .upsertSection(
                                       sections[index].id!,
                                       Section(
@@ -248,7 +251,8 @@ class _SectionPageState extends ConsumerState<SectionPage> {
                                               onPressed: () {
                                                 ref
                                                     .read(SectionsProvider(
-                                                            jwtToken!)
+                                                            jwtToken!,
+                                                            decodedUserId)
                                                         .notifier)
                                                     .deleteSection(
                                                         sections[index].id!,
@@ -293,7 +297,8 @@ class _SectionPageState extends ConsumerState<SectionPage> {
                                       );
                                     } else {
                                       ref
-                                          .read(SectionsProvider(jwtToken!)
+                                          .read(SectionsProvider(
+                                                  jwtToken!, decodedUserId)
                                               .notifier)
                                           .deleteSection(
                                               sections[index].id!, jwtToken!);
@@ -332,14 +337,15 @@ class _SectionPageState extends ConsumerState<SectionPage> {
             });
           },
           addElement: () {
-            final addElement =
-                ref.read(sectionsProvider(jwtToken!).notifier).createSection(
-                      Section(
-                        name: _textController.text,
-                        userId: decodedUserId,
-                        exercisesPerformed: 0,
-                      ),
-                    );
+            final addElement = ref
+                .read(sectionsProvider(jwtToken!, decodedUserId).notifier)
+                .createSection(
+                  Section(
+                    name: _textController.text,
+                    userId: decodedUserId,
+                    exercisesPerformed: 0,
+                  ),
+                );
             setState(() {
               opacity = 0;
               _textController.text = "";

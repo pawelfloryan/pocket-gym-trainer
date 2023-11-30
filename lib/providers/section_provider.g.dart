@@ -6,7 +6,7 @@ part of 'section_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$sectionsHash() => r'0800bd2a831fe652062fe3444da40299e6e2ad94';
+String _$sectionsHash() => r'46452eaced79c3f05e14ab05ce863571942521d0';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,9 +31,11 @@ class _SystemHash {
 
 abstract class _$Sections
     extends BuildlessAutoDisposeAsyncNotifier<List<Section>> {
+  late final String userId;
   late final String result;
 
   FutureOr<List<Section>> build(
+    String userId,
     String result,
   );
 }
@@ -49,9 +51,11 @@ class SectionsFamily extends Family<AsyncValue<List<Section>>> {
 
   /// See also [Sections].
   SectionsProvider call(
+    String userId,
     String result,
   ) {
     return SectionsProvider(
+      userId,
       result,
     );
   }
@@ -61,6 +65,7 @@ class SectionsFamily extends Family<AsyncValue<List<Section>>> {
     covariant SectionsProvider provider,
   ) {
     return call(
+      provider.userId,
       provider.result,
     );
   }
@@ -85,9 +90,12 @@ class SectionsProvider
     extends AutoDisposeAsyncNotifierProviderImpl<Sections, List<Section>> {
   /// See also [Sections].
   SectionsProvider(
+    String userId,
     String result,
   ) : this._internal(
-          () => Sections()..result = result,
+          () => Sections()
+            ..userId = userId
+            ..result = result,
           from: sectionsProvider,
           name: r'sectionsProvider',
           debugGetCreateSourceHash:
@@ -96,6 +104,7 @@ class SectionsProvider
                   : _$sectionsHash,
           dependencies: SectionsFamily._dependencies,
           allTransitiveDependencies: SectionsFamily._allTransitiveDependencies,
+          userId: userId,
           result: result,
         );
 
@@ -106,9 +115,11 @@ class SectionsProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
+    required this.userId,
     required this.result,
   }) : super.internal();
 
+  final String userId;
   final String result;
 
   @override
@@ -116,6 +127,7 @@ class SectionsProvider
     covariant Sections notifier,
   ) {
     return notifier.build(
+      userId,
       result,
     );
   }
@@ -125,12 +137,15 @@ class SectionsProvider
     return ProviderOverride(
       origin: this,
       override: SectionsProvider._internal(
-        () => create()..result = result,
+        () => create()
+          ..userId = userId
+          ..result = result,
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
+        userId: userId,
         result: result,
       ),
     );
@@ -144,12 +159,15 @@ class SectionsProvider
 
   @override
   bool operator ==(Object other) {
-    return other is SectionsProvider && other.result == result;
+    return other is SectionsProvider &&
+        other.userId == userId &&
+        other.result == result;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, userId.hashCode);
     hash = _SystemHash.combine(hash, result.hashCode);
 
     return _SystemHash.finish(hash);
@@ -157,6 +175,9 @@ class SectionsProvider
 }
 
 mixin SectionsRef on AutoDisposeAsyncNotifierProviderRef<List<Section>> {
+  /// The parameter `userId` of this provider.
+  String get userId;
+
   /// The parameter `result` of this provider.
   String get result;
 }
@@ -166,6 +187,8 @@ class _SectionsProviderElement
     with SectionsRef {
   _SectionsProviderElement(super.provider);
 
+  @override
+  String get userId => (origin as SectionsProvider).userId;
   @override
   String get result => (origin as SectionsProvider).result;
 }
